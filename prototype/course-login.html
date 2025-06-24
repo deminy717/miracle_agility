@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程 - 犬敏捷俱乐部</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .login-icon {
+            font-size: 60px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .login-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .login-desc {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .wechat-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #07C160;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .wechat-login-btn i {
+            margin-right: 8px;
+        }
+        
+        .wechat-login-btn:hover {
+            background-color: #06ad56;
+        }
+        
+        .login-footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .login-illustration {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:30</div>
+        <div class="status-bar-icons">
+            <div class="signal-icon">
+                <i class="fas fa-signal"></i>
+            </div>
+            <div class="wifi-icon">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <div class="battery-icon">
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页面内容 -->
+    <div class="page-container">
+        <div class="login-container">
+            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZG9nfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" alt="登录插图" class="login-illustration rounded-lg">
+            
+            <h2 class="login-title">欢迎来到犬敏捷俱乐部</h2>
+            <p class="login-desc">登录后即可查看您的专属课程，记录训练进度，获取专业指导</p>
+            
+            <button class="wechat-login-btn">
+                <i class="fab fa-weixin"></i> 微信一键登录
+            </button>
+            
+            <p class="login-footer">登录即表示您同意我们的服务条款和隐私政策</p>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <div class="tab-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="tab-text">主页</div>
+        </div>
+        <div class="tab-item active">
+            <div class="tab-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="tab-text">课程</div>
+        </div>
+        <div class="tab-item">
+            <div class="tab-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="tab-text">我的</div>
+        </div>
+    </div>
+</body>
+</html> 
