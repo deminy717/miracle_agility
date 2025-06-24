@@ -1,0 +1,54 @@
+<view class="container">
+  <!-- 视频播放器 -->
+  <view class="video-player">
+    <video 
+      id="myVideo"
+      src="{{video.videoUrl}}"
+      poster="{{video.coverImage}}"
+      controls
+      autoplay="{{true}}"
+      show-center-play-btn="{{true}}"
+      show-play-btn="{{true}}"
+      show-fullscreen-btn="{{true}}"
+      bindplay="onVideoPlay"
+      bindpause="onVideoPause"
+      bindended="onVideoEnd"
+      binderror="onVideoError"
+      bindtimeupdate="onTimeUpdate"
+      object-fit="cover">
+    </video>
+  </view>
+
+  <!-- 视频信息 -->
+  <view class="video-info">
+    <view class="video-title">{{video.title}}</view>
+    <view class="video-meta">
+      <text class="video-views">{{video.views}} 次观看</text>
+      <text class="video-time">{{video.publishTime}}</text>
+    </view>
+    <view class="video-desc">{{video.desc}}</view>
+  </view>
+
+  <!-- 相关视频 -->
+  <view class="related-videos">
+    <view class="section-title">相关推荐</view>
+    <view class="video-list">
+      <view 
+        class="video-item" 
+        wx:for="{{video.related}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="goToVideoDetail">
+        <image class="video-cover" src="{{item.coverImage}}" mode="aspectFill"></image>
+        <view class="video-duration">{{item.duration}}</view>
+        <view class="video-title">{{item.title}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-icon"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

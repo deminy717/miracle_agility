@@ -1,0 +1,35 @@
+<view class="container">
+  <!-- 文章头部 -->
+  <view class="article-header">
+    <view class="article-title">{{article.title}}</view>
+    <view class="article-meta">
+      <text class="article-author">{{article.author}}</text>
+      <text class="article-time">{{article.publishTime}}</text>
+      <text class="article-views">阅读 {{article.views}}</text>
+    </view>
+    <view class="article-tags">
+      <text wx:for="{{article.tags}}" wx:key="index" class="article-tag">{{item}}</text>
+    </view>
+  </view>
+  
+  <!-- 文章内容 -->
+  <view class="article-content">
+    <rich-text nodes="{{article.content}}"></rich-text>
+  </view>
+
+  <!-- 文章底部 -->
+  <view class="article-footer">
+    <view class="article-share">
+      <button open-type="share" class="share-btn">
+        <image src="/static/images/icon/share.png" class="share-icon"></image>
+        <text>分享</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-icon"></view>
+    <view class="loading-text">加载中...</view>
+  </view>
+</view> 

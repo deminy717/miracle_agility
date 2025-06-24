@@ -1,62 +1,209 @@
 /**index.wxss**/
 page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
+  height: 100%;
+  background-color: #f8f8f8;
 }
 
-.userinfo {
+.scrollarea {
+  height: 100%;
+}
+
+.container {
+  padding: 0 0 20rpx 0;
+  box-sizing: border-box;
+}
+
+/* 图标字体 */
+@font-face {
+  font-family: "iconfont";
+  src: url('data:font/woff2;charset=utf-8;base64,d09GMgABAAAAAAOEAAsAAAAAB4AAAAM3AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHFQGYACDHAqCMIIhATYCJAMQCwoABCAFhGcHRxvdBsiuMTaGVk+hJNlhkJBEh/v+sDT9R0QUkH0+PKu27+1+2o4F7YLkdqegHRGh2aDSNEhoJOkTIfRHxCb01r+t1mw6HfmUaHCkQCIFdBChCSR0oADnG8aueJHrCfQbFwU7urp7D5QpzFEB4o6dJlBmJRdNYUyh27TmxSvEU3Tq6VMAfOK/H//BWDJJXZmrTu7suoLqL+D5f9k//QnCbwSOcz6wbZRZBUrxsNZ6l8jG+UX0E/yl1QINNQn4Ap7/n+3+/5+4+J8eMRZoVMHnv7xEljSIQtRZnLU3YxbgC/CiriiQL+BVoSBP6NOMQbzDE3jCXNf1MuxLimVYllCcvJBUjlK9RKTZBFEo3uB/PHRv8sxEURKrZp96yLMoijwb9NvtDsMeD+/1eo3N5shk75t6vVvP9BzcEydepfQMeYq8hn1U7aORR0aOU/Xy/cf3rd/gMjSL5hB0p/MYf2PwDr9+/Uby3DnHmcOHs87cLRFluycOvK3Knh/3yPPnvYQNiLuFcmHzgwejn2bJPxNfVVVJb5UtF7xOsLbYi7BoU2Y02PNgr6Gzd+3+ztB4j/rT9SulNBY+qP7MnWvQu8Iue9e6QO8HfWv1zZmz82O7yZ08Ic7YjCZuZgaUPtCKBrtzY1vw2tZDGSH/h1+a/+A0eF3/QXqT5xqJxmGVHi/4V8BRviEYvjUDdG/rfy0EPIM9+x+FBUb+Q7DzP7Ef+ZWmf5G1sP+cZWELizTXzCJMJqkWKyyysCnLV0q2m4V+/ThXuGzTEPqNpUNSGwNZnwkUxRKo9FmMWp+laDdh1fYdhjCJ0O4eAGHEPpKh75CN2Eco...') format('woff2');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-newspaper:before {
+  content: "\e7be";
+}
+
+.icon-playcircle:before {
+  content: "\e78b";
+}
+
+/* Logo和介绍 */
+.logo-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #aaa;
-  width: 80%;
+  padding: 40rpx 0;
 }
 
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
+.logo-image {
+  width: 160rpx;
+  height: 160rpx;
   border-radius: 50%;
+  border: 4rpx solid #0066cc;
 }
 
-.usermotto {
-  margin-top: 200px;
+.logo-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-top: 20rpx;
 }
 
-.avatar-wrapper {
-  padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
+.club-intro {
+  padding: 0 30rpx;
+  margin-bottom: 40rpx;
+  line-height: 1.6;
+  font-size: 28rpx;
+  color: #333;
+  text-align: justify;
 }
 
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
+/* 区块标题 */
+.section-title {
+  margin: 30rpx 30rpx 20rpx;
 }
 
-.nickname-wrapper {
+.section-title-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #0066cc;
   display: flex;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
+  align-items: center;
 }
 
-.nickname-label {
-  width: 105px;
+.section-title-text .iconfont {
+  margin-right: 10rpx;
 }
 
-.nickname-input {
+/* 资讯列表 */
+.news-list {
+  margin-bottom: 40rpx;
+}
+
+.article-card {
+  display: flex;
+  margin: 20rpx 30rpx;
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.article-info {
   flex: 1;
+  padding: 20rpx;
+}
+
+.article-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #333;
+}
+
+.article-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-meta {
+  font-size: 22rpx;
+  color: #999;
+  display: flex;
+}
+
+.article-date {
+  margin-right: 20rpx;
+}
+
+.article-image {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.article-image image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 视频轮播 */
+.video-carousel {
+  white-space: nowrap;
+  margin-bottom: 30rpx;
+}
+
+.video-scroll-container {
+  padding: 0 30rpx;
+  display: inline-flex;
+}
+
+.video-item {
+  width: 300rpx;
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  display: inline-block;
+}
+
+.video-cover {
+  position: relative;
+  width: 300rpx;
+  height: 180rpx;
+}
+
+.video-cover image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-play-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.video-play-icon .iconfont {
+  color: white;
+  font-size: 50rpx;
+}
+
+.video-info {
+  padding: 16rpx;
+}
+
+.video-title {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.video-meta {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
 }

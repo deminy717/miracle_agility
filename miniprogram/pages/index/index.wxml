@@ -1,27 +1,117 @@
 <!--index.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+    <!-- 俱乐部Logo和介绍 -->
+    <view class="logo-container">
+      <image src="/static/images/logo.JPG" class="logo-image"></image>
+      <text class="logo-title">犬敏捷俱乐部</text>
+    </view>
+    
+    <view class="club-intro">
+      <text>欢迎来到犬敏捷俱乐部！我们专注于提供高质量的犬敏捷训练课程、专业的竞赛指导和丰富的科普知识。通过我们的平台，您可以随时了解最新的赛事资讯，预约线下课程，并记录您和爱犬的成长历程。</text>
+    </view>
+    
+    <!-- 最新资讯 -->
+    <view class="section-title">
+      <text class="section-title-text"><text class="iconfont icon-newspaper"></text> 最新资讯</text>
+    </view>
+    
+    <view class="news-list">
+      <!-- 资讯卡片1 -->
+      <view class="article-card" bindtap="goToArticle" data-id="1">
+        <view class="article-info">
+          <view class="article-title">2023年全国犬敏捷大赛报名开始</view>
+          <view class="article-desc">第十届全国犬敏捷大赛将于2023年9月举行，现已开始接受报名，欢迎各位爱好者积极参与！</view>
+          <view class="article-meta">
+            <text class="article-date">2023-06-15</text>
+            <text class="article-views">1255次浏览</text>
+          </view>
         </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+        <view class="article-image">
+          <image src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nJTIwYWdpbGl0eXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+        </view>
+      </view>
+      
+      <!-- 资讯卡片2 -->
+      <view class="article-card" bindtap="goToArticle" data-id="2">
+        <view class="article-info">
+          <view class="article-title">夏季犬敏捷训练专题课程上线</view>
+          <view class="article-desc">夏季高温期间如何科学训练？我们推出了夏季专题课程，帮助您和爱犬安全度过炎热夏天。</view>
+          <view class="article-meta">
+            <text class="article-date">2023-06-10</text>
+            <text class="article-views">865次浏览</text>
+          </view>
+        </view>
+        <view class="article-image">
+          <image src="https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZG9nJTIwdHJhaW5pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+        </view>
+      </view>
+      
+      <!-- 资讯卡片3 -->
+      <view class="article-card" bindtap="goToArticle" data-id="3">
+        <view class="article-info">
+          <view class="article-title">如何选择适合犬敏捷的犬种</view>
+          <view class="article-desc">并非所有犬种都适合参加敏捷训练，本文将从体型、性格等方面为您详细介绍如何选择适合敏捷训练的犬种。</view>
+          <view class="article-meta">
+            <text class="article-date">2023-06-05</text>
+            <text class="article-views">1024次浏览</text>
+          </view>
+        </view>
+        <view class="article-image">
+          <image src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9nfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+        </view>
+      </view>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    
+    <!-- 精选视频 -->
+    <view class="section-title">
+      <text class="section-title-text"><text class="iconfont icon-playcircle"></text> 精选视频</text>
     </view>
+    
+    <scroll-view scroll-x class="video-carousel">
+      <view class="video-scroll-container">
+        <!-- 视频1 -->
+        <view class="video-item" bindtap="playVideo" data-id="1">
+          <view class="video-cover">
+            <image src="https://images.unsplash.com/photo-1591946614720-90a587da4a36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZG9nJTIwdHJhaW5pbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+            <view class="video-play-icon">
+              <text class="iconfont icon-playcircle"></text>
+            </view>
+          </view>
+          <view class="video-info">
+            <view class="video-title">犬敏捷基础教程 - 第1集</view>
+            <view class="video-meta">12分钟 · 5天前</view>
+          </view>
+        </view>
+        
+        <!-- 视频2 -->
+        <view class="video-item" bindtap="playVideo" data-id="2">
+          <view class="video-cover">
+            <image src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZG9nJTIwYWdpbGl0eXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+            <view class="video-play-icon">
+              <text class="iconfont icon-playcircle"></text>
+            </view>
+          </view>
+          <view class="video-info">
+            <view class="video-title">如何训练障碍跳跃</view>
+            <view class="video-meta">18分钟 · 1周前</view>
+          </view>
+        </view>
+        
+        <!-- 视频3 -->
+        <view class="video-item" bindtap="playVideo" data-id="3">
+          <view class="video-cover">
+            <image src="https://images.unsplash.com/photo-1551730459-92db2a308d6a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGRvZyUyMHRyYWluaW5nfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" mode="aspectFill"></image>
+            <view class="video-play-icon">
+              <text class="iconfont icon-playcircle"></text>
+            </view>
+          </view>
+          <view class="video-info">
+            <view class="video-title">教你读懂犬只肢体语言</view>
+            <view class="video-meta">22分钟 · 2周前</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 </scroll-view>
