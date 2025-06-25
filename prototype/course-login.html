@@ -3,127 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>课程 - 犬敏捷俱乐部</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>课程 - 未登录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="common.css">
     <style>
+        .status-bar {
+            background: linear-gradient(135deg, #000, #333);
+            height: 44px;
+        }
+        .tab-bar {
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
         .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            padding: 20px;
-            text-align: center;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .login-icon {
-            font-size: 60px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        
-        .login-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .login-desc {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-        
-        .wechat-login-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #07C160;
+        .wechat-btn {
+            background: linear-gradient(135deg, #07c160, #00a651);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(7, 193, 96, 0.3);
+            transition: all 0.3s ease;
         }
-        
-        .wechat-login-btn i {
-            margin-right: 8px;
+        .wechat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(7, 193, 96, 0.4);
         }
-        
-        .wechat-login-btn:hover {
-            background-color: #06ad56;
+        .floating-paw {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
         }
-        
-        .login-footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #888;
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
         }
-        
-        .login-illustration {
-            width: 200px;
-            height: 200px;
-            margin-bottom: 20px;
+        .dog-illustration {
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.1));
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <!-- iOS 状态栏 -->
-    <div class="status-bar">
-        <div class="status-bar-time">12:30</div>
-        <div class="status-bar-icons">
-            <div class="signal-icon">
-                <i class="fas fa-signal"></i>
-            </div>
-            <div class="wifi-icon">
-                <i class="fas fa-wifi"></i>
-            </div>
-            <div class="battery-icon">
-                <i class="fas fa-battery-full"></i>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- iOS状态栏 -->
+    <div class="status-bar flex items-center justify-between px-6 text-white text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="bg-white rounded-sm px-1 py-0.5">
+                <span class="text-black text-xs">100%</span>
             </div>
         </div>
     </div>
-    
-    <!-- 页面内容 -->
-    <div class="page-container">
-        <div class="login-container">
-            <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZG9nfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" alt="登录插图" class="login-illustration rounded-lg">
+
+    <!-- 导航栏 -->
+    <div class="bg-white px-4 py-3 border-b border-gray-100">
+        <div class="flex items-center justify-center">
+            <h1 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-graduation-cap text-club-blue mr-2"></i>
+                我的课程
+                <div class="inline-block ml-2 text-yellow-400"><i class="fas fa-graduation-cap"></i></div>
+            </h1>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="flex-1 flex items-center justify-center p-6 relative">
+        <!-- 浮动装饰 -->
+        <div class="floating-paw top-20 left-10 text-3xl text-club-orange opacity-30"><i class="fas fa-paw"></i></div>
+        <div class="floating-paw top-32 right-16 text-2xl text-yellow-400 opacity-40" style="animation-delay: 1s;"><i class="fas fa-bone"></i></div>
+        <div class="floating-paw bottom-40 left-16 text-2xl text-club-blue opacity-30" style="animation-delay: 2s;"><i class="fas fa-dog"></i></div>
+
+        <div class="login-container p-8 w-full max-w-sm relative">
+            <!-- 装饰性元素 -->
+            <div class="absolute top-4 right-4 text-4xl opacity-20"><i class="fas fa-home"></i></div>
+            <div class="absolute bottom-4 left-4 text-3xl opacity-15"><i class="fas fa-futbol"></i></div>
             
-            <h2 class="login-title">欢迎来到犬敏捷俱乐部</h2>
-            <p class="login-desc">登录后即可查看您的专属课程，记录训练进度，获取专业指导</p>
-            
-            <button class="wechat-login-btn">
-                <i class="fab fa-weixin"></i> 微信一键登录
+            <!-- 狗狗插画 -->
+            <div class="text-center mb-8">
+                <div class="dog-illustration text-8xl mb-4 text-club-blue"><i class="fas fa-dog"></i></div>
+                <h2 class="text-xl font-bold text-gray-800 mb-2">欢迎来到学习天地</h2>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    登录后即可查看您的专属课程
+                    <br>与爱犬一起踏上敏捷训练之旅
+                </p>
+            </div>
+
+            <!-- 登录按钮 -->
+            <button class="wechat-btn w-full py-4 px-6 font-medium text-lg mb-4">
+                <i class="fab fa-weixin text-2xl mr-3"></i>
+                微信一键登录
             </button>
-            
-            <p class="login-footer">登录即表示您同意我们的服务条款和隐私政策</p>
+
+            <!-- 提示信息 -->
+            <div class="bg-white/50 rounded-xl p-4 mt-6">
+                <div class="flex items-start space-x-3">
+                    <div class="text-2xl text-yellow-500"><i class="fas fa-lightbulb"></i></div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-1">登录后您可以：</h3>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• 查看个人专属课程</li>
+                            <li>• 跟踪学习进度</li>
+                            <li>• 获得专业指导</li>
+                            <li>• 参与社区讨论</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 安全提示 -->
+            <div class="flex items-center justify-center mt-6 text-xs text-gray-500">
+                <i class="fas fa-shield-alt mr-1"></i>
+                <span>我们承诺保护您的隐私安全</span>
+            </div>
         </div>
     </div>
-    
-    <!-- 底部导航栏 -->
-    <div class="tab-bar">
-        <div class="tab-item">
-            <div class="tab-icon">
-                <i class="fas fa-home"></i>
-            </div>
-            <div class="tab-text">主页</div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-bar flex items-center justify-around px-6">
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-home text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">主页</span>
         </div>
-        <div class="tab-item active">
-            <div class="tab-icon">
-                <i class="fas fa-book"></i>
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <i class="fas fa-graduation-cap text-club-blue text-xl mb-1"></i>
+                <div class="absolute -top-1 -right-1 text-yellow-400 text-xs"><i class="fas fa-paw"></i></div>
             </div>
-            <div class="tab-text">课程</div>
+            <span class="text-xs text-club-blue font-medium">课程</span>
         </div>
-        <div class="tab-item">
-            <div class="tab-icon">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="tab-text">我的</div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-user text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">我的</span>
         </div>
     </div>
 </body>

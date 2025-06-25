@@ -1,0 +1,99 @@
+<view class="profile-page">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-header">
+      <image 
+        class="user-avatar" 
+        src="{{userInfo.avatar}}" 
+        mode="aspectFill" 
+        bindlongpress="onAvatarLongPress"
+      />
+      <view class="user-info">
+        <text class="user-name">{{userInfo.nickname}}</text>
+      </view>
+      <image class="edit-btn" src="/static/images/icon/edit.png" bindtap="onEditProfile" />
+    </view>
+  </view>
+
+  <!-- 数据统计 -->
+  <view class="stats-container">
+    <view class="stats-header">
+      <text class="stats-icon">◎</text>
+      <text class="stats-title">学习数据</text>
+      <text class="stats-decoration">●</text>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalCourses}}</text>
+        <text class="stat-label">总课程</text>
+        <text class="stat-icon">♦</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.completedCourses}}</text>
+        <text class="stat-label">已完成</text>
+        <text class="stat-icon">✓</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalStudyTime}}</text>
+        <text class="stat-label">学时(分)</text>
+        <text class="stat-icon">○</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.certificates}}</text>
+        <text class="stat-label">证书</text>
+        <text class="stat-icon">★</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成就系统 -->
+  <view class="achievements-container">
+    <view class="achievements-header">
+      <text class="achievements-icon">★</text>
+      <text class="achievements-title">我的成就</text>
+      <text class="achievements-decoration">♪</text>
+    </view>
+    
+    <view class="achievements-grid">
+      <view 
+        class="achievement-item {{item.unlocked ? 'unlocked' : 'locked'}}"
+        wx:for="{{achievements}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onAchievementClick"
+      >
+        <view class="achievement-icon">
+          <text class="{{item.unlocked ? 'icon-active' : 'icon-inactive'}}">{{item.icon}}</text>
+        </view>
+        <text class="achievement-title">{{item.title}}</text>
+        <text class="achievement-desc">{{item.description}}</text>
+        <view wx:if="{{item.unlocked}}" class="achievement-date">{{item.date}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-container">
+    <view class="menu-list">
+      <view 
+        class="menu-item"
+        wx:for="{{menuItems}}" 
+        wx:key="id"
+        data-path="{{item.path}}"
+        bindtap="onMenuClick"
+      >
+        <view class="menu-icon">
+          <text>{{item.icon}}</text>
+        </view>
+        <text class="menu-title">{{item.title}}</text>
+        <text class="menu-arrow">▶</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-container">
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

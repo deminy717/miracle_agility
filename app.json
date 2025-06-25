@@ -1,0 +1,75 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/course/course",
+    "pages/course-detail/course-detail",
+    "pages/course-content/course-content",
+    "pages/profile/profile",
+    "pages/logs/logs",
+    "pages/article-list/article-list",
+    "pages/article-detail/article-detail",
+    "pages/admin-home/admin-home",
+    "pages/developer-home/developer-home",
+    "pages/publish-article/publish-article",
+    "pages/publish-course/publish-course",
+    "pages/publish-content/publish-content",
+    "pages/rich-text-editor/rich-text-editor",
+    "pages/card-editor/card-editor",
+    "pages/admin/course-manage/course-manage",
+    "pages/admin/course-create/course-create",
+    "pages/admin/course-edit/course-edit",
+    "pages/admin/chapter-manage/chapter-manage",
+    "pages/admin/chapter-create/chapter-create",
+    "pages/admin/chapter-edit/chapter-edit",
+    "pages/admin/lesson-create/lesson-create",
+    "pages/admin/lesson-edit/lesson-edit",
+    "pages/admin/article-manage/article-manage",
+    "pages/admin/article-create/article-create",
+    "pages/admin/article-edit/article-edit"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#203b9d",
+    "navigationBarTitleText": "奇迹犬敏捷",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#203b9d",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "主页",
+        "iconPath": "static/images/icon/home.png",
+        "selectedIconPath": "static/images/icon/home-active.png"
+      },
+      {
+        "pagePath": "pages/course/course",
+        "text": "课程",
+        "iconPath": "static/images/icon/course.png",
+        "selectedIconPath": "static/images/icon/course-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "static/images/icon/profile.png",
+        "selectedIconPath": "static/images/icon/profile-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.camera": {
+      "desc": "用于拍摄视频和图片"
+    },
+    "scope.album": {
+      "desc": "用于从相册选择视频和图片"
+    }
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

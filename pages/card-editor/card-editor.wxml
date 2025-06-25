@@ -1,0 +1,200 @@
+<!--卡片式内容编辑器-->
+<view class="card-editor-container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="back-btn" bindtap="goBack">←</text>
+    <text class="page-title">内容编辑器</text>
+    <text class="save-btn" bindtap="saveContent">保存</text>
+  </view>
+
+  <!-- 课程信息 -->
+  <view class="course-info">
+    <input class="course-title" 
+           placeholder="请输入课程标题" 
+           value="{{courseInfo.title}}" 
+           bindinput="onTitleInput"/>
+    <input class="course-subtitle" 
+           placeholder="请输入章节信息" 
+           value="{{courseInfo.subtitle}}" 
+           bindinput="onSubtitleInput"/>
+  </view>
+
+  <!-- 内容卡片 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <view class="content-cards">
+      <view class="content-card" wx:for="{{contentCards}}" wx:key="id">
+        
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="card-type {{item.type}}">{{item.typeName}}</view>
+          <view class="card-actions">
+            <text class="action-btn" bindtap="moveUp" data-index="{{index}}">↑</text>
+            <text class="action-btn" bindtap="moveDown" data-index="{{index}}">↓</text>
+            <text class="action-btn delete" bindtap="deleteCard" data-index="{{index}}">×</text>
+          </view>
+        </view>
+
+        <!-- 视频卡片 -->
+        <view wx:if="{{item.type === 'video'}}" class="video-content">
+          <view wx:if="{{item.videoUrl}}" class="video-preview">
+            <video src="{{item.videoUrl}}" controls class="video-player"></video>
+            <view class="video-stats">
+              <text>🎬 {{item.duration || '30分钟'}}</text>
+              <text>👥 {{item.views || '156人学习'}}</text>
+            </view>
+          </view>
+          <view wx:else class="video-placeholder" bindtap="selectVideo" data-index="{{index}}">
+            <text class="placeholder-icon">📹</text>
+            <text>点击添加视频</text>
+          </view>
+        </view>
+
+        <!-- 文本卡片 -->
+        <view wx:elif="{{item.type === 'text'}}" class="text-content">
+          <input placeholder="段落标题" 
+                 value="{{item.title}}"
+                 bindinput="onTextTitleInput"
+                 data-index="{{index}}"
+                 class="text-title"/>
+          <textarea placeholder="请输入文本内容..." 
+                    value="{{item.content}}"
+                    bindinput="onTextContentInput"
+                    data-index="{{index}}"
+                    class="text-area">
+          </textarea>
+        </view>
+
+        <!-- 图片卡片 -->
+        <view wx:elif="{{item.type === 'image'}}" class="image-content">
+          <view wx:if="{{item.imageUrl}}" class="image-preview">
+            <image src="{{item.imageUrl}}" mode="aspectFill" class="image-display"></image>
+            <text class="change-image-btn" bindtap="selectImage" data-index="{{index}}">更换图片</text>
+          </view>
+          <view wx:else class="image-placeholder" bindtap="selectImage" data-index="{{index}}">
+            <text class="placeholder-icon">🖼️</text>
+            <text>点击添加图片</text>
+          </view>
+          <textarea placeholder="图片描述（可选）" 
+                    value="{{item.description}}"
+                    bindinput="onImageDescriptionInput"
+                    data-index="{{index}}"
+                    class="image-description">
+          </textarea>
+        </view>
+
+        <!-- 重点卡片 -->
+        <view wx:elif="{{item.type === 'highlight'}}" class="highlight-content">
+          <input placeholder="重点标题" 
+                 value="{{item.title}}"
+                 bindinput="onHighlightTitleInput"
+                 data-index="{{index}}"
+                 class="highlight-title"/>
+          <view class="highlight-points">
+            <view wx:for="{{item.points}}" wx:key="pointIndex" wx:for-item="point" wx:for-index="pointIndex" class="point-item">
+              <text class="point-bullet">•</text>
+              <input placeholder="重点内容" 
+                     value="{{point}}"
+                     bindinput="onPointInput"
+                     data-index="{{index}}"
+                     data-point-index="{{pointIndex}}"
+                     class="point-input"/>
+              <text class="delete-point" 
+                    bindtap="deletePoint" 
+                    data-index="{{index}}" 
+                    data-point-index="{{pointIndex}}">×</text>
+            </view>
+            <text class="add-point" bindtap="addPoint" data-index="{{index}}">+ 添加重点</text>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 添加按钮 -->
+  <view class="add-fab" bindtap="showAddMenu">+</view>
+
+  <!-- 添加菜单 -->
+  <view class="add-menu {{showAddMenu ? 'show' : ''}}" wx:if="{{showAddMenu}}">
+    <view class="menu-overlay" bindtap="hideAddMenu"></view>
+    <view class="menu-content">
+      <text class="menu-title">选择内容类型</text>
+      <view class="menu-options">
+        <view class="menu-option" bindtap="addCard" data-type="video">
+          <text class="option-icon">📹</text>
+          <text>视频</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="text">
+          <text class="option-icon">📝</text>
+          <text>文本</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="image">
+          <text class="option-icon">🖼️</text>
+          <text>图片</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="highlight">
+          <text class="option-icon">⚡</text>
+          <text>重点</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预览模态框 -->
+  <view class="preview-modal {{showPreview ? 'show' : ''}}" wx:if="{{showPreview}}">
+    <view class="preview-content">
+      <view class="preview-header">
+        <text class="preview-title">内容预览</text>
+        <text class="close-btn" bindtap="closePreview">×</text>
+      </view>
+      <scroll-view class="preview-body" scroll-y>
+        <text class="preview-course-title">{{courseInfo.title}}</text>
+        <text class="preview-course-subtitle">{{courseInfo.subtitle}}</text>
+        
+        <view wx:for="{{contentCards}}" wx:key="id" class="preview-card">
+          <!-- 预览视频 -->
+          <view wx:if="{{item.type === 'video' && item.videoUrl}}" class="preview-video">
+            <video src="{{item.videoUrl}}" controls class="preview-video-player"></video>
+            <view class="preview-stats">
+              <text>🎬 {{item.duration}}</text>
+              <text>👥 {{item.views}}</text>
+            </view>
+          </view>
+          
+          <!-- 预览文本 -->
+          <view wx:elif="{{item.type === 'text'}}" class="preview-text">
+            <text class="preview-text-title">{{item.title}}</text>
+            <text class="preview-text-content">{{item.content}}</text>
+          </view>
+          
+          <!-- 预览图片 -->
+          <view wx:elif="{{item.type === 'image' && item.imageUrl}}" class="preview-image">
+            <image src="{{item.imageUrl}}" mode="aspectFill" class="preview-image-display"></image>
+            <text wx:if="{{item.description}}" class="preview-image-desc">{{item.description}}</text>
+          </view>
+          
+          <!-- 预览重点 -->
+          <view wx:elif="{{item.type === 'highlight'}}" class="preview-highlight">
+            <view class="preview-highlight-header">
+              <text class="highlight-icon">⚡</text>
+              <text class="highlight-title">{{item.title}}</text>
+            </view>
+            <view class="highlight-list">
+              <view wx:for="{{item.points}}" wx:key="pointIndex" class="highlight-point">
+                <text class="point-bullet">•</text>
+                <text>{{item}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 底部工具栏 -->
+  <view class="bottom-toolbar">
+    <button class="toolbar-btn" bindtap="showPreview">预览</button>
+    <button class="toolbar-btn" bindtap="clearAll">清空</button>
+    <button class="toolbar-btn primary" bindtap="saveContent">保存</button>
+  </view>
+</view>

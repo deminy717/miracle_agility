@@ -1,0 +1,75 @@
+<view class="course-detail-page">
+    <!-- 课程Banner -->
+  <view class="course-banner">
+    <view class="banner-background">
+      <image class="bg-image" src="{{courseInfo.image}}" mode="aspectFill" />
+      <view class="bg-overlay"></view>
+    </view>
+    
+    <view class="banner-content">
+      <view class="course-info">
+        <view class="course-category">犬敏捷训练</view>
+        <text class="course-title">{{courseInfo.title}}</text>
+        <text class="course-desc">{{courseInfo.description}}</text>
+
+      </view>
+    </view>
+  </view>
+
+  <!-- 课程章节 -->
+  <view class="chapters-container">
+
+    <view class="chapters-list">
+      <view 
+        class="chapter-item" 
+        wx:for="{{chapters}}" 
+        wx:key="id"
+      >
+        <!-- 章节头部 -->
+        <view 
+          class="chapter-header"
+          data-id="{{item.id}}"
+          bindtap="toggleChapter"
+        >
+          <view class="chapter-info">
+            <view class="chapter-text">
+              <text class="chapter-title">{{item.title}}</text>
+              <text class="chapter-subtitle">{{item.subtitle}}</text>
+            </view>
+          </view>
+          <view class="chapter-status">
+            <text class="completion-badge">{{item.completedLessons}}/{{item.totalLessons}}完成</text>
+            <text class="expand-icon">{{item.expanded ? '▲' : '▼'}}</text>
+          </view>
+        </view>
+
+        <!-- 课程列表 -->
+        <view class="lessons-list" wx:if="{{item.expanded}}">
+          <view 
+            class="lesson-item"
+            wx:for="{{item.lessons}}" 
+            wx:for-item="lesson"
+            wx:key="id"
+            data-id="{{lesson.id}}"
+            bindtap="onLessonClick"
+          >
+            <view class="lesson-content">
+              <view class="lesson-status">
+                <view class="status-dot {{lesson.status}}"></view>
+              </view>
+              <view class="lesson-info">
+                <text class="lesson-title">{{lesson.title}}</text>
+                <text class="lesson-meta">{{lesson.duration}} • {{lesson.type}}</text>
+              </view>
+              <view class="lesson-action">
+                <text wx:if="{{lesson.status === 'completed'}}" class="action-icon completed">✓</text>
+                <text wx:elif="{{lesson.status === 'current'}}" class="action-icon current">▶</text>
+                <text wx:else class="action-icon pending">○</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

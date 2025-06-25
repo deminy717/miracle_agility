@@ -3,323 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>课程内容 - 犬敏捷俱乐部</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>课程内容</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="common.css">
     <style>
-        .nav-bar {
+        .status-bar {
+            background: linear-gradient(135deg, #000, #333);
             height: 44px;
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            color: white;
-            position: relative;
         }
-        
-        .nav-back {
-            font-size: 18px;
-            margin-right: 12px;
+        .tab-bar {
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
         }
-        
-        .nav-bar-title {
-            font-size: 18px;
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-        }
-        
-        .lesson-header {
-            padding: 16px;
-            background-color: white;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .lesson-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-        }
-        
-        .lesson-meta {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #888;
-        }
-        
-        .lesson-meta > span {
-            margin-right: 16px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .lesson-meta i {
-            margin-right: 4px;
-        }
-        
-        .lesson-content {
-            padding: 16px;
-            background-color: white;
-            margin-bottom: 16px;
-        }
-        
-        .content-section {
-            margin-bottom: 20px;
-        }
-        
-        .content-section:last-child {
-            margin-bottom: 0;
-        }
-        
-        .content-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--primary-color);
-        }
-        
-        .content-text {
-            font-size: 14px;
-            line-height: 1.8;
-            color: #444;
-            margin-bottom: 12px;
-        }
-        
-        .content-image {
-            width: 100%;
-            border-radius: 8px;
-            margin: 12px 0;
-        }
-        
         .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
+            background: #000;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 16px;
-            border-radius: 8px;
+            position: relative;
+            aspect-ratio: 16/9;
         }
-        
-        .video-container iframe {
+        .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .tip-box {
-            background-color: #e3f2fd;
-            border-left: 4px solid var(--primary-color);
-            padding: 12px;
-            border-radius: 0 8px 8px 0;
-            margin: 16px 0;
-        }
-        
-        .tip-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-        
-        .tip-title i {
-            margin-right: 8px;
-        }
-        
-        .tip-content {
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        
-        .lesson-nav {
-            display: flex;
-            background-color: white;
-            padding: 12px 16px;
-            margin-top: 16px;
-            margin-bottom: 70px;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .lesson-nav-btn {
-            flex: 1;
+            right: 0;
+            bottom: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-            color: var(--primary-color);
-            font-weight: 600;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+        .play-button {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #3b82f6;
+            transition: all 0.3s ease;
+        }
+        .play-button:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        .content-section {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            position: relative;
+        }
+        .tip-box {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .progress-nav {
+            position: fixed;
+            bottom: 83px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-button {
+            background: #3b82f6;
+            color: white;
+            border-radius: 25px;
+            padding: 8px 20px;
             font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
-        
-        .lesson-nav-btn i {
-            margin-right: 6px;
+        .nav-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
         }
-        
-        .lesson-nav-btn.next i {
-            margin-right: 0;
-            margin-left: 6px;
+        .nav-button:disabled {
+            background: #d1d5db;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <!-- iOS 状态栏 -->
-    <div class="status-bar">
-        <div class="status-bar-time">12:30</div>
-        <div class="status-bar-icons">
-            <div class="signal-icon">
-                <i class="fas fa-signal"></i>
-            </div>
-            <div class="wifi-icon">
-                <i class="fas fa-wifi"></i>
-            </div>
-            <div class="battery-icon">
-                <i class="fas fa-battery-full"></i>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- iOS状态栏 -->
+    <div class="status-bar flex items-center justify-between px-6 text-white text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="bg-white rounded-sm px-1 py-0.5">
+                <span class="text-black text-xs">100%</span>
             </div>
         </div>
     </div>
-    
+
     <!-- 导航栏 -->
-    <div class="nav-bar">
-        <div class="nav-back">
-            <i class="fas fa-chevron-left"></i>
-        </div>
-        <div class="nav-bar-title">课程内容</div>
-    </div>
-    
-    <!-- 页面内容 -->
-    <div class="page-container" style="height: calc(100% - 44px - 44px);">
-        <!-- 课程标题信息 -->
-        <div class="lesson-header">
-            <div class="lesson-title">1.1 犬敏捷运动简介</div>
-            <div class="lesson-meta">
-                <span><i class="far fa-clock"></i> 15分钟</span>
-                <span><i class="far fa-calendar-alt"></i> 最近更新: 2023-05-10</span>
+    <div class="bg-white px-4 py-3 border-b border-gray-100">
+        <div class="flex items-center">
+            <button class="mr-4 text-club-blue">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </button>
+            <div class="flex-1">
+                <h1 class="text-lg font-bold text-gray-800">2.2 直线行走训练</h1>
+                <p class="text-xs text-gray-500">第二章：基础动作训练</p>
             </div>
+            <div class="text-xs text-gray-500">12/20</div>
         </div>
-        
-        <!-- 课程内容 -->
-        <div class="lesson-content">
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="flex-1 overflow-y-auto pb-20">
+        <div class="p-4">
             <!-- 视频部分 -->
             <div class="content-section">
-                <div class="video-container">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CvLj9UjVS5c" title="犬敏捷运动简介" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-container mb-4">
+                    <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&h=450&fit=crop" 
+                         alt="训练视频" class="w-full h-full object-cover">
+                    <div class="video-overlay">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm text-gray-600">
+                    <span><i class="fas fa-play-circle mr-1"></i>30分钟</span>
+                    <span><i class="fas fa-users mr-1"></i>156人学习</span>
+                    <span><i class="fas fa-eye mr-1"></i>已观看 15分钟</span>
                 </div>
             </div>
-            
-            <!-- 视频控制和笔记功能 -->
-            <div class="content-section bg-gray-50 p-3 rounded-lg">
-                <div class="flex justify-between items-center mb-3">
-                    <div class="text-sm font-medium">视频控制</div>
-                    <div class="text-xs text-gray-500">15:30 / 25:00</div>
-                </div>
+
+            <!-- 课程概述 -->
+            <div class="content-section">
+                <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                    <div class="text-2xl mr-2 text-club-orange"><i class="fas fa-running"></i></div>
+                    课程概述
+                </h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    直线行走训练是犬敏捷训练的基础技能之一。通过本节课程，您将学会如何引导狗狗保持直线前进，控制步伐节奏，以及如何在训练中建立良好的沟通。
+                </p>
                 
-                <div class="flex space-x-4 mb-4 justify-center">
-                    <button class="p-2 rounded-full bg-gray-200 hover:bg-gray-300">
-                        <i class="fas fa-step-backward text-gray-700"></i>
-                    </button>
-                    <button class="p-2 rounded-full bg-gray-200 hover:bg-gray-300">
-                        <i class="fas fa-backward text-gray-700"></i>
-                    </button>
-                    <button class="p-3 rounded-full bg-primary text-white">
-                        <i class="fas fa-pause"></i>
-                    </button>
-                    <button class="p-2 rounded-full bg-gray-200 hover:bg-gray-300">
-                        <i class="fas fa-forward text-gray-700"></i>
-                    </button>
-                    <button class="p-2 rounded-full bg-gray-200 hover:bg-gray-300">
-                        <i class="fas fa-step-forward text-gray-700"></i>
-                    </button>
-                </div>
-                
-                <div class="border-t pt-3 mt-2">
-                    <div class="text-sm font-medium mb-2">我的笔记</div>
-                    <textarea class="w-full p-2 border rounded-lg text-sm" rows="3" placeholder="记录学习要点和训练心得..."></textarea>
-                    <div class="flex justify-between mt-2">
-                        <button class="text-xs text-gray-500">
-                            <i class="far fa-image mr-1"></i> 添加图片
-                        </button>
-                        <button class="text-xs bg-primary text-white px-3 py-1 rounded">
-                            保存笔记
-                        </button>
+                                    <div class="highlight-box">
+                        <div class="flex items-start">
+                            <div class="text-2xl mr-3 text-yellow-500"><i class="fas fa-bolt"></i></div>
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-2">本节重点</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• 掌握直线行走的基本手势</li>
+                                <li>• 学会控制狗狗的行走速度</li>
+                                <li>• 建立清晰的指令系统</li>
+                                <li>• 处理常见的偏离问题</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 文字介绍部分 -->
+
+            <!-- 准备工作 -->
             <div class="content-section">
-                <div class="content-title">什么是犬敏捷运动？</div>
-                <div class="content-text">
-                    犬敏捷运动(Dog Agility)起源于20世纪70年代的英国，是一项由人和犬共同完成的障碍竞技运动。在这项运动中，训练员需要引导犬只在规定时间内，按照特定顺序完成跳跃、钻洞、走桥等各种障碍物。
+                <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                    <div class="text-2xl mr-2 text-purple-600"><i class="fas fa-bullseye"></i></div>
+                    训练前准备
+                </h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop" 
+                         alt="训练用具" class="rounded-lg object-cover">
+                    <img src="https://images.unsplash.com/photo-1560743173-567a3b5658b1?w=400&h=300&fit=crop" 
+                         alt="训练场地" class="rounded-lg object-cover">
                 </div>
-                <div class="content-text">
-                    作为一项集竞技性、观赏性和娱乐性于一体的运动，犬敏捷不仅能锻炼犬只的身体素质和灵活性，还能增强犬与主人之间的默契配合和沟通能力。
+
+                <h3 class="font-semibold text-gray-800 mb-2 flex items-center">
+                    <div class="text-lg mr-2 text-gray-600"><i class="fas fa-toolbox"></i></div>
+                    所需用具
+                </h3>
+                <ul class="text-gray-700 space-y-2 mb-4">
+                    <li class="flex items-center">
+                        <div class="w-2 h-2 bg-club-blue rounded-full mr-3"></div>
+                        训练牵引绳（建议长度3-5米）
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-2 h-2 bg-club-orange rounded-full mr-3"></div>
+                        奖励零食（小块易消化）
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                        训练标志筒（至少4个）
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                        舒适的运动鞋
+                    </li>
+                </ul>
+
+                <div class="tip-box">
+                    <div class="flex items-start">
+                        <div class="text-2xl mr-3 text-yellow-500"><i class="fas fa-lightbulb"></i></div>
+                        <div>
+                            <h4 class="font-bold text-blue-800 mb-1">专家提示</h4>
+                            <p class="text-sm text-blue-700">
+                                选择一个相对安静、干扰较少的场地进行训练。初次训练建议在室内或封闭区域进行。
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <img src="https://images.unsplash.com/photo-1507145569372-d69bae8bc9a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZG9nJTIwYWdpbGl0eXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" alt="犬敏捷运动图片" class="content-image">
             </div>
-            
-            <!-- 提示框 -->
-            <div class="tip-box">
-                <div class="tip-title">
-                    <i class="fas fa-lightbulb"></i> 小贴士
-                </div>
-                <div class="tip-content">
-                    不同品种、不同体型的犬只都可以参与敏捷运动，只要它们身体健康并具备基本的服从性训练基础即可。特别适合精力充沛、活泼好动的犬只。
-                </div>
-            </div>
-            
-            <!-- 犬敏捷的好处 -->
+
+            <!-- 训练步骤 -->
             <div class="content-section">
-                <div class="content-title">犬敏捷运动的好处</div>
-                <div class="content-text">
-                    <strong>1. 身体锻炼：</strong>帮助犬只保持良好的体态和身体素质，增强肌肉力量和柔韧性。
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <div class="text-2xl mr-2 text-gray-600"><i class="fas fa-clipboard-list"></i></div>
+                    训练步骤
+                </h2>
+
+                <!-- 步骤1 -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-club-blue text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">1</div>
+                        <h3 class="font-bold text-gray-800">建立起始位置</h3>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=600&h=400&fit=crop" 
+                         alt="起始位置" class="rounded-lg object-cover mb-3">
+                    <p class="text-gray-700 leading-relaxed">
+                        让狗狗坐在您的左侧，保持与您平行的位置。用温和的语调说"准备"，让狗狗专注于您。这个起始位置是所有敏捷训练的基础。
+                    </p>
                 </div>
-                <div class="content-text">
-                    <strong>2. 心智刺激：</strong>通过解决问题和学习新技能，提供智力挑战，减少无聊和破坏性行为。
+
+                <!-- 步骤2 -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-club-blue text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">2</div>
+                        <h3 class="font-bold text-gray-800">发出行走指令</h3>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed mb-3">
+                        清晰地说出"走"或"前进"指令，同时向前迈步。保持稳定的步伐，让狗狗跟随您的节奏。初期可以使用牵引绳轻柔地引导。
+                    </p>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-sm text-gray-600">
+                            <strong>注意：</strong>指令要简洁明了，语调保持一致。避免在训练过程中改变指令词汇。
+                        </p>
+                    </div>
                 </div>
-                <div class="content-text">
-                    <strong>3. 增强沟通：</strong>促进犬只与主人之间的沟通和默契，建立更紧密的情感联系。
-                </div>
-                <div class="content-text">
-                    <strong>4. 社交机会：</strong>参加训练班和比赛能为犬只和主人提供社交机会，结交志同道合的朋友。
+
+                <!-- 步骤3 -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-8 h-8 bg-club-blue text-white rounded-full flex items-center justify-center font-bold text-sm mr-3">3</div>
+                        <h3 class="font-bold text-gray-800">保持直线前进</h3>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        在行走过程中，如果狗狗偏离直线，温和地用牵引绳引导回正确路线。当狗狗正确行走时，及时给予口头鼓励"很好"或"对了"。
+                    </p>
                 </div>
             </div>
-            
-            <!-- 敏捷障碍物介绍 -->
+
+            <!-- 常见问题 -->
             <div class="content-section">
-                <div class="content-title">常见敏捷障碍物</div>
-                <div class="content-text">
-                    在标准的犬敏捷比赛中，通常包含以下几类障碍物：
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <div class="text-2xl mr-2 text-blue-600"><i class="fas fa-question-circle"></i></div>
+                    常见问题解答
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="border-l-4 border-club-orange pl-4">
+                        <h4 class="font-semibold text-gray-800 mb-1">狗狗总是走得太快怎么办？</h4>
+                        <p class="text-sm text-gray-600">
+                            放慢您自己的步伐，当狗狗速度过快时暂停并让它重新调整。可以用"慢一点"的指令配合手势训练。
+                        </p>
+                    </div>
+                    
+                    <div class="border-l-4 border-club-blue pl-4">
+                        <h4 class="font-semibold text-gray-800 mb-1">狗狗容易分心怎么办？</h4>
+                        <p class="text-sm text-gray-600">
+                            选择干扰较少的环境，缩短单次训练时间，增加互动频率。准备狗狗最喜欢的零食作为奖励。
+                        </p>
+                    </div>
                 </div>
-                <div class="content-text">
-                    <strong>跳跃类：</strong>包括单杆跳、双杆跳、轮胎跳等，是最基础的障碍物类型。
-                </div>
-                <img src="https://images.unsplash.com/photo-1585586463948-9e40851ed193?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGRvZyUyMGp1bXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60" alt="跳跃障碍物" class="content-image">
-                <div class="content-text">
-                    <strong>接触类：</strong>如A字板、跷跷板、狗走板等，犬只需要接触特定区域通过。
-                </div>
-                <div class="content-text">
-                    <strong>隧道类：</strong>包括硬质隧道和软质隧道，测试犬只的勇气和方向感。
-                </div>
-                <div class="content-text">
-                    <strong>障碍物组合：</strong>如连续跳、障碍组等，需要犬只连续完成多个障碍。
+            </div>
+
+            <!-- 总结 -->
+            <div class="content-section">
+                <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                    <div class="text-2xl mr-2 text-green-600"><i class="fas fa-check-circle"></i></div>
+                    课程总结
+                </h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    恭喜您完成了直线行走训练课程！记住，敏捷训练需要持续的练习和耐心。每天15-20分钟的练习比一次长时间训练更有效。
+                </p>
+                
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <div class="text-xl mr-2 text-green-600"><i class="fas fa-check"></i></div>
+                        <h4 class="font-semibold text-green-800">下一步学习建议</h4>
+                    </div>
+                    <p class="text-sm text-green-700">
+                        练习直线行走至少一周后，可以开始学习"转弯和停止"课程。建议每天练习并记录狗狗的进步情况。
+                    </p>
                 </div>
             </div>
         </div>
-        
-        <!-- 课程导航 -->
-        <div class="lesson-nav">
-            <div class="lesson-nav-btn">
-                <i class="fas fa-chevron-left"></i> 上一课
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="progress-nav">
+        <button class="nav-button">
+            <i class="fas fa-arrow-left mr-2"></i>上一课
+        </button>
+        <div class="text-sm text-gray-600">
+            12 / 20
+        </div>
+        <button class="nav-button">
+            下一课<i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-bar flex items-center justify-around px-6">
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-home text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">主页</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <i class="fas fa-graduation-cap text-club-blue text-xl mb-1"></i>
+                <div class="absolute -top-1 -right-1 text-yellow-400 text-xs"><i class="fas fa-paw"></i></div>
             </div>
-            <div class="lesson-nav-btn next">
-                下一课 <i class="fas fa-chevron-right"></i>
-            </div>
+            <span class="text-xs text-club-blue font-medium">课程</span>
+        </div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-user text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">我的</span>
         </div>
     </div>
 </body>

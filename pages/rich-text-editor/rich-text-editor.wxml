@@ -1,0 +1,105 @@
+<!--富文本编辑器页面-->
+<view class="editor-container" style="height: {{containerHeight ? containerHeight + 'px' : '100vh'}}">
+  <!-- 工具栏 -->
+  <view class="toolbar">
+    <!-- 第一行：字体样式和大小 -->
+    <view class="toolbar-row">
+      <text class="toolbar-btn {{formats.bold ? 'active' : ''}}" bindtap="format" data-name="bold">B</text>
+      <text class="toolbar-btn {{formats.italic ? 'active' : ''}}" bindtap="format" data-name="italic">I</text>
+      <text class="toolbar-btn {{formats.underline ? 'active' : ''}}" bindtap="format" data-name="underline">U</text>
+      <text class="toolbar-btn" bindtap="format" data-name="strike">S</text>
+      <text class="toolbar-btn" bindtap="setFontSize" data-size="12px">小</text>
+      <text class="toolbar-btn" bindtap="setFontSize" data-size="16px">中</text>
+      <text class="toolbar-btn" bindtap="setFontSize" data-size="20px">大</text>
+      <text class="toolbar-btn" bindtap="setFontSize" data-size="24px">特大</text>
+    </view>
+
+    <!-- 第二行：颜色和对齐 -->
+    <view class="toolbar-row">
+      <view class="color-btn" style="background-color: #000000;" bindtap="setFontColor" data-color="#000000"></view>
+      <view class="color-btn" style="background-color: #e74c3c;" bindtap="setFontColor" data-color="#e74c3c"></view>
+      <view class="color-btn" style="background-color: #3498db;" bindtap="setFontColor" data-color="#3498db"></view>
+      <view class="color-btn" style="background-color: #2ecc71;" bindtap="setFontColor" data-color="#2ecc71"></view>
+      <view class="color-btn" style="background-color: #f39c12;" bindtap="setFontColor" data-color="#f39c12"></view>
+      <text class="toolbar-btn {{formats.align === 'left' ? 'active' : ''}}" bindtap="format" data-name="align" data-value="left">左</text>
+      <text class="toolbar-btn {{formats.align === 'center' ? 'active' : ''}}" bindtap="format" data-name="align" data-value="center">中</text>
+      <text class="toolbar-btn {{formats.align === 'right' ? 'active' : ''}}" bindtap="format" data-name="align" data-value="right">右</text>
+    </view>
+
+    <!-- 第三行：列表、功能和操作 -->
+    <view class="toolbar-row">
+      <text class="toolbar-btn" bindtap="format" data-name="list" data-value="ordered">1.</text>
+      <text class="toolbar-btn" bindtap="format" data-name="list" data-value="bullet">•</text>
+      <text class="toolbar-btn" bindtap="insertImage">图片</text>
+      <text class="toolbar-btn" bindtap="insertVideo">视频</text>
+      <text class="toolbar-btn" bindtap="insertDivider">分割线</text>
+      <text class="toolbar-btn" bindtap="removeFormat">清除格式</text>
+
+      <text class="toolbar-btn" bindtap="undo">撤销</text>
+      <text class="toolbar-btn" bindtap="redo">重做</text>
+      <text class="toolbar-btn" bindtap="clear">清空</text>
+    </view>
+  </view>
+
+  <!-- 编辑器 -->
+  <editor 
+    id="editor" 
+    class="editor"
+    placeholder="{{placeholder}}"
+    show-img-size
+    show-img-toolbar
+    show-img-resize
+    bindready="onEditorReady"
+    bindfocus="onEditorFocus"
+    bindblur="onEditorBlur"
+    bindinput="onEditorInput"
+    bindstatuschange="onStatusChange">
+  </editor>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="action-buttons">
+      <button class="btn-secondary btn-small" bindtap="preview">预览</button>
+      <button class="btn-primary btn-small" bindtap="save">保存</button>
+    </view>
+  </view>
+
+
+</view>
+
+<!-- 预览模态框 -->
+<view class="preview-modal {{showPreview ? 'show' : ''}}" wx:if="{{showPreview}}">
+  <view class="preview-content">
+    <view class="preview-header">
+      <text class="preview-title">内容预览</text>
+      <text class="close-btn" bindtap="closePreview">×</text>
+    </view>
+    <scroll-view class="preview-body" scroll-y>
+      <view class="preview-rich-text">
+        <rich-text nodes="{{previewContent}}" wx:if="{{!hasVideo}}"></rich-text>
+        <view wx:else>
+          <view class="html-preview" style="{{previewHtmlStyle}}">
+            <text>{{previewTextContent}}</text>
+            <view wx:for="{{videoList}}" wx:key="index" class="video-preview">
+              <video src="{{item}}" controls style="width: 100%; max-width: 300px; height: auto; margin: 10px 0;"></video>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="preview-footer">
+      <button class="btn-secondary" bindtap="closePreview">关闭</button>
+      <button class="btn-primary" bindtap="copyContent">复制内容</button>
+    </view>
+  </view>
+</view>
+
+<!-- 图片上传进度提示 -->
+<view class="upload-toast {{showUploadToast ? 'show' : ''}}" wx:if="{{showUploadToast}}">
+  <view class="upload-content">
+    <text class="upload-text">{{uploadText}}</text>
+    <view class="upload-progress" wx:if="{{uploadProgress > 0}}">
+      <view class="progress-bar" style="width: {{uploadProgress}}%"></view>
+    </view>
+  </view>
+</view>

@@ -1,6 +1,6 @@
 ---
 description: 
-globs: miniprogram/pages/**/*,miniprogram/components/**/*
+globs: pages/**/*,components/**/**
 alwaysApply: false
 ---
 是一个经验丰富的小程序开发人员, 长解决各种小程序开发问题, 严格遵守小程序开发规范

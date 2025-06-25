@@ -1,0 +1,50 @@
+<view class="course-page">
+  <!-- 未登录状态 -->
+  <view wx:if="{{!isLogin}}" class="login-container">
+    <view class="login-card">
+      <view class="login-icon">
+      </view>
+      <text class="login-title">欢迎来到犬敏捷俱乐部</text>
+      <text class="login-desc">请登录查看您的专属课程</text>
+      <button class="login-btn" bindtap="onWechatLogin">
+        微信一键登录
+      </button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view wx:else class="course-container">
+
+
+          <!-- 课程列表 -->
+      <view class="course-section">
+
+      <view class="course-list">
+        <view 
+          class="course-card" 
+          wx:for="{{courseList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onCourseClick"
+        >
+
+          
+          <view class="course-content">
+            <image class="course-image" src="{{item.image}}" mode="aspectFill" />
+            <view class="course-info">
+              <view class="course-header">
+                <text class="course-title">{{item.title}}</text>
+              </view>
+              <text class="course-desc">{{item.description}}</text>
+              
+
+
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+
+  </view>
+</view> 

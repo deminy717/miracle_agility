@@ -1,0 +1,94 @@
+<view class="course-create-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">新增课程</text>
+    <text class="page-subtitle">创建一个新的训练课程</text>
+  </view>
+
+  <!-- 表单内容 -->
+  <view class="form-container">
+    <!-- 课程标题 -->
+    <view class="form-item">
+      <text class="form-label">课程标题 *</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入课程标题（3-50字符）"
+        value="{{formData.title}}"
+        bindinput="onTitleInput"
+        maxlength="50"
+      />
+      <view class="char-count">{{formData.title.length}}/50</view>
+      <view class="error-tip" wx:if="{{errors.title}}">{{errors.title}}</view>
+    </view>
+
+    <!-- 课程介绍 -->
+    <view class="form-item">
+      <text class="form-label">课程介绍 *</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请输入课程介绍（10-500字符）"
+        value="{{formData.description}}"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+        auto-height
+      />
+      <view class="char-count">{{formData.description.length}}/500</view>
+      <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
+    </view>
+
+    <!-- 课程封面 -->
+    <view class="form-item">
+      <text class="form-label">课程封面 *</text>
+      <view class="image-upload">
+        <view class="image-preview" wx:if="{{formData.cover}}">
+          <image src="{{formData.cover}}" mode="aspectFill" />
+          <view class="image-delete" bindtap="deleteCover">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+        <view class="upload-btn" wx:else bindtap="chooseCover">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">选择封面图片</text>
+        </view>
+      </view>
+      <view class="error-tip" wx:if="{{errors.cover}}">{{errors.cover}}</view>
+    </view>
+
+    <!-- 课程分类 -->
+    <view class="form-item">
+      <text class="form-label">课程分类</text>
+      <picker 
+        class="form-picker" 
+        bindchange="onCategoryChange" 
+        value="{{categoryIndex}}" 
+        range="{{categoryOptions}}"
+      >
+        <view class="picker-text">{{categoryOptions[categoryIndex]}}</view>
+      </picker>
+    </view>
+
+    <!-- 课程标签 -->
+    <view class="form-item">
+      <text class="form-label">课程标签</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入标签，用逗号分隔"
+        value="{{formData.tags}}"
+        bindinput="onTagsInput"
+      />
+      <view class="form-tip">例如：基础训练,敏捷性,初学者</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn btn-secondary" bindtap="saveDraft" disabled="{{saving}}">
+      <text wx:if="{{saving}}">保存中...</text>
+      <text wx:else>保存草稿</text>
+    </button>
+    <button class="btn btn-primary" bindtap="publishCourse" disabled="{{saving}}">
+      <text wx:if="{{saving}}">发布中...</text>
+      <text wx:else>立即发布</text>
+    </button>
+  </view>
+</view>

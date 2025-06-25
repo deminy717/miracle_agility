@@ -1,0 +1,10 @@
+/* 引用文章创建页面的样式 */
+@import "../article-create/article-create.wxss";
+
+/* 章节创建页面特有样式 */
+.chapter-create-page {
+  padding: 32rpx;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 200rpx;
+}

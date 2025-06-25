@@ -1,0 +1,70 @@
+<wxs module="utils">
+  function formatDate(timestamp) {
+    if (!timestamp) return '未知';
+    var date = getDate(timestamp);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+  }
+  
+  module.exports = {
+    formatDate: formatDate
+  };
+</wxs>
+
+<view class="container">
+  <!-- 分类筛选 -->
+  <scroll-view class="category-scroll" scroll-x="true">
+    <view class="category-list">
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="index"
+        class="category-item {{activeCategory === item ? 'active' : ''}}"
+        data-category="{{item}}"
+        bind:tap="onCategoryChange"
+      >
+        {{item}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 文章列表 -->
+  <scroll-view class="article-list" scroll-y="true">
+    <view 
+      wx:for="{{articles}}" 
+      wx:key="id"
+      class="article-card"
+      data-id="{{item.id}}"
+      bind:tap="goToArticle"
+    >
+      <view class="news-content">
+        <view class="news-image-container">
+          <image class="news-image" src="{{item.cover || '/static/images/default-article.jpg'}}" mode="aspectFill" />
+          <view class="category-tag">{{item.category}}</view>
+        </view>
+        <view class="news-text">
+          <text class="news-card-title">{{item.title}}</text>
+          <text class="news-summary">{{item.summary}}</text>
+                     <view class="news-meta">
+             <text class="news-date">{{utils.formatDate(item.publishTime)}}</text>
+           </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading">
+      <text class="loading-text">加载中...</text>
+    </view>
+    
+    <view wx:elif="{{!hasMore && articles.length > 0}}" class="no-more">
+      <text class="no-more-text">没有更多文章了</text>
+    </view>
+
+    <view wx:elif="{{articles.length === 0 && !loading}}" class="empty">
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无文章</text>
+    </view>
+  </scroll-view>
+</view> 

@@ -1,0 +1,51 @@
+<view class="admin-home-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">🛡️ 管理员中心</text>
+    <text class="page-subtitle">数据统计与内容管理</text>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-section">
+    <view class="section-title">数据统计</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalUsers}}</text>
+        <text class="stat-label">用户总数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalCourses}}</text>
+        <text class="stat-label">课程总数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalArticles}}</text>
+        <text class="stat-label">文章总数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.todayActiveUsers}}</text>
+        <text class="stat-label">今日活跃</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 管理功能 -->
+  <view class="management-section">
+    <view class="section-title">内容管理</view>
+    <view class="management-grid-three">
+      <view class="management-item" bindtap="goToCourseManagement">
+        <view class="management-icon">📚</view>
+        <text class="management-text">课程管理</text>
+      </view>
+      
+      <view class="management-item" bindtap="goToArticleManagement">
+        <view class="management-icon">📄</view>
+        <text class="management-text">文章管理</text>
+      </view>
+      
+      <view class="management-item" bindtap="goToUserManagement">
+        <view class="management-icon">👥</view>
+        <text class="management-text">用户管理</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,93 @@
+<view class="chapter-create-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">新增章节</text>
+    <text class="page-subtitle">为课程添加新的章节内容</text>
+  </view>
+
+  <!-- 表单内容 -->
+  <view class="form-container">
+    <!-- 章节标题 -->
+    <view class="form-item">
+      <text class="form-label">章节标题 *</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入章节标题（3-100字符）"
+        value="{{formData.title}}"
+        bindinput="onTitleInput"
+        maxlength="100"
+      />
+      <view class="char-count">{{formData.title.length}}/100</view>
+      <view class="error-tip" wx:if="{{errors.title}}">{{errors.title}}</view>
+    </view>
+
+    <!-- 章节描述 -->
+    <view class="form-item">
+      <text class="form-label">章节描述 *</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请输入章节描述（10-300字符）"
+        value="{{formData.description}}"
+        bindinput="onDescriptionInput"
+        maxlength="300"
+        auto-height
+      />
+      <view class="char-count">{{formData.description.length}}/300</view>
+      <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
+    </view>
+
+    <!-- 章节内容 -->
+    <view class="form-item">
+      <text class="form-label">章节内容 *</text>
+      <view class="content-editor">
+        <button class="editor-btn" bindtap="editContent">
+          <text class="editor-icon">📝</text>
+          <text class="editor-text">
+            {{formData.content ? '编辑章节内容' : '添加章节内容'}}
+          </text>
+        </button>
+        <view class="content-preview" wx:if="{{formData.content}}">
+          <text class="preview-text">{{contentPreview}}</text>
+        </view>
+      </view>
+      <view class="error-tip" wx:if="{{errors.content}}">{{errors.content}}</view>
+    </view>
+
+    <!-- 章节时长 -->
+    <view class="form-item">
+      <text class="form-label">预计时长（分钟）</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入章节学习时长"
+        value="{{formData.duration}}"
+        bindinput="onDurationInput"
+        type="number"
+      />
+    </view>
+
+    <!-- 章节排序 -->
+    <view class="form-item">
+      <text class="form-label">章节顺序</text>
+      <picker 
+        class="form-picker" 
+        bindchange="onOrderChange" 
+        value="{{orderIndex}}" 
+        range="{{orderOptions}}"
+      >
+        <view class="picker-text">{{orderOptions[orderIndex]}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn btn-secondary" bindtap="saveDraft" disabled="{{saving}}">
+      <text wx:if="{{saving}}">保存中...</text>
+      <text wx:else>保存草稿</text>
+    </button>
+    <button class="btn btn-primary" bindtap="publishChapter" disabled="{{saving}}">
+      <text wx:if="{{saving}}">发布中...</text>
+      <text wx:else>立即发布</text>
+    </button>
+  </view>
+</view>

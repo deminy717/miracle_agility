@@ -1,0 +1,78 @@
+<view class="chapter-manage-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">章节管理</text>
+    <text class="page-subtitle">{{courseInfo.title}}</text>
+  </view>
+
+  <!-- 课程信息卡片 -->
+  <view class="course-info-card">
+    <view class="course-cover">
+      <image src="{{courseInfo.cover}}" mode="aspectFill" />
+    </view>
+    <view class="course-details">
+      <text class="course-title">{{courseInfo.title}}</text>
+      <view class="course-stats">
+        <text class="stat-item">{{chapters.length}}个章节</text>
+        <text class="stat-item">{{courseInfo.studentCount}}人学习</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 章节列表 -->
+  <view class="chapters-section">
+    <view class="section-header">
+      <text class="section-title">章节列表</text>
+      <button class="add-chapter-btn" bindtap="addChapter">
+        <text class="btn-icon">+</text>
+        <text class="btn-text">新增章节</text>
+      </button>
+    </view>
+
+    <view class="chapters-list">
+      <view 
+        class="chapter-item" 
+        wx:for="{{chapters}}" 
+        wx:key="id"
+        bindtap="viewChapter"
+        data-chapter="{{item}}"
+      >
+        <view class="chapter-number">{{index + 1}}</view>
+        <view class="chapter-info">
+          <text class="chapter-title">{{item.title}}</text>
+          <text class="chapter-description">{{item.description}}</text>
+          <view class="chapter-meta">
+            <text class="meta-item">{{item.lessonCount}}个课时</text>
+            <text class="meta-item">{{item.duration}}分钟</text>
+            <text class="meta-item status-{{item.status}}">{{item.status === 'published' ? '已发布' : '草稿'}}</text>
+          </view>
+        </view>
+        
+        <view class="chapter-actions">
+          <view class="action-btn edit-btn" bindtap="editChapter" data-id="{{item.id}}">
+            <text class="btn-icon">✏️</text>
+          </view>
+          <view class="action-btn lesson-btn" bindtap="manageLessons" data-id="{{item.id}}">
+            <text class="btn-icon">📝</text>
+          </view>
+          <view class="action-btn move-btn" bindtap="moveChapter" data-id="{{item.id}}" data-direction="up" wx:if="{{index > 0}}">
+            <text class="btn-icon">⬆️</text>
+          </view>
+          <view class="action-btn move-btn" bindtap="moveChapter" data-id="{{item.id}}" data-direction="down" wx:if="{{index < chapters.length - 1}}">
+            <text class="btn-icon">⬇️</text>
+          </view>
+          <view class="action-btn delete-btn" bindtap="deleteChapter" data-id="{{item.id}}">
+            <text class="btn-icon">🗑️</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{chapters.length === 0}}">
+      <text class="empty-icon">📖</text>
+      <text class="empty-text">暂无章节</text>
+      <text class="empty-tip">点击上方按钮创建第一个章节</text>
+    </view>
+  </view>
+</view>

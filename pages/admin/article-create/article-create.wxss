@@ -1,0 +1,57 @@
+/* 引用课程创建页面的样式 */
+@import "../course-create/course-create.wxss";
+
+/* 文章创建页面特有样式 */
+.article-create-page {
+  padding: 32rpx;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 200rpx;
+}
+
+/* 内容编辑器按钮 */
+.content-editor {
+  border: 2rpx dashed #d1d5db;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.editor-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+  background: #f9fafb;
+  color: #6b7280;
+  border: none;
+  font-size: 28rpx;
+}
+
+.editor-btn:active {
+  background: #f3f4f6;
+}
+
+.editor-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.editor-text {
+  font-size: 28rpx;
+}
+
+.content-preview {
+  padding: 24rpx;
+  background: white;
+  border-top: 1rpx solid #e5e7eb;
+  max-height: 200rpx;
+  overflow: hidden;
+}
+
+.preview-text {
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.6;
+}

@@ -1,0 +1,99 @@
+<view class="article-manage-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">📄 文章管理</text>
+    <text class="page-subtitle">管理所有资讯内容</text>
+  </view>
+
+  <!-- 统计概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-number">{{stats.total}}</text>
+      <text class="stat-label">总文章数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.published}}</text>
+      <text class="stat-label">已发布</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.draft}}</text>
+      <text class="stat-label">草稿</text>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选 -->
+  <view class="search-section">
+    <view class="search-box">
+      <input 
+        class="search-input" 
+        placeholder="搜索文章标题..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <text class="search-icon">🔍</text>
+    </view>
+    <picker 
+      class="filter-picker" 
+      bindchange="onCategoryFilter" 
+      value="{{categoryIndex}}" 
+      range="{{categoryOptions}}"
+    >
+      <view class="picker-text">{{categoryOptions[categoryIndex]}}</view>
+    </picker>
+  </view>
+
+  <!-- 文章列表 -->
+  <view class="articles-list">
+    <view 
+      class="article-item" 
+      wx:for="{{filteredArticles}}" 
+      wx:key="id"
+      bindtap="viewArticle"
+      data-article="{{item}}"
+    >
+      <view class="article-cover">
+        <image src="{{item.cover}}" mode="aspectFill" />
+        <view class="article-status status-{{item.status}}">
+          {{item.status === 'published' ? '已发布' : '草稿'}}
+        </view>
+      </view>
+      
+      <view class="article-info">
+        <text class="article-title">{{item.title}}</text>
+        <text class="article-summary">{{item.summary}}</text>
+        <view class="article-meta">
+          <text class="meta-item">📂 {{item.category}}</text>
+          <text class="meta-item">👀 {{item.viewCount}}阅读</text>
+          <text class="meta-item">⏰ {{item.updateTime}}</text>
+        </view>
+      </view>
+      
+      <view class="article-actions">
+        <view class="action-btn edit-btn" bindtap="editArticle" data-id="{{item.id}}">
+          <text class="btn-icon">✏️</text>
+        </view>
+        <view class="action-btn preview-btn" bindtap="previewArticle" data-id="{{item.id}}">
+          <text class="btn-icon">👁️</text>
+        </view>
+        <view class="action-btn status-btn" bindtap="toggleStatus" data-id="{{item.id}}">
+          <text class="btn-icon">{{item.status === 'published' ? '📴' : '📡'}}</text>
+        </view>
+        <view class="action-btn delete-btn" bindtap="deleteArticle" data-id="{{item.id}}">
+          <text class="btn-icon">🗑️</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredArticles.length === 0}}">
+    <text class="empty-icon">📄</text>
+    <text class="empty-text">暂无文章数据</text>
+    <text class="empty-tip">点击右下角按钮创建第一篇文章</text>
+  </view>
+
+  <!-- 浮动添加按钮 -->
+  <view class="fab-button" bindtap="createArticle">
+    <text class="fab-icon">+</text>
+  </view>
+</view>
