@@ -1,0 +1,106 @@
+<view class="admin-container">
+  <!-- 登录状态检查 -->
+  <view wx:if="{{!isAdminLoggedIn}}" class="login-section">
+    <view class="login-card">
+      <view class="login-header">
+        <text class="login-title">管理员登录</text>
+        <text class="login-subtitle">输入管理员账号密码以继续</text>
+      </view>
+      
+      <view class="login-form">
+        <view class="form-item">
+          <view class="form-label">用户名</view>
+          <input class="form-input" 
+                 placeholder="请输入用户名" 
+                 value="{{loginForm.username}}"
+                 bindinput="onUsernameInput" />
+        </view>
+        
+        <view class="form-item">
+          <view class="form-label">密码</view>
+          <input class="form-input" 
+                 type="password"
+                 placeholder="请输入密码" 
+                 value="{{loginForm.password}}"
+                 bindinput="onPasswordInput" />
+        </view>
+        
+        <button class="login-btn" 
+                bindtap="adminLogin"
+                loading="{{loginLoading}}">
+          {{loginLoading ? '登录中...' : '登录'}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 管理后台主界面 -->
+  <view wx:else class="admin-main">
+    <!-- 头部信息 -->
+    <view class="admin-header">
+      <view class="admin-info">
+        <text class="admin-name">{{adminInfo.realName}}</text>
+        <text class="admin-role">{{adminInfo.role === 'SUPER_ADMIN' ? '超级管理员' : '管理员'}}</text>
+      </view>
+      <button class="logout-btn" bindtap="adminLogout">退出</button>
+    </view>
+
+    <!-- 统计信息卡片 -->
+    <view class="stats-section">
+      <view class="stats-grid">
+        <view class="stat-card">
+          <view class="stat-number">{{statistics.totalArticles || 0}}</view>
+          <view class="stat-label">文章总数</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-number">{{statistics.totalVideos || 0}}</view>
+          <view class="stat-label">视频总数</view>
+        </view>
+        <view class="stat-card">
+          <view class="stat-number">{{statistics.totalCourses || 0}}</view>
+          <view class="stat-label">课程总数</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section">
+      <view class="menu-title">内容管理</view>
+      <view class="menu-grid">
+        <view class="menu-item" bindtap="navigateToArticleManage">
+          <view class="menu-icon">📝</view>
+          <view class="menu-text">文章管理</view>
+          <view class="menu-arrow">></view>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateToVideoManage">
+          <view class="menu-icon">🎥</view>
+          <view class="menu-text">视频管理</view>
+          <view class="menu-arrow">></view>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateToCourseManage">
+          <view class="menu-icon">📚</view>
+          <view class="menu-text">课程管理</view>
+          <view class="menu-arrow">></view>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateToFileUpload">
+          <view class="menu-icon">📁</view>
+          <view class="menu-text">文件上传</view>
+          <view class="menu-arrow">></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快速操作 -->
+    <view class="quick-actions">
+      <view class="section-title">快速操作</view>
+      <view class="action-buttons">
+        <button class="action-btn primary" bindtap="createArticle">新建文章</button>
+        <button class="action-btn" bindtap="createVideo">新建视频</button>
+        <button class="action-btn" bindtap="createCourse">新建课程</button>
+      </view>
+    </view>
+  </view>
+</view> 

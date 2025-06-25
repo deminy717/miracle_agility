@@ -1,0 +1,50 @@
+<view class="article-detail-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 文章内容 -->
+  <view wx:elif="{{article}}" class="article-content">
+    <!-- 文章头部 -->
+    <view class="article-header">
+      <view class="article-title">{{article.title}}</view>
+      <view class="article-meta">
+        <text class="meta-item">作者：{{article.author || '未知'}}</text>
+        <text class="meta-item">发布时间：{{article.createTime}}</text>
+        <text class="meta-item">浏览量：{{article.viewCount || 0}}</text>
+      </view>
+      <view wx:if="{{article.tags}}" class="article-tags">
+        <text class="tag" wx:for="{{tagList}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 封面图片 -->
+    <view wx:if="{{article.coverImage}}" class="article-cover">
+      <image src="{{article.coverImage}}" mode="widthFix" />
+    </view>
+
+    <!-- 文章描述 -->
+    <view wx:if="{{article.desc}}" class="article-desc">
+      <text>{{article.desc}}</text>
+    </view>
+
+    <!-- 文章正文 -->
+    <view class="article-body">
+      <text class="article-content-text">{{article.content}}</text>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="edit-btn" bindtap="editArticle">编辑文章</button>
+      <button class="delete-btn" bindtap="deleteArticle">删除文章</button>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:else class="error-state">
+    <text class="error-icon">😞</text>
+    <text class="error-text">文章不存在或已被删除</text>
+    <button class="back-btn" bindtap="goBack">返回列表</button>
+  </view>
+</view> 

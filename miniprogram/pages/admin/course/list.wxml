@@ -1,0 +1,84 @@
+<view class="course-list-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" 
+           placeholder="搜索课程名称或描述" 
+           value="{{searchKeyword}}"
+           bindinput="onSearchInput"
+           bindconfirm="onSearch" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 操作栏 -->
+  <view class="action-bar">
+    <button class="add-btn" bindtap="goToCreate">
+      <text class="add-icon">+</text>
+      <text>新建课程</text>
+    </button>
+    <view class="total-count">共 {{totalCount}} 个课程</view>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="course-list">
+    <view class="course-item" 
+          wx:for="{{courseList}}" 
+          wx:key="id"
+          bindtap="goToDetail"
+          data-id="{{item.id}}">
+      
+      <!-- 课程封面 -->
+      <view class="course-cover">
+        <image src="{{item.coverImage || '/static/images/default-course.png'}}" 
+               mode="aspectFill" />
+        <view class="course-level">{{item.level || 'L1'}}</view>
+      </view>
+
+      <!-- 课程信息 -->
+      <view class="course-info">
+        <view class="course-title">{{item.title}}</view>
+        <view class="course-desc">{{item.desc || '暂无描述'}}</view>
+        
+        <view class="course-meta">
+          <text class="meta-item">讲师：{{item.instructor || '未知'}}</text>
+          <text class="meta-item">时长：{{item.duration || '0'}}分钟</text>
+          <text class="meta-item">价格：¥{{item.price || 0}}</text>
+          <text class="meta-item">{{item.createTime}}</text>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="course-actions">
+          <button class="action-btn edit" 
+                  bindtap="editCourse"
+                  data-id="{{item.id}}"
+                  catchtap="true">编辑</button>
+          <button class="action-btn delete" 
+                  bindtap="deleteCourse"
+                  data-id="{{item.id}}"
+                  catchtap="true">删除</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{courseList.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">📚</text>
+      <text class="empty-text">暂无课程数据</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
+      <text wx:if="{{!loadingMore}}">点击加载更多</text>
+      <text wx:else>加载中...</text>
+    </view>
+
+    <!-- 没有更多 -->
+    <view wx:elif="{{courseList.length > 0}}" class="no-more">
+      <text>没有更多了</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view> 

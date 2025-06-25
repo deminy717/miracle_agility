@@ -1,0 +1,83 @@
+<view class="video-list-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input class="search-input" 
+           placeholder="搜索视频标题或描述" 
+           value="{{searchKeyword}}"
+           bindinput="onSearchInput"
+           bindconfirm="onSearch" />
+    <button class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+
+  <!-- 操作栏 -->
+  <view class="action-bar">
+    <button class="add-btn" bindtap="goToCreate">
+      <text class="add-icon">+</text>
+      <text>新建视频</text>
+    </button>
+    <view class="total-count">共 {{totalCount}} 个视频</view>
+  </view>
+
+  <!-- 视频列表 -->
+  <view class="video-list">
+    <view class="video-item" 
+          wx:for="{{videoList}}" 
+          wx:key="id"
+          bindtap="goToDetail"
+          data-id="{{item.id}}">
+      
+      <!-- 视频封面 -->
+      <view class="video-cover">
+        <image src="{{item.coverImage || '/static/images/default-video.png'}}" 
+               mode="aspectFill" />
+        <view class="video-duration">{{item.duration || '00:00'}}</view>
+      </view>
+
+      <!-- 视频信息 -->
+      <view class="video-info">
+        <view class="video-title">{{item.title}}</view>
+        <view class="video-desc">{{item.desc || '暂无描述'}}</view>
+        
+        <view class="video-meta">
+          <text class="meta-item">作者：{{item.author || '未知'}}</text>
+          <text class="meta-item">播放：{{item.viewCount || 0}}</text>
+          <text class="meta-item">{{item.createTime}}</text>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="video-actions">
+          <button class="action-btn edit" 
+                  bindtap="editVideo"
+                  data-id="{{item.id}}"
+                  catchtap="true">编辑</button>
+          <button class="action-btn delete" 
+                  bindtap="deleteVideo"
+                  data-id="{{item.id}}"
+                  catchtap="true">删除</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{videoList.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">📹</text>
+      <text class="empty-text">暂无视频数据</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMore">
+      <text wx:if="{{!loadingMore}}">点击加载更多</text>
+      <text wx:else>加载中...</text>
+    </view>
+
+    <!-- 没有更多 -->
+    <view wx:elif="{{videoList.length > 0}}" class="no-more">
+      <text>没有更多了</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view> 

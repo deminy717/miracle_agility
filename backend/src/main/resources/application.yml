@@ -1,0 +1,104 @@
+server:
+  port: 8080
+  address: 0.0.0.0  # 允许所有IP访问，包括局域网
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: miracle-agility-backend
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/miracle_agility?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: Hhm980510
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    
+  redis:
+    host: localhost
+    port: 6379
+    password: 
+    database: 0
+    timeout: 3000ms
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+# Jackson配置 - 解决LocalDateTime序列化问题
+jackson:
+  date-format: yyyy-MM-dd HH:mm:ss
+  time-zone: Asia/Shanghai
+  serialization:
+    write-dates-as-timestamps: false
+  deserialization:
+    fail-on-unknown-properties: false
+  default-property-inclusion: non_null
+
+# MyBatis Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT 配置
+jwt:
+  secret: miracle-agility-secret-key
+  expiration: 86400000  # 24小时
+
+# 文件上传配置
+file:
+  upload:
+    path: /uploads/
+    max-size: 10MB
+
+# 管理后台配置
+app:
+  upload:
+    path: ./uploads  # 文件上传本地路径
+    domain: http://localhost:8080  # 文件访问域名
+
+logging:
+  level:
+    root: info
+    com.miracle.agility: debug
+    # 只在开发环境显示SQL日志
+    com.miracle.agility.mapper: debug
+    # 关闭Spring的debug日志，避免过多输出
+    org.springframework.web: warn
+    org.springframework.security: warn
+    org.springframework.web.client: debug
+    javax.net.ssl: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/miracle-agility.log
+    max-size: 10MB
+    max-history: 7
+
+# 微信小程序配置
+wechat:
+  # 请替换为你的实际微信小程序AppID和Secret
+  appid: wx48dc282ebc13fd32
+  secret: d1869569a8cb366debbbc0c97a39e8f3
+
+# 网络和SSL配置
+management:
+  endpoint:
+    health:
+      show-details: always
