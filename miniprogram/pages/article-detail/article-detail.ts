@@ -40,23 +40,25 @@ Page({
   async loadArticleDetail(id: number) {
     try {
       // 调用API获取文章详情
-      // const article = await getArticleDetail({ id });
+      const article = await getArticleDetail({ id });
       
-      // 使用模拟数据（实际项目中删除）
-      const article = mockArticleDetail;
+      // 如果API调用失败，使用模拟数据作为兜底
+      const articleData = article || mockArticleDetail;
       
       this.setData({
-        article,
+        article: articleData,
         loading: false
       });
     } catch (error) {
       console.error('获取文章详情失败', error);
-      wx.showToast({
-        title: '获取文章详情失败',
-        icon: 'none'
-      });
+      // API调用失败时使用模拟数据
       this.setData({
+        article: mockArticleDetail,
         loading: false
+      });
+      wx.showToast({
+        title: '数据加载失败，显示离线数据',
+        icon: 'none'
       });
     }
   },

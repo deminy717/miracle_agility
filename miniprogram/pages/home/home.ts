@@ -18,68 +18,95 @@ Page({
 
   // 页面加载
   onLoad() {
-    // 加载资讯和视频
-    this.loadArticles();
-    this.loadVideos();
+    this.setData({ loading: true });
+    this.getArticles();
+    this.getVideos();
   },
 
   // 页面显示
   onShow() {
-    // 可以在这里添加刷新逻辑
+    // 可以在这里刷新数据
   },
 
   // 下拉刷新
   onPullDownRefresh() {
-    // 重新加载数据
-    this.loadArticles();
-    this.loadVideos();
-    // 停止下拉刷新
+    this.setData({ loading: true });
+    this.getArticles();
+    this.getVideos();
     wx.stopPullDownRefresh();
   },
 
-  // 加载资讯
-  async loadArticles() {
+  // 获取资讯列表
+  async getArticles() {
     try {
-      // 调用API获取资讯列表
-      // const articles = await getArticles({
-      //   page: 1,
-      //   pageSize: 10
-      // });
+      console.log('🚀 开始获取资讯列表');
       
-      // 使用模拟数据（实际项目中删除）
-      const articles = mockArticles.list;
+      const result = await getArticles({
+        page: 1,
+        pageSize: 10
+      });
+      
+      console.log('✅ 获取资讯列表成功', result);
+      
+      // 如果API调用成功，使用返回的数据，否则使用模拟数据作为兜底
+      const articles = (result && result.list) || mockArticles.list;
       
       this.setData({
-        articles,
+        articles: articles,
         loading: false
       });
     } catch (error) {
-      console.error('获取资讯失败', error);
+      console.warn('⚠️ API获取资讯列表失败，使用模拟数据', error);
+      
+      // 检查是否是401错误
+      if (error && (error as any).error === 401) {
+        console.log('🔒 资讯API检测到401错误');
+        // 清除登录信息
+        wx.removeStorageSync('token');
+        wx.removeStorageSync('userInfo');
+        wx.removeStorageSync('hasUserInfo');
+      }
+      
       this.setData({
+        articles: mockArticles.list,
         loading: false
       });
     }
   },
 
-  // 加载视频
-  async loadVideos() {
+  // 获取视频列表
+  async getVideos() {
     try {
-      // 调用API获取视频列表
-      // const videos = await getVideos({
-      //   page: 1,
-      //   pageSize: 10
-      // });
+      console.log('🚀 开始获取视频列表');
       
-      // 使用模拟数据（实际项目中删除）
-      const videos = mockVideos.list;
+      const result = await getVideos({
+        page: 1,
+        pageSize: 10
+      });
+      
+      console.log('✅ 获取视频列表成功', result);
+      
+      // 如果API调用成功，使用返回的数据，否则使用模拟数据作为兜底
+      const videos = (result && result.list) || mockVideos.list;
       
       this.setData({
-        videos,
+        videos: videos,
         loading: false
       });
     } catch (error) {
-      console.error('获取视频失败', error);
+      console.warn('⚠️ API获取视频列表失败，使用模拟数据', error);
+      
+      // 检查是否是401错误
+      if (error && (error as any).error === 401) {
+        console.log('🔒 视频API检测到401错误');
+        // 清除登录信息
+        wx.removeStorageSync('token');
+        wx.removeStorageSync('userInfo');
+        wx.removeStorageSync('hasUserInfo');
+      }
+      
       this.setData({
+        videos: mockVideos.list,
         loading: false
       });
     }

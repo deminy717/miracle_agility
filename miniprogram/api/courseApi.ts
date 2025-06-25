@@ -5,7 +5,7 @@ import { request } from './request';
 // 获取课程列表
 export function getCourseList(data?: any) {
   return request({
-    url: '/api/courses',
+    url: '/course/list',
     method: 'GET',
     data
   });
@@ -14,7 +14,7 @@ export function getCourseList(data?: any) {
 // 获取课程详情
 export function getCourseDetail(data: { id: number }) {
   return request({
-    url: `/api/courses/${data.id}`,
+    url: `/course/detail?id=${data.id}`,
     method: 'GET'
   });
 }
@@ -22,7 +22,7 @@ export function getCourseDetail(data: { id: number }) {
 // 获取课程内容
 export function getCourseContent(data: { courseId: number; chapterId: number; lessonId: number }) {
   return request({
-    url: `/api/courses/${data.courseId}/chapters/${data.chapterId}/lessons/${data.lessonId}`,
+    url: `/course/lesson?courseId=${data.courseId}&chapterId=${data.chapterId}&lessonId=${data.lessonId}`,
     method: 'GET'
   });
 }
@@ -30,9 +30,12 @@ export function getCourseContent(data: { courseId: number; chapterId: number; le
 // 更新课程学习状态
 export function updateLessonStatus(data: { courseId: number; chapterId: number; lessonId: number; status: string }) {
   return request({
-    url: `/api/courses/${data.courseId}/chapters/${data.chapterId}/lessons/${data.lessonId}/status`,
+    url: `/course/update-status`,
     method: 'POST',
     data: {
+      courseId: data.courseId,
+      chapterId: data.chapterId,
+      lessonId: data.lessonId,
       status: data.status
     }
   });

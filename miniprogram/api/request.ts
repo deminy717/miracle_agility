@@ -1,5 +1,22 @@
 // API请求基础封装
-const BASE_URL = 'https://api.example.com'; // 实际项目中替换为真实API地址
+
+// 根据环境自动选择API地址
+function getBaseURL() {
+  // 获取系统信息
+  const systemInfo = wx.getSystemInfoSync();
+  
+  // 如果是开发者工具，使用localhost
+  if (systemInfo.platform === 'devtools') {
+    return 'http://localhost:8080/api';
+  }
+  
+  // 真机环境使用局域网IP（你可以根据需要修改这个IP）
+  return 'http://192.168.10.100:8080/api';
+}
+
+const BASE_URL = getBaseURL();
+
+console.log('🌐 当前API地址:', BASE_URL);
 
 // 封装请求函数
 export const request = (options: {
@@ -31,6 +48,14 @@ export const request = (options: {
     });
 
     // 发起请求
+    console.log('🚀 发起网络请求:', {
+      url: `${BASE_URL}${url}`,
+      method,
+      data,
+      needLogin,
+      token: token ? '***有token***' : '无token'
+    });
+
     wx.request({
       url: `${BASE_URL}${url}`,
       method,
@@ -42,6 +67,12 @@ export const request = (options: {
       success: (res: any) => {
         // 关闭加载提示
         wx.hideLoading();
+        
+        console.log('✅ 网络请求成功:', {
+          url: `${BASE_URL}${url}`,
+          statusCode: res.statusCode,
+          data: res.data
+        });
         
         const { data } = res;
         
@@ -71,16 +102,24 @@ export const request = (options: {
           reject({ error: 500, message: data.message || '系统异常' });
         } else {
           // 业务异常
-          wx.showToast({
-            title: data.message || '请求失败',
-            icon: 'none'
-          });
+          // 对于登录接口，不自动显示toast，让调用方处理
+          if (!url.includes('/user/login')) {
+            wx.showToast({
+              title: data.message || '请求失败',
+              icon: 'none'
+            });
+          }
           reject({ error: data.error, message: data.message || '请求失败' });
         }
       },
       fail: (err) => {
         // 关闭加载提示
         wx.hideLoading();
+        
+        console.error('❌ 网络请求失败:', {
+          url: `${BASE_URL}${url}`,
+          error: err
+        });
         
         // 网络错误
         wx.showToast({

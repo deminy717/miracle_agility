@@ -60,23 +60,25 @@ Page({
   async loadVideoDetail(id: number) {
     try {
       // 调用API获取视频详情
-      // const video = await getVideoDetail({ id });
+      const video = await getVideoDetail({ id });
       
-      // 使用模拟数据（实际项目中删除）
-      const video = mockVideoDetail;
+      // 如果API调用失败，使用模拟数据作为兜底
+      const videoData = video || mockVideoDetail;
       
       this.setData({
-        video,
+        video: videoData,
         loading: false
       });
     } catch (error) {
       console.error('获取视频详情失败', error);
-      wx.showToast({
-        title: '获取视频详情失败',
-        icon: 'none'
-      });
+      // API调用失败时使用模拟数据
       this.setData({
+        video: mockVideoDetail,
         loading: false
+      });
+      wx.showToast({
+        title: '数据加载失败，显示离线数据',
+        icon: 'none'
       });
     }
   },

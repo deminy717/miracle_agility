@@ -1,6 +1,6 @@
 // course.ts
 import { getCourseList, mockCourseList } from '../../api/courseApi';
-import { isLogin, getLocalUserInfo, mockLogin } from '../../utils/auth';
+import { isLogin, getLocalUserInfo } from '../../utils/auth';
 
 // 课程类型定义
 interface Course {
@@ -63,23 +63,59 @@ Page({
     try {
       this.setData({ loading: true });
       
-      // 调用API获取课程列表
-      // const courses = await getCourseList({
-      //   page: 1,
-      //   pageSize: 10
-      // });
+      console.log('🚀 开始获取课程列表');
       
-      // 使用模拟数据
-      const courses = mockCourseList.courses;
+      // 调用API获取课程列表
+      const result = await getCourseList({
+        page: 1,
+        pageSize: 10
+      });
+      
+      console.log('✅ 获取课程列表成功', result);
+      
+      // 如果API调用成功，使用返回的数据，否则使用模拟数据作为兜底
+      const courses = (result && result.list) || mockCourseList.courses;
       
       this.setData({
         courses,
         loading: false
       });
     } catch (error) {
-      console.error('获取课程列表失败', error);
+      console.error('❌ 获取课程列表失败', error);
+      
+      // 检查是否是401错误（需要登录）
+      if (error && (error as any).error === 401) {
+        console.log('🔒 检测到401错误，清除登录状态');
+        
+        // 清除本地登录信息
+        wx.removeStorageSync('token');
+        wx.removeStorageSync('userInfo');
+        wx.removeStorageSync('hasUserInfo');
+        
+        // 更新登录状态
+        this.setData({
+          hasUserInfo: false,
+          loading: false,
+          courses: []
+        });
+        
+        wx.showToast({
+          title: '登录已过期，请重新登录',
+          icon: 'none'
+        });
+        
+        return;
+      }
+      
+      // 其他错误使用模拟数据
       this.setData({
+        courses: mockCourseList.courses,
         loading: false
+      });
+      
+      wx.showToast({
+        title: '获取失败，使用模拟数据',
+        icon: 'none'
       });
     }
   },
@@ -95,7 +131,12 @@ Page({
       coursesCount: 3,
       completedCount: 1
     };
-    mockLogin(userInfo);
+    
+    // 保存token和用户信息
+    wx.setStorageSync('token', 'mock-token-' + Date.now());
+    wx.setStorageSync('userInfo', userInfo);
+    wx.setStorageSync('hasUserInfo', true);
+    
     this.checkLogin();
   },
 

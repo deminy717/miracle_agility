@@ -6,7 +6,19 @@
     "pages/course-content/course-content",
     "pages/article-detail/article-detail",
     "pages/video-detail/video-detail",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/profile-setup/profile-setup",
+    "pages/admin/index",
+    "pages/admin/article/list",
+    "pages/admin/article/create",
+    "pages/admin/article/edit",
+    "pages/admin/video/list",
+    "pages/admin/video/create",
+    "pages/admin/video/edit",
+    "pages/admin/course/list",
+    "pages/admin/course/create",
+    "pages/admin/course/edit",
+    "pages/admin/upload/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

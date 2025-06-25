@@ -41,45 +41,71 @@ page {
   overflow: hidden;
 }
 
-/* 未登录状态 */
-.not-login {
+/* 登录区域 */
+.login-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 100rpx 30rpx;
-  background-color: #fff;
-  flex: 1;
+  padding: 100rpx 60rpx 60rpx;
+  background: white;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
 .login-avatar {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 50%;
-  overflow: hidden;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
   margin-bottom: 30rpx;
+  background: #f5f5f5;
 }
 
-.login-avatar image {
-  width: 100%;
-  height: 100%;
+.login-text {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  text-align: center;
 }
 
-.login-tips {
-  font-size: 30rpx;
-  color: #666;
-  margin-bottom: 50rpx;
+.auth-tip {
+  background: rgba(255, 193, 7, 0.1);
+  border: 2rpx solid #ffc107;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin: 20rpx 0;
+  text-align: center;
+}
+
+.auth-tip text {
+  display: block;
+  font-size: 26rpx;
+  color: #856404;
+  line-height: 1.4;
+}
+
+.auth-tip text:first-child {
+  font-weight: bold;
+  margin-bottom: 8rpx;
 }
 
 .login-btn {
-  width: 80%;
-  height: 80rpx;
-  line-height: 80rpx;
-  background-color: #0066cc;
-  color: #fff;
-  font-size: 30rpx;
-  border-radius: 40rpx;
-  margin-top: 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 24rpx 80rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  margin-top: 30rpx;
+  min-width: 300rpx;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+}
+
+.login-btn::after {
+  border: none;
 }
 
 /* 已登录状态 */
@@ -256,8 +282,7 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60rpx 0;
-  flex: 1;
+  height: 200rpx;
 }
 
 .loading-icon {
@@ -271,11 +296,526 @@ page {
 }
 
 .loading-text {
-  font-size: 24rpx;
+  margin-top: 20rpx;
   color: #999;
+  font-size: 28rpx;
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* 调试面板样式 */
+.debug-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 400rpx;
+  background: rgba(0, 0, 0, 0.9);
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  z-index: 9999;
+  border-top: 2rpx solid #333;
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #333;
+  background: #111;
+}
+
+.debug-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #00ff00;
+}
+
+.debug-clear-btn {
+  background: #ff4444 !important;
+  color: white !important;
+  border: none !important;
+  font-size: 24rpx !important;
+}
+
+.debug-logs {
+  height: 320rpx;
+  padding: 10rpx;
+}
+
+.debug-log-item {
+  font-size: 24rpx;
+  line-height: 40rpx;
+  padding: 5rpx 10rpx;
+  margin-bottom: 5rpx;
+  background: rgba(0, 255, 0, 0.1);
+  border-radius: 8rpx;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.debug-empty {
+  text-align: center;
+  color: #666;
+  padding: 40rpx;
+  font-size: 28rpx;
+}
+
+/* 头像昵称填写模态框 */
+.avatar-nickname-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20rpx;
+  margin: 40rpx;
+  padding: 40rpx;
+  position: relative;
+  max-width: 600rpx;
+  width: 100%;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.modal-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.modal-subtitle {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.modal-body {
+  margin-bottom: 40rpx;
+}
+
+/* 头像选择 */
+.avatar-section {
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.section-label {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.avatar-button {
+  position: relative;
+  width: 150rpx;
+  height: 150rpx;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 50%;
+}
+
+.avatar-button:active .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-text {
+  color: white;
+  font-size: 22rpx;
+}
+
+/* 昵称输入 */
+.nickname-section {
+  margin-bottom: 20rpx;
+}
+
+.nickname-input {
+  width: 100%;
+  height: 70rpx;
+  border: 1rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 0 15rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+.nickname-input:focus {
+  border-color: #4CAF50;
+  background: white;
+}
+
+/* 模态框操作按钮 */
+.modal-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.cancel-button {
+  flex: 1;
+  height: 70rpx;
+  background: #f0f0f0;
+  color: #666;
+  border: none;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  line-height: 70rpx;
+}
+
+.confirm-button {
+  flex: 2;
+  height: 70rpx;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+  line-height: 70rpx;
+}
+
+.confirm-button.disabled {
+  background: #ccc;
+}
+
+/* 已登录状态 */
+.profile {
+  padding: 30rpx;
+}
+
+/* 用户信息 */
+.user-info {
+  background: white;
+  border-radius: 15rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  overflow: hidden;
+  margin-right: 30rpx;
+  border: 4rpx solid #4CAF50;
+}
+
+.user-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.user-detail {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.user-id {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 功能列表 */
+.menu-list {
+  background: white;
+  border-radius: 15rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.menu-title {
+  padding: 30rpx 30rpx 10rpx 30rpx;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: bold;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 25rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 20rpx;
+}
+
+.menu-icon image {
+  width: 100%;
+  height: 100%;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  font-size: 24rpx;
+  color: #ccc;
+}
+
+/* 退出登录按钮 */
+.logout-btn {
+  background: #ff4757;
+  color: white;
+  text-align: center;
+  padding: 25rpx;
+  border-radius: 15rpx;
+  font-size: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(255, 71, 87, 0.3);
+}
+
+/* 未登录状态 */
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 60rpx 40rpx;
+}
+
+.login-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  margin-bottom: 40rpx;
+}
+
+.login-text {
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+  margin-bottom: 60rpx;
+  line-height: 1.5;
+}
+
+.login-btn {
+  width: 100%;
+  max-width: 500rpx;
+  height: 80rpx;
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: bold;
+  box-shadow: 0 4rpx 15rpx rgba(76, 175, 80, 0.3);
+}
+
+.login-btn[disabled] {
+  background: #ccc;
+  box-shadow: none;
+}
+
+.debug-toggle-btn {
+  margin-top: 30rpx;
+  background: transparent;
+  color: #999;
+  border: 1rpx solid #ddd;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+}
+
+.loading-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #f0f0f0;
+  border-top: 4rpx solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 20rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 调试面板（悬浮窗口） */
+.debug-panel {
+  position: fixed;
+  bottom: 100rpx;
+  right: 20rpx;
+  width: 600rpx;
+  max-height: 400rpx;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 10rpx;
+  z-index: 999;
+  font-size: 24rpx;
+}
+
+.debug-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15rpx 20rpx;
+  background: #333;
+  border-radius: 10rpx 10rpx 0 0;
+}
+
+.debug-title {
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.debug-clear-btn,
+.debug-close-btn {
+  background: #666;
+  color: #fff;
+  border: none;
+  border-radius: 8rpx;
+  padding: 8rpx 15rpx;
+  font-size: 20rpx;
+  margin-left: 10rpx;
+}
+
+.debug-logs {
+  max-height: 300rpx;
+  padding: 10rpx 20rpx;
+}
+
+.debug-log-item {
+  color: #00ff00;
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+  word-break: break-all;
+  font-size: 22rpx;
+}
+
+.debug-empty {
+  color: #999;
+  text-align: center;
+  padding: 20rpx;
+}
+
+/* 管理后台入口样式 */
+.admin-entry {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 20rpx 30rpx 10rpx 30rpx;
+  border-radius: 15rpx;
+  box-shadow: 0 4rpx 15rpx rgba(102, 126, 234, 0.3);
+  color: white;
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.admin-entry .menu-text {
+  color: white;
+  font-weight: bold;
+}
+
+.admin-entry .menu-arrow {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  font-size: 24rpx;
 } 
