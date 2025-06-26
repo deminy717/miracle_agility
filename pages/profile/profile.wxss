@@ -294,4 +294,81 @@
   font-weight: bold;
   width: 100%;
   border: 2rpx solid #fecaca;
+}
+
+/* 未登录状态样式 */
+.not-logged-in-content {
+  padding: 40rpx;
+  text-align: center;
+}
+
+.login-prompt {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 60rpx 40rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
+}
+
+.login-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.login-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 50rpx;
+  line-height: 1.5;
+}
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #203b9d, #2757d4);
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 25rpx 60rpx;
+  font-size: 32rpx;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(32, 59, 157, 0.3);
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.skip-btn {
+  background: #f5f5f5;
+  color: #666;
+  border-radius: 50rpx;
+  padding: 20rpx 60rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.skip-btn::after {
+  border: none;
+}
+
+
+
+.user-level {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
 } 

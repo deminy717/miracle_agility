@@ -26,7 +26,8 @@
     "pages/admin/lesson-edit/lesson-edit",
     "pages/admin/article-manage/article-manage",
     "pages/admin/article-create/article-create",
-    "pages/admin/article-edit/article-edit"
+    "pages/admin/article-edit/article-edit",
+    "pages/edit-profile/edit-profile"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,0 +1,33 @@
+# 开发环境配置
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/miracle_agility?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: # 你的MySQL密码
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 微信小程序配置 - 开发环境
+wechat:
+  mini-program:
+    # 开发测试用的AppID，或者使用测试号
+    app-id: wx1234567890abcdef  # 替换为你的微信小程序AppID
+    app-secret: your_wechat_app_secret_here  # 替换为你的AppSecret
+    api-url: https://api.weixin.qq.com
+
+# JWT配置 - 开发环境
+jwt:
+  secret: miracle_agility_dev_jwt_secret_2024
+  access-token-expiration: 86400 # 开发环境延长到24小时
+  refresh-token-expiration: 604800 # 7天
+
+# 日志配置 - 开发环境
+logging:
+  level:
+    com.miracle.agility: DEBUG
+    org.springframework.web: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 

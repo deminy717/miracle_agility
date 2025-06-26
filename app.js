@@ -1,33 +1,39 @@
 // app.js
 const config = require('./utils/config.js')
+const auth = require('./utils/auth.js')
+const debug = require('./utils/debug.js')
 
 App({
   onLaunch() {
-    // 显示当前环境信息
-    console.log('='.repeat(50))
-    console.log(`🚀 应用启动 - 当前环境: ${config.environment.toUpperCase()}`)
-    console.log(`📱 ${config.isDevelopment() ? 'Mock数据模式' : 'API请求模式'}`)
-    console.log(`🌐 API地址: ${config.getCurrentConfig().baseUrl || 'Mock数据'}`)
-    console.log('='.repeat(50))
-
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 初始化登录状态（根据环境使用不同策略）
-    if (config.isDevelopment()) {
-      this.setMockLoginState()
-    } else {
-      this.checkLogin()
-    }
+    console.log('🚀 Miracle Agility 小程序启动')
+    console.log(`📱 ${config.isMock() ? 'Mock数据模式' : 'API请求模式'}`)
     
-    // 获取用户信息
-    this.getUserProfile()
+    // 获取系统信息
+    this.getSystemInfo()
+    
+    // 初始化全局数据
+    this.initGlobalData()
+    
+    // 检查是否是Mock模式
+    if (config.isMock()) {
+      // Mock模式：初始化模拟数据
+      this.initMockData()
+    } else {
+      // 生产模式：检查登录状态
+      this.checkAuthStatus()
+    }
   },
 
   // 设置模拟登录状态（仅用于开发预览）
   setMockLoginState() {
+    // 只有在真正的开发模式下才设置mock数据
+    if (!config.isDevelopment()) {
+      console.log('🚫 非开发模式，跳过Mock登录状态设置')
+      return
+    }
+    
+    console.log('🔧 开发模式：设置Mock登录状态')
+    
     // 清理旧数据，确保干净状态
     wx.clearStorageSync()
     
@@ -167,7 +173,10 @@ App({
     latestArticles: null,
     config: config, // 将配置对象添加到全局数据中
     editorContent: null, // 富文本编辑器内容
-    editorContext: null // 编辑器来源上下文
+    editorContext: null, // 编辑器来源上下文
+    systemInfo: null,
+    isAdmin: false,
+    isDeveloper: false
   },
 
   // 获取当前环境配置
@@ -177,8 +186,8 @@ App({
 
   // 切换环境（开发时使用）
   switchEnvironment(env) {
-    if (env !== 'development' && env !== 'production') {
-      console.error('❌ 无效的环境参数，只支持 development 或 production')
+    if (env !== 'mock' && env !== 'production') {
+      console.error('❌ 无效的环境参数，只支持 mock 或 production')
       return false
     }
     
@@ -188,33 +197,29 @@ App({
     // 显示新的环境信息
     console.log('='.repeat(50))
     console.log(`🚀 环境切换 - 当前环境: ${config.environment.toUpperCase()}`)
-    console.log(`📱 ${config.isDevelopment() ? 'Mock数据模式' : 'API请求模式'}`)
+    console.log(`📱 ${config.isMock() ? 'Mock数据模式' : 'API请求模式'}`)
     console.log(`🌐 API地址: ${config.getCurrentConfig().baseUrl || 'Mock数据'}`)
     console.log('='.repeat(50))
     
     return true
   },
 
-  // 切换用户类型（开发时使用）
+  // 切换用户类型（两种模式都支持）
   switchUserType(userType = 'user') {
     if (!['admin', 'developer', 'user'].includes(userType)) {
       console.error('❌ 无效的用户类型，只支持 admin、developer 或 user')
       return false
     }
     
-    if (config.isDevelopment()) {
-      this.setMockUserType(userType)
-      const typeNames = {
-        admin: '管理员',
-        developer: '开发者',
-        user: '普通用户'
-      }
-      console.log(`👤 用户类型已切换到: ${typeNames[userType]}`)
-      return true
-    } else {
-      console.warn('⚠️ 用户类型切换只在开发环境中可用')
-      return false
+    // Mock模式和生产模式都支持用户类型切换
+    this.setMockUserType(userType)
+    const typeNames = {
+      admin: '管理员',
+      developer: '开发者',
+      user: '普通用户'
     }
+    console.log(`👤 用户类型已切换到: ${typeNames[userType]}`)
+    return true
   },
 
   // 强制切换为开发者模式
@@ -256,5 +261,60 @@ App({
     })
     
     return devUserInfo
+  },
+
+  // 获取系统信息
+  getSystemInfo() {
+    try {
+      const systemInfo = wx.getSystemInfoSync()
+      this.globalData.systemInfo = systemInfo
+      console.log('系统信息获取成功:', systemInfo)
+    } catch (error) {
+      console.error('获取系统信息失败:', error)
+    }
+  },
+
+  // 初始化全局数据
+  initGlobalData() {
+    this.globalData.isLoggedIn = false
+    this.globalData.userInfo = null
+    this.globalData.isAdmin = false
+    this.globalData.isDeveloper = false
+    this.globalData.latestArticles = []
+    
+    // 展示本地存储能力
+    const logs = wx.getStorageSync('logs') || []
+    logs.unshift(Date.now())
+    wx.setStorageSync('logs', logs)
+  },
+
+  // 初始化Mock数据
+  initMockData() {
+    console.log('🎭 初始化Mock数据模式')
+    this.setMockLoginState()
+    this.getUserProfile()
+    debug.logDebugInfo()
+  },
+
+  // 检查认证状态（生产模式）
+  checkAuthStatus() {
+    console.log('🔐 检查认证状态')
+    auth.autoLoginCheck().then((result) => {
+      console.log('自动登录检查结果:', result)
+      if (result.success) {
+        this.globalData.isLoggedIn = true
+        const userInfo = auth.getCurrentUser()
+        if (userInfo) {
+          this.globalData.userInfo = userInfo
+          this.globalData.isAdmin = userInfo.isAdmin || false
+          this.globalData.isDeveloper = userInfo.isDeveloper || false
+        }
+      }
+    }).catch((error) => {
+      console.error('自动登录检查失败:', error)
+      // 清除可能存在的无效登录状态
+      this.globalData.isLoggedIn = false
+      this.globalData.userInfo = null
+    })
   }
 })

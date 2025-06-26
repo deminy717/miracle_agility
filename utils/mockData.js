@@ -13,7 +13,15 @@ const mockData = {
         joinDate: '2024-01-15',
         role: 'developer', // 修改为开发者角色
         isAdmin: false,
-        isDeveloper: true
+        isDeveloper: true,
+        province: '广东省',
+        city: '深圳市',
+        district: '南山区',
+        profession: '软件工程师',
+        bio: '热爱犬敏捷训练的开发者',
+        specialties: '敏捷训练、服从训练',
+        gender: 'male',
+        experience: 'intermediate'
       }
     },
     '/user/info': {
@@ -27,7 +35,15 @@ const mockData = {
       totalStudyTime: 1280,
       role: 'developer', // 修改为开发者角色
       isAdmin: false,
-      isDeveloper: true
+      isDeveloper: true,
+      province: '广东省',
+      city: '深圳市',
+      district: '南山区',
+      profession: '软件工程师',
+      bio: '热爱犬敏捷训练的开发者',
+      specialties: '敏捷训练、服从训练',
+      gender: 'male',
+      experience: 'intermediate'
     },
     
     // 添加不同类型的用户数据用于测试
@@ -51,6 +67,15 @@ const mockData = {
       role: 'user',
       isAdmin: false,
       isDeveloper: false
+    },
+    
+    // 用户信息更新接口
+    '/user/update': {
+      success: true,
+      message: '用户信息更新成功',
+      data: {
+        updated: true
+      }
     }
   },
 
@@ -239,43 +264,57 @@ const mockData = {
   getMockData(url, data = {}, method = 'GET') {
     console.log(`[Mock] 请求: ${method} ${url}`, data)
     
+    // 去除URL前缀，统一处理（支持/api前缀和不带前缀）
+    let cleanUrl = url
+    if (url.startsWith('/api/')) {
+      cleanUrl = url.replace('/api', '')
+    }
+    
+    console.log(`[Mock] 清理后的URL: ${cleanUrl}`)
+    
     // 用户相关接口
-    if (url.startsWith('/user/')) {
-      return this.user[url] || null
+    if (cleanUrl.startsWith('/user/')) {
+      // 特殊处理PUT请求的用户信息更新
+      if (cleanUrl === '/user/update' && method === 'PUT') {
+        console.log('[Mock] 处理用户信息更新请求，数据:', data)
+        return this.user[cleanUrl] || null
+      }
+      return this.user[cleanUrl] || null
     }
     
     // 课程相关接口
-    if (url.startsWith('/course/') || url.startsWith('/lesson/')) {
-      if (url === '/course/detail' && data.courseId) {
-        return { ...this.course[url], id: data.courseId }
+    if (cleanUrl.startsWith('/course/') || cleanUrl.startsWith('/lesson/')) {
+      if (cleanUrl === '/course/detail' && data.courseId) {
+        return { ...this.course[cleanUrl], id: data.courseId }
       }
-      if (url === '/lesson/content' && data.lessonId) {
-        return { ...this.course[url], id: data.lessonId }
+      if (cleanUrl === '/lesson/content' && data.lessonId) {
+        return { ...this.course[cleanUrl], id: data.lessonId }
       }
-      return this.course[url] || null
+      return this.course[cleanUrl] || null
     }
     
     // 资讯相关接口
-    if (url.startsWith('/news/')) {
-      if (url === '/news/detail' && data.newsId) {
-        return { ...this.news[url], id: data.newsId }
+    if (cleanUrl.startsWith('/news/')) {
+      if (cleanUrl === '/news/detail' && data.newsId) {
+        return { ...this.news[cleanUrl], id: data.newsId }
       }
-      if (url === '/news/list') {
-        const mockList = this.news[url]
+      if (cleanUrl === '/news/list') {
+        const mockList = this.news[cleanUrl]
         return {
           ...mockList,
           page: data.page || 1,
           limit: data.limit || 10
         }
       }
-      return this.news[url] || null
+      return this.news[cleanUrl] || null
     }
     
     // 统计相关接口
-    if (url.startsWith('/stats/')) {
-      return this.stats[url] || null
+    if (cleanUrl.startsWith('/stats/')) {
+      return this.stats[cleanUrl] || null
     }
     
+    console.log(`[Mock] 未找到匹配的数据: ${cleanUrl}`)
     return null
   }
 }
