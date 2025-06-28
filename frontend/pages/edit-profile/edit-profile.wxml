@@ -3,15 +3,19 @@
   <view class="avatar-section">
     <view class="section-title">头像</view>
     <view class="avatar-container">
-      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar" disabled="{{uploading}}">
         <image 
           class="avatar-preview" 
           src="{{userInfo.avatar}}" 
           mode="aspectFill"
         />
-        <view class="avatar-overlay">
+        <view class="avatar-overlay" wx:if="{{!uploading}}">
           <text class="camera-icon">📷</text>
           <text class="avatar-hint">点击更换头像</text>
+        </view>
+        <view class="avatar-overlay uploading" wx:if="{{uploading}}">
+          <text class="upload-icon">⏳</text>
+          <text class="upload-hint">上传中...</text>
         </view>
       </button>
       <view class="avatar-tip">支持从微信头像或相册选择</view>

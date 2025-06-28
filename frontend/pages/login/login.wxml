@@ -2,7 +2,7 @@
   <view class="login-container">
     <view class="login-card">
       <view class="login-icon">
-        <image class="logo-icon" src="/static/images/logo.JPG" mode="aspectFit"></image>
+        <image class="logo-icon" src="/static/images/logo.jpg" mode="aspectFit"></image>
       </view>
       <text class="login-title">欢迎来到奇迹犬敏捷俱乐部</text>
       <text class="login-desc">登录后可享受个性化学习体验</text>

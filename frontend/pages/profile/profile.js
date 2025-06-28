@@ -61,11 +61,15 @@ Page({
       const app = getApp()
       if (app.globalData.isLoggedIn && app.globalData.userInfo) {
         console.log('个人中心 - 从全局获取用户信息:', app.globalData.userInfo)
+        const processedUserInfo = {
+          ...app.globalData.userInfo,
+          avatar: app.globalData.userInfo.avatarUrl || app.globalData.userInfo.avatar || '/static/images/default-avatar.png'
+        }
         this.setData({
           isLogin: true,
-          userInfo: app.globalData.userInfo
+          userInfo: processedUserInfo
         })
-        this.checkUserStatus(app.globalData.userInfo)
+        this.checkUserStatus(processedUserInfo)
         this.initMenuItems()
         return
       }
@@ -75,11 +79,15 @@ Page({
       
       if (token && userInfo) {
         console.log('个人中心 - 用户已登录:', userInfo)
+        const processedUserInfo = {
+          ...userInfo,
+          avatar: userInfo.avatarUrl || userInfo.avatar || '/static/images/default-avatar.png'
+        }
         this.setData({
           isLogin: true,
-          userInfo: userInfo
+          userInfo: processedUserInfo
         })
-        this.checkUserStatus(userInfo)
+        this.checkUserStatus(processedUserInfo)
         this.initMenuItems()
       } else {
         console.log('个人中心 - 用户未登录')
@@ -120,10 +128,16 @@ Page({
         app.globalData.isLoggedIn = true
       }
       
+      // 处理用户信息字段映射
+      const processedUserInfo = {
+        ...userInfo,
+        avatar: userInfo.avatarUrl || userInfo.avatar || '/static/images/default-avatar.png'
+      }
+      
       // 更新页面状态
       this.setData({
         isLogin: true,
-        userInfo: userInfo
+        userInfo: processedUserInfo
       })
       
       this.checkUserStatus(userInfo)
@@ -140,11 +154,15 @@ Page({
         const cachedUserInfo = auth.getCurrentUser()
         if (cachedUserInfo) {
           console.log('个人中心 - 使用缓存的用户信息:', cachedUserInfo)
+          const processedUserInfo = {
+            ...cachedUserInfo,
+            avatar: cachedUserInfo.avatarUrl || cachedUserInfo.avatar || '/static/images/default-avatar.png'
+          }
           this.setData({
             isLogin: true,
-            userInfo: cachedUserInfo
+            userInfo: processedUserInfo
           })
-          this.checkUserStatus(cachedUserInfo)
+          this.checkUserStatus(processedUserInfo)
           this.initMenuItems()
         } else {
           console.log('个人中心：获取用户信息失败，跳转到登录页')

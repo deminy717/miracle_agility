@@ -268,7 +268,8 @@ App({
     this.globalData.userInfo = null
     this.globalData.isAdmin = false
     this.globalData.isDeveloper = false
-    this.globalData.latestArticles = []
+    // 不要将latestArticles初始化为空数组，保持为null让主页可以正确判断
+    // this.globalData.latestArticles = []
     
     // 展示本地存储能力
     const logs = wx.getStorageSync('logs') || []

@@ -180,7 +180,11 @@ Page({
       if (this.data.page === 2) {
         const latestArticles = this.data.allArticles.slice(0, 3);
         const app = getApp();
+        if (!app.globalData) {
+          app.globalData = {};
+        }
         app.globalData.latestArticles = latestArticles;
+        console.log('文章列表页面更新全局数据:', latestArticles);
       }
     }, 500); // 模拟网络延迟
   },

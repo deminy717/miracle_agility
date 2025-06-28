@@ -3,7 +3,13 @@
   <view class="club-section">
     <!-- Logo 主图 -->
     <view class="main-logo-container">
-      <image class="main-logo" src="{{clubInfo.logo}}" mode="aspectFill" />
+      <image 
+        class="main-logo" 
+        src="{{clubInfo.logo}}" 
+        mode="aspectFill" 
+        binderror="onLogoError"
+        bindload="onLogoLoad"
+      />
       <view class="logo-overlay"></view>
     </view>
     

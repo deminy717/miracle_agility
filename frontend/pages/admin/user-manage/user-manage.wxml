@@ -26,7 +26,6 @@
             <view class="user-name">{{item.nickname || '未知用户'}}</view>
             <view class="user-meta">
               <text class="course-count">{{item.courseCount}}门课程</text>
-              <text class="completion-rate">完成率 {{item.completionRate}}%</text>
             </view>
             <view class="user-contact" wx:if="{{item.phone || item.email}}">
               <text wx:if="{{item.phone}}" class="contact-item">📱 {{item.phone}}</text>
@@ -70,18 +69,7 @@
                 </view>
               </view>
               
-              <view class="course-progress">
-                <view class="progress-bar">
-                  <view 
-                    class="progress-fill" 
-                    style="width: {{course.progress}}%"
-                  ></view>
-                </view>
-                <text class="progress-text">{{course.progress}}%</text>
-                <text class="status-badge {{course.isCompleted ? 'completed' : 'learning'}}">
-                  {{course.isCompleted ? '已完成' : '学习中'}}
-                </text>
-              </view>
+
             </view>
           </view>
         </view>
@@ -153,15 +141,7 @@
             <text class="form-value">{{userDetailInfo.totalCourses}} 门</text>
           </view>
           
-          <view class="form-item" wx:if="{{userDetailInfo.totalCourses > 0}}">
-            <text class="form-label">已完成课程</text>
-            <text class="form-value">{{userDetailInfo.completedCourses}} 门</text>
-          </view>
-          
-          <view class="form-item" wx:if="{{userDetailInfo.totalCourses > 0}}">
-            <text class="form-label">完成率</text>
-            <text class="form-value">{{userDetailInfo.completionRate}}%</text>
-          </view>
+
           
           <view class="form-item" wx:if="{{userDetailInfo.totalCourses === 0}}">
             <text class="form-label">学习状态</text>

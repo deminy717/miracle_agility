@@ -43,17 +43,12 @@ Page({
         // 确保courses是数组
         const courses = Array.isArray(user.courses) ? user.courses : []
         
-        // 计算完成率
-        const completionRate = this.calculateCompletionRate(courses)
-        
         // 处理课程数据
         const processedCourses = courses.map(course => ({
           ...course,
           courseTitle: course.courseTitle || '未知课程',
           registrationTypeText: this.getRegistrationTypeText(course.registrationType),
-          formattedCreatedAt: this.formatDate(course.createdAt),
-          progress: typeof course.progress === 'number' ? course.progress : 0,
-          isCompleted: Boolean(course.isCompleted)
+          formattedCreatedAt: this.formatDate(course.createdAt)
         }))
 
         return {
@@ -63,8 +58,7 @@ Page({
           phone: user.phone || '',
           email: user.email || '',
           courseCount: user.courseCount || 0,
-          courses: processedCourses,
-          completionRate
+          courses: processedCourses
         }
       })
       
@@ -140,11 +134,6 @@ Page({
     // 格式化注册时间
     const registrationDate = this.formatDate(userInfo.createdAt) || '未知'
     
-    // 计算完成情况
-    const totalCourses = courses.length
-    const completedCourses = courses.filter(course => course.isCompleted).length
-    const completionRate = totalCourses > 0 ? Math.round((completedCourses / totalCourses) * 100) : 0
-    
     // 设置详情信息
     this.setData({
       showUserDetail: true,
@@ -155,9 +144,7 @@ Page({
         roleText: roleText,
         level: userInfo.level,
         registrationDate: registrationDate,
-        totalCourses: totalCourses,
-        completedCourses: completedCourses,
-        completionRate: completionRate
+        totalCourses: courses.length
       }
     })
   },
@@ -197,17 +184,10 @@ Page({
     // 如果有分页需求，在这里实现
   },
 
-  // 格式化日期
+    // 格式化日期
   formatDate(dateString) {
     if (!dateString) return ''
     const date = new Date(dateString)
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-  },
-
-  // 计算完成率
-  calculateCompletionRate(courses) {
-    if (!courses || courses.length === 0) return 0
-    const completedCount = courses.filter(course => course.isCompleted).length
-    return Math.round((completedCount / courses.length) * 100)
   }
 })

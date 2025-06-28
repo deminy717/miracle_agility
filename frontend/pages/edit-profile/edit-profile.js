@@ -1,5 +1,6 @@
 const config = require('../../utils/config')
 const api = require('../../utils/api')
+const upload = require('../../utils/upload')
 
 Page({
   data: {
@@ -19,6 +20,7 @@ Page({
     nicknameLength: 0,
     bioLength: 0,
     canSave: false,
+    uploading: false, // 头像上传状态
     
     // 性别选项
     genderList: [
@@ -43,6 +45,7 @@ Page({
   },
 
   onLoad(options) {
+    console.log('编辑个人信息页面加载，参数:', options)
     this.loadUserInfo()
   },
 
@@ -114,7 +117,7 @@ Page({
     
     // 设置默认值 - 处理后端字段映射
     const profileData = {
-      avatar: userInfo.avatarUrl || userInfo.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+      avatar: userInfo.avatarUrl || userInfo.avatar || '/static/images/default-avatar.png',
       nickname: userInfo.nickname || '',
       phone: userInfo.phone || '',
       profession: userInfo.profession || '',
@@ -162,20 +165,52 @@ Page({
   },
 
   // 选择头像
-  onChooseAvatar(e) {
+  async onChooseAvatar(e) {
     const { avatarUrl } = e.detail
-    console.log('选择头像:', avatarUrl)
+    console.log('选择微信头像:', avatarUrl)
     
+    // 先显示本地预览
     this.setData({
-      'userInfo.avatar': avatarUrl
+      'userInfo.avatar': avatarUrl,
+      uploading: true
     })
     
-    this.checkCanSave()
-    
-    wx.showToast({
-      title: '头像已更新',
-      icon: 'success'
-    })
+    try {
+      wx.showLoading({ title: '上传中...' })
+      
+      // 上传头像到服务器
+      const uploadResult = await upload.uploadImage(avatarUrl, 'avatar')
+      console.log('头像上传成功:', uploadResult)
+      
+      // 更新为服务器返回的URL
+      this.setData({
+        'userInfo.avatar': uploadResult.url,
+        uploading: false
+      })
+      
+      this.checkCanSave()
+      
+      wx.hideLoading()
+      wx.showToast({
+        title: '头像上传成功',
+        icon: 'success'
+      })
+      
+    } catch (error) {
+      console.error('头像上传失败:', error)
+      
+      // 恢复原来的头像
+      this.setData({
+        'userInfo.avatar': this.data.originalUserInfo.avatar,
+        uploading: false
+      })
+      
+      wx.hideLoading()
+      wx.showToast({
+        title: '头像上传失败',
+        icon: 'none'
+      })
+    }
   },
 
   // 昵称输入
@@ -265,8 +300,6 @@ Page({
     })
     this.checkCanSave()
   },
-
-
 
   // 检查是否可以保存
   checkCanSave() {

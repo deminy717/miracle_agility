@@ -6,7 +6,7 @@
       <view class="user-header">
         <image 
           class="user-avatar" 
-          src="{{userInfo.avatar}}" 
+          src="{{userInfo.avatar || userInfo.avatarUrl || '/static/images/default-avatar.png'}}" 
           mode="aspectFill"
         />
         <view class="user-info">
