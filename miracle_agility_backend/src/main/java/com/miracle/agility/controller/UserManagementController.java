@@ -48,50 +48,55 @@ public class UserManagementController {
                         .body(ApiResponse.forbidden("无权限访问后台管理功能"));
             }
 
-            // 获取所有用户课程关联信息
-            List<UserCourse> userCourses = userCourseService.getAllUserCourses();
+            // 获取所有用户
+            List<User> allUsers = userService.getAllUsers();
+            log.info("查询到所有用户数量: {}", allUsers.size());
 
-            // 按用户分组并整理数据
-            Map<Long, List<UserCourse>> userCoursesMap = userCourses.stream()
+            // 获取所有用户课程关联信息
+            List<UserCourse> allUserCourses = userCourseService.getAllUserCourses();
+            log.info("查询到用户课程关联数量: {}", allUserCourses.size());
+
+            // 按用户分组课程信息
+            Map<Long, List<UserCourse>> userCoursesMap = allUserCourses.stream()
                     .collect(Collectors.groupingBy(UserCourse::getUserId));
 
             // 构建返回数据
-            List<UserListItemDTO> userList = userCoursesMap.entrySet().stream()
-                    .map(entry -> {
-                        Long userId = entry.getKey();
-                        List<UserCourse> courses = entry.getValue();
-
-                        if (!courses.isEmpty()) {
-                            UserCourse firstCourse = courses.get(0);
+            List<UserListItemDTO> userList = allUsers.stream()
+                    .map(user -> {
+                        List<UserCourse> userCourses = userCoursesMap.getOrDefault(user.getId(), Collections.emptyList());
+                        
+                        // 构建课程信息列表
+                        List<UserCourseInfoDTO> courseList = userCourses.stream().map(uc -> {
+                            // 从SQL查询结果中提取课程标题，如果没有则使用默认值
+                            String courseTitle = "未知课程";
+                            if (uc.getCourse() != null && uc.getCourse().getTitle() != null) {
+                                courseTitle = uc.getCourse().getTitle();
+                            }
                             
-                            // 构建课程信息列表
-                            List<UserCourseInfoDTO> courseList = courses.stream().map(uc -> 
-                                UserCourseInfoDTO.builder()
+                            return UserCourseInfoDTO.builder()
                                     .courseId(uc.getCourseId())
-                                    .courseTitle(uc.getCourse() != null ? uc.getCourse().getTitle() : "未知课程")
+                                    .courseTitle(courseTitle)
                                     .progress(uc.getProgress())
                                     .registrationType(uc.getRegistrationType())
                                     .createdAt(uc.getCreatedAt())
                                     .isCompleted(uc.getIsCompleted())
-                                    .build()
-                            ).collect(Collectors.toList());
-                            
-                            // 构建用户列表项
-                            return UserListItemDTO.builder()
-                                    .userId(userId)
-                                    .nickname(firstCourse.getUser() != null ? firstCourse.getUser().getNickname() : "未知用户")
-                                    .avatarUrl(firstCourse.getUser() != null ? firstCourse.getUser().getAvatarUrl() : "")
-                                    .phone(firstCourse.getUser() != null ? firstCourse.getUser().getPhone() : "")
-                                    .email(firstCourse.getUser() != null ? firstCourse.getUser().getEmail() : "")
-                                    .courseCount(courses.size())
-                                    .courses(courseList)
                                     .build();
-                        }
-                        return null;
+                        }).collect(Collectors.toList());
+                        
+                        // 构建用户列表项
+                        return UserListItemDTO.builder()
+                                .userId(user.getId())
+                                .nickname(user.getNickname() != null ? user.getNickname() : "未知用户")
+                                .avatarUrl(user.getAvatarUrl() != null ? user.getAvatarUrl() : "")
+                                .phone(user.getPhone() != null ? user.getPhone() : "")
+                                .email(user.getEmail() != null ? user.getEmail() : "")
+                                .courseCount(courseList.size())
+                                .courses(courseList)
+                                .build();
                     })
-                    .filter(user -> user != null)
                     .collect(Collectors.toList());
 
+            log.info("返回用户列表数量: {}", userList.size());
             return ResponseEntity.ok(ApiResponse.success("获取成功", userList));
 
         } catch (Exception e) {

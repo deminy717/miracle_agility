@@ -61,7 +61,6 @@ public class LessonServiceImpl implements LessonService {
         lesson.setChapterId(request.getChapterId());
         lesson.setCourseId(request.getCourseId());
         lesson.setTitle(request.getTitle());
-        lesson.setDescription(request.getDescription());
         lesson.setSortOrder(sortOrder);
         lesson.setStatus(request.getStatus() != null ? request.getStatus() : "draft");
         lesson.setDurationMinutes(request.getDurationMinutes());
@@ -174,7 +173,6 @@ public class LessonServiceImpl implements LessonService {
         
         // 更新课时基本信息
         lesson.setTitle(request.getTitle());
-        lesson.setDescription(request.getDescription());
         lesson.setDurationMinutes(request.getDurationMinutes());
         lesson.setVideoUrl(request.getVideoUrl());
         lesson.setVideoDuration(request.getVideoDuration());
@@ -425,7 +423,6 @@ public class LessonServiceImpl implements LessonService {
                 .chapterId(lesson.getChapterId())
                 .courseId(lesson.getCourseId())
                 .title(lesson.getTitle())
-                .description(lesson.getDescription())
                 .sortOrder(lesson.getSortOrder())
                 .status(lesson.getStatus())
                 .durationMinutes(lesson.getDurationMinutes())

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户服务实现类
@@ -212,19 +213,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean hasPermission(Long userId, String permission) {
-        User user = userMapper.selectById(userId);
-        if (user == null) {
+        try {
+            User user = userMapper.selectById(userId);
+            if (user == null || !user.isActive()) {
+                return false;
+            }
+
+            // 简单的权限检查逻辑
+            // 可以根据实际需求扩展更复杂的权限系统
+            if ("admin".equals(user.getRole()) || "super_admin".equals(user.getRole())) {
+                return true; // 管理员拥有所有权限
+            }
+
+            // 其他权限检查逻辑
+            return false;
+
+        } catch (Exception e) {
+            log.error("权限检查失败: userId={}, permission={}, error={}", userId, permission, e.getMessage());
             return false;
         }
+    }
 
-        // 简单的权限检查逻辑，可以根据需要扩展
-        switch (permission) {
-            case "admin":
-                return user.isAdmin();
-            case "super_admin":
-                return user.isSuperAdmin();
-            default:
-                return true; // 普通权限
+    @Override
+    public List<User> getAllUsers() {
+        try {
+            log.info("获取所有用户列表");
+            List<User> users = userMapper.selectList(null);
+            log.info("查询到用户数量: {}", users.size());
+            return users;
+        } catch (Exception e) {
+            log.error("获取用户列表失败: {}", e.getMessage());
+            throw new RuntimeException("获取用户列表失败", e);
         }
     }
 

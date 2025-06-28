@@ -28,7 +28,7 @@ frontend/
 │   └── ...                    # 其他工具
 ├── static/                    # 静态资源
 │   ├── images/                # 图片资源
-│   └── logo.JPG               # 应用Logo
+│   └── logo.png               # 应用Logo
 └── convert_icons.html         # 图标转换工具
 ```
 

@@ -23,10 +23,6 @@ public class LessonCreateRequest {
     @Size(max = 200, message = "课时标题长度不能超过200字符")
     private String title;
     
-    @NotBlank(message = "课时描述不能为空")
-    @Size(max = 2000, message = "课时描述长度不能超过2000字符")
-    private String description;
-    
     private Integer sortOrder;
     
     private String status; // draft, published, archived

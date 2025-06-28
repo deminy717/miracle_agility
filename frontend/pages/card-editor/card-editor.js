@@ -53,7 +53,12 @@ Page({
     // 调试日志显示（临时禁用避免热重载）
     showDebugLog: false,
     debugLogs: [],
-    debugLogExpanded: false
+    debugLogExpanded: false,
+    
+    // 全屏编辑相关
+    showFullscreenEditor: false,
+    fullscreenContent: '',
+    fullscreenEditIndex: -1
   },
 
   onLoad(options) {
@@ -229,7 +234,6 @@ Page({
         'courseInfo.title': '编辑课时',
         'courseInfo.subtitle': this.data.chapterTitle || '章节课时',
         'lessonInfo.title': lessonData.title || '',
-        'lessonInfo.description': lessonData.description || '',
         'lessonInfo.duration': lessonData.durationMinutes ? lessonData.durationMinutes.toString() : '',
         // 关键修复：设置courseId和chapterId
         courseId: lessonData.courseId,
@@ -384,14 +388,6 @@ Page({
   onLessonTitleInput(e) {
     this.setData({
       'lessonInfo.title': e.detail.value
-    });
-    this.saveFormDataToCache();
-  },
-
-  // 课时描述输入
-  onLessonDescriptionInput(e) {
-    this.setData({
-      'lessonInfo.description': e.detail.value
     });
     this.saveFormDataToCache();
   },
@@ -1080,6 +1076,60 @@ Page({
     this.saveFormDataToCache();
   },
 
+  // 进入全屏编辑
+  enterFullscreenEdit(e) {
+    const index = e.currentTarget.dataset.index;
+    const currentContent = this.data.contentCards[index].content || '';
+    
+    this.setData({
+      showFullscreenEditor: true,
+      fullscreenContent: currentContent,
+      fullscreenEditIndex: index
+    });
+  },
+
+  // 退出全屏编辑
+  exitFullscreenEdit() {
+    // 保存全屏编辑的内容到原卡片
+    if (this.data.fullscreenEditIndex >= 0) {
+      this.setData({
+        [`contentCards[${this.data.fullscreenEditIndex}].content`]: this.data.fullscreenContent,
+        showFullscreenEditor: false,
+        fullscreenContent: '',
+        fullscreenEditIndex: -1
+      });
+      this.saveFormDataToCache();
+    } else {
+      this.setData({
+        showFullscreenEditor: false,
+        fullscreenContent: '',
+        fullscreenEditIndex: -1
+      });
+    }
+  },
+
+  // 全屏编辑内容输入
+  onFullscreenTextInput(e) {
+    this.setData({
+      fullscreenContent: e.detail.value
+    });
+  },
+
+  // 文本框获得焦点
+  onTextAreaFocus(e) {
+    // 可以在这里添加获得焦点时的处理逻辑
+  },
+
+  // 文本框失去焦点
+  onTextAreaBlur(e) {
+    // 可以在这里添加失去焦点时的处理逻辑
+  },
+
+  // 文本框确认输入
+  onTextContentConfirm(e) {
+    // 可以在这里添加确认输入时的处理逻辑
+  },
+
   onHighlightTitleInput(e) {
     const index = e.currentTarget.dataset.index;
     const cards = this.data.contentCards;
@@ -1191,7 +1241,6 @@ Page({
         chapterId: parseInt(this.data.chapterId),
         courseId: parseInt(this.data.courseId),
         title: this.data.lessonInfo.title.trim(),
-        description: this.data.lessonInfo.description.trim(),
         durationMinutes: this.data.lessonInfo.duration ? parseInt(this.data.lessonInfo.duration) : null,
         status: 'draft', // 明确设置为草稿状态
         lessonCards: this.data.contentCards.map((card, index) => ({
@@ -1254,14 +1303,6 @@ Page({
       return;
     }
 
-    if (!this.data.lessonInfo.description.trim()) {
-      wx.showToast({
-        title: '请输入课时简介',
-        icon: 'none'
-      });
-      return;
-    }
-
     if (this.data.contentCards.length === 0) {
       wx.showToast({
         title: '请添加至少一个内容卡片',
@@ -1284,7 +1325,6 @@ Page({
         chapterId: parseInt(this.data.chapterId),
         courseId: parseInt(this.data.courseId),
         title: this.data.lessonInfo.title.trim(),
-        description: this.data.lessonInfo.description.trim(),
         durationMinutes: this.data.lessonInfo.duration ? parseInt(this.data.lessonInfo.duration) : null,
         status: isEditMode ? 'draft' : 'published',
         lessonCards: this.data.contentCards.map((card, index) => ({

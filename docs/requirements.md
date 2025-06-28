@@ -9,7 +9,7 @@
 
     * **首页**
         * 这里可以看到俱乐部的logo和简单介绍
-        * 俱乐部logo可以在 ./miniprogram/static/images/logo.jpg 找到
+        * 俱乐部logo可以在 ./miniprogram/static/images/logo.png 找到
 
     
     * **课程**

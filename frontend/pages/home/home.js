@@ -1,7 +1,7 @@
 Page({
   data: {
     clubInfo: {
-      logo: '/static/images/logo.jpg',
+      logo: '/static/images/logo.png',
       name: '奇迹犬敏捷',
       description: '欢迎来到奇迹犬敏捷！我们致力于为每一位狗狗和主人提供专业的敏捷训练课程，让您的爱犬在快乐中成长，在挑战中进步。'
     },
@@ -160,7 +160,7 @@ Page({
     const currentLogo = this.data.clubInfo.logo
     
     // 多重备用方案
-    if (currentLogo === '/static/images/logo.jpg') {
+    if (currentLogo === '/static/images/logo.png') {
       // 第一次失败，尝试使用PNG格式
       console.log('尝试使用PNG格式logo')
       this.setData({

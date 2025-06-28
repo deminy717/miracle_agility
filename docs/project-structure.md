@@ -197,7 +197,7 @@ miracle_agility/
 │   └── mockData.js                # 模拟数据
 │
 ├── static/                        # 静态资源目录
-│   ├── logo.JPG                   # 应用Logo
+│   ├── logo.png                   # 应用Logo
 │   └── images/                    # 图片资源
 │       └── icon/                  # 图标资源
 │           ├── home.png           # 主页图标

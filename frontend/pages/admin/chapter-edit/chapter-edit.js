@@ -204,8 +204,8 @@ Page({
         courseId: parseInt(this.data.courseId),
         title: title.trim(),
         description: description.trim(),
-        durationMinutes: parseInt(duration) || 0,
-        status: status
+        status: status,
+        durationMinutes: this.data.chapterInfo.durationMinutes || 0
       };
 
       console.log('更新章节请求数据:', requestData);

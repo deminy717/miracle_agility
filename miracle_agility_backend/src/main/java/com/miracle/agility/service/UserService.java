@@ -4,6 +4,8 @@ import com.miracle.agility.dto.LoginRequest;
 import com.miracle.agility.dto.LoginResponse;
 import com.miracle.agility.entity.User;
 
+import java.util.List;
+
 /**
  * 用户服务接口
  */
@@ -68,4 +70,11 @@ public interface UserService {
      * @return 是否有权限
      */
     boolean hasPermission(Long userId, String permission);
-} 
+    
+    /**
+     * 获取所有用户列表
+     * 
+     * @return 所有用户列表
+     */
+    List<User> getAllUsers();
+}

@@ -22,7 +22,6 @@ public class LessonResponse {
     private Long chapterId;
     private Long courseId;
     private String title;
-    private String description;
     private Integer sortOrder;
     private String status;
     private Integer durationMinutes;
@@ -149,7 +148,6 @@ public class LessonResponse {
                 .chapterId(lesson.getChapterId())
                 .courseId(lesson.getCourseId())
                 .title(lesson.getTitle())
-                .description(lesson.getDescription())
                 .sortOrder(lesson.getSortOrder())
                 .status(lesson.getStatus())
                 .durationMinutes(lesson.getDurationMinutes())

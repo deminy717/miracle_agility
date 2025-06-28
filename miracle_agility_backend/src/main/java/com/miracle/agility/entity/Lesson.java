@@ -28,9 +28,6 @@ public class Lesson {
     @TableField("title")
     private String title;
     
-    @TableField("description")
-    private String description;
-    
     @TableField("sort_order")
     private Integer sortOrder;
     
