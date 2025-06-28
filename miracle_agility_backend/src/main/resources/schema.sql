@@ -91,8 +91,6 @@ CREATE TABLE courses (
     duration_minutes INT DEFAULT 0 COMMENT '总时长(分钟)',
     lesson_count INT DEFAULT 0 COMMENT '课时数量',
     student_count INT DEFAULT 0 COMMENT '学生数量',
-    rating DECIMAL(3,2) DEFAULT 0.00 COMMENT '评分',
-    rating_count INT DEFAULT 0 COMMENT '评分人数',
     tags JSON COMMENT '标签数组',
     requirements JSON COMMENT '学习要求',
     objectives JSON COMMENT '学习目标',

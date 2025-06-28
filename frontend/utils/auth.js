@@ -449,6 +449,37 @@ function hasPermission(permission) {
 }
 
 /**
+ * 检查管理员权限
+ * 如果用户不是管理员，会自动跳转到首页并提示
+ * @returns {boolean} 是否有管理员权限
+ */
+function checkAdminAuth() {
+  if (!checkLoginStatus()) {
+    wx.showToast({
+      title: '请先登录',
+      icon: 'none'
+    })
+    wx.switchTab({
+      url: '/pages/profile/profile'
+    })
+    return false
+  }
+  
+  if (!hasPermission('admin')) {
+    wx.showToast({
+      title: '无管理员权限',
+      icon: 'none'
+    })
+    wx.switchTab({
+      url: '/pages/home/home'
+    })
+    return false
+  }
+  
+  return true
+}
+
+/**
  * 自动登录检查
  * 在app启动时调用，检查是否需要自动登录或刷新令牌
  */
@@ -492,5 +523,6 @@ module.exports = {
   redirectToLogin,
   getCurrentUser,
   hasPermission,
+  checkAdminAuth,
   autoLoginCheck
 } 

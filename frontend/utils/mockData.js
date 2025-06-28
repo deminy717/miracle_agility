@@ -260,6 +260,179 @@ const mockData = {
     }
   },
 
+  // 用户管理相关mock数据
+  admin: {
+    '/admin/users/list': [
+      {
+        userId: 1,
+        nickname: '张三',
+        avatarUrl: 'https://images.unsplash.com/photo-1581888227599-779811939961?w=200&h=200&fit=crop&crop=face',
+        phone: '138****8888',
+        email: 'zhangsan@example.com',
+        courseCount: 3,
+        courses: [
+          {
+            courseId: 1,
+            courseTitle: '犬敏捷入门基础',
+            progress: 85,
+            registrationType: 'direct',
+            createdAt: '2024-01-10T08:30:00',
+            isCompleted: true
+          },
+          {
+            courseId: 2,
+            courseTitle: '障碍物训练进阶',
+            progress: 45,
+            registrationType: 'direct',
+            createdAt: '2024-02-15T14:20:00',
+            isCompleted: false
+          },
+          {
+            courseId: 3,
+            courseTitle: '高级竞技训练',
+            progress: 10,
+            registrationType: 'code',
+            createdAt: '2024-03-05T16:45:00',
+            isCompleted: false
+          }
+        ]
+      },
+      {
+        userId: 2,
+        nickname: '李四',
+        avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+        phone: '139****9999',
+        email: 'lisi@example.com',
+        courseCount: 2,
+        courses: [
+          {
+            courseId: 1,
+            courseTitle: '犬敏捷入门基础',
+            progress: 100,
+            registrationType: 'direct',
+            createdAt: '2024-01-05T10:15:00',
+            isCompleted: true
+          },
+          {
+            courseId: 4,
+            courseTitle: '犬敏捷比赛策略',
+            progress: 60,
+            registrationType: 'code',
+            createdAt: '2024-02-20T09:30:00',
+            isCompleted: false
+          }
+        ]
+      },
+      {
+        userId: 3,
+        nickname: '王五',
+        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+        phone: '137****7777',
+        email: 'wangwu@example.com',
+        courseCount: 1,
+        courses: [
+          {
+            courseId: 2,
+            courseTitle: '障碍物训练进阶',
+            progress: 30,
+            registrationType: 'direct',
+            createdAt: '2024-03-01T11:20:00',
+            isCompleted: false
+          }
+        ]
+      }
+    ],
+    '/admin/users/1/detail': {
+      userInfo: {
+        id: 1,
+        nickname: '张三',
+        avatarUrl: 'https://images.unsplash.com/photo-1581888227599-779811939961?w=200&h=200&fit=crop&crop=face',
+        phone: '13888888888',
+        email: 'zhangsan@example.com',
+        role: 'user',
+        level: '高级学员',
+        createdAt: '2023-12-01T08:30:00'
+      },
+      courses: [
+        {
+          courseId: 1,
+          courseTitle: '犬敏捷入门基础',
+          courseCover: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop',
+          progress: 85,
+          totalStudyMinutes: 320,
+          registrationType: 'direct',
+          isCompleted: true,
+          createdAt: '2024-01-10T08:30:00',
+          lastStudyTime: '2024-03-15T14:25:00'
+        },
+        {
+          courseId: 2,
+          courseTitle: '障碍物训练进阶',
+          courseCover: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
+          progress: 45,
+          totalStudyMinutes: 180,
+          registrationType: 'direct',
+          isCompleted: false,
+          createdAt: '2024-02-15T14:20:00',
+          lastStudyTime: '2024-03-18T09:15:00'
+        },
+        {
+          courseId: 3,
+          courseTitle: '高级竞技训练',
+          courseCover: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
+          progress: 10,
+          totalStudyMinutes: 45,
+          registrationType: 'code',
+          isCompleted: false,
+          createdAt: '2024-03-05T16:45:00',
+          lastStudyTime: '2024-03-20T18:30:00'
+        }
+      ]
+    },
+    '/admin/users/2/detail': {
+      userInfo: {
+        id: 2,
+        nickname: '李四',
+        avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+        phone: '13999999999',
+        email: 'lisi@example.com',
+        role: 'user',
+        level: '中级学员',
+        createdAt: '2023-12-15T10:20:00'
+      },
+      courses: [
+        {
+          courseId: 1,
+          courseTitle: '犬敏捷入门基础',
+          courseCover: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop',
+          progress: 100,
+          totalStudyMinutes: 280,
+          registrationType: 'direct',
+          isCompleted: true,
+          createdAt: '2024-01-05T10:15:00',
+          lastStudyTime: '2024-02-10T16:40:00'
+        },
+        {
+          courseId: 4,
+          courseTitle: '犬敏捷比赛策略',
+          courseCover: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop',
+          progress: 60,
+          totalStudyMinutes: 210,
+          registrationType: 'code',
+          isCompleted: false,
+          createdAt: '2024-02-20T09:30:00',
+          lastStudyTime: '2024-03-19T11:25:00'
+        }
+      ]
+    },
+    '/admin/users/statistics': {
+      totalUsers: 25,
+      totalRegistrations: 48,
+      completedCourses: 18,
+      completionRate: 37.5
+    }
+  },
+
   // 通用方法：根据URL获取mock数据
   getMockData(url, data = {}, method = 'GET') {
     console.log(`[Mock] 请求: ${method} ${url}`, data)
@@ -312,6 +485,17 @@ const mockData = {
     // 统计相关接口
     if (cleanUrl.startsWith('/stats/')) {
       return this.stats[cleanUrl] || null
+    }
+    
+    // 用户管理相关接口
+    if (cleanUrl.startsWith('/admin/')) {
+      // 处理用户详情请求，支持动态用户ID
+      if (cleanUrl.match(/^\/admin\/users\/\d+\/detail$/)) {
+        const userId = cleanUrl.split('/')[3]; // 提取用户ID
+        // 尝试获取指定用户ID的详情，如果不存在则返回第一个用户的详情
+        return this.admin[`/admin/users/${userId}/detail`] || this.admin['/admin/users/1/detail'];
+      }
+      return this.admin[cleanUrl] || null
     }
     
     console.log(`[Mock] 未找到匹配的数据: ${cleanUrl}`)

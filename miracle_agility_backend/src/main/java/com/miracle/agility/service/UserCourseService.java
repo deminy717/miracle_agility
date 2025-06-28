@@ -53,9 +53,4 @@ public interface UserCourseService {
      * 取消课程注册
      */
     void cancelCourseRegistration(Long userId, Long courseId);
-
-    /**
-     * 对课程进行评价
-     */
-    void rateCourse(Long userId, Long courseId, int rating, String review);
 } 

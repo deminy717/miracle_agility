@@ -4,9 +4,10 @@ const auth = require('../../../utils/auth.js')
 Page({
   data: {
     userList: [],
-    statistics: {},
     loading: false,
-    expandedUsers: {} // 记录展开状态的用户ID
+    expandedUsers: {}, // 记录展开状态的用户ID
+    showUserDetail: false, // 控制用户详情模态框显示
+    userDetailInfo: {} // 用户详情信息
   },
 
   onLoad() {
@@ -23,7 +24,6 @@ Page({
       return
     }
     this.loadUserList()
-    this.loadStatistics()
   },
 
   // 加载用户列表
@@ -35,30 +35,45 @@ Page({
     try {
       wx.showLoading({ title: '加载中...' })
       
-      const response = await api.request('/admin/users/list', {}, 'GET')
+      const response = await api.request('/api/admin/users/list', {}, 'GET')
+      console.log('API响应:', response) // 添加日志
       
-      if (response && response.code === 200) {
-        // 预处理用户数据，添加格式化字段
-        const processedUserList = (response.data || []).map(user => {
-          return {
-            ...user,
-            // 预处理课程数据
-            courses: user.courses ? user.courses.map(course => ({
-              ...course,
-              registrationTypeText: this.getRegistrationTypeText(course.registrationType),
-              formattedCreatedAt: this.formatDate(course.createdAt)
-            })) : [],
-            // 预计算完成率
-            completionRate: this.calculateCompletionRate(user.courses)
-          }
-        })
+      // 预处理用户数据，添加格式化字段
+      const processedUserList = response.map(user => {
+        // 确保courses是数组
+        const courses = Array.isArray(user.courses) ? user.courses : []
         
-        this.setData({
-          userList: processedUserList
-        })
-      } else {
-        throw new Error(response?.message || '获取用户列表失败')
-      }
+        // 计算完成率
+        const completionRate = this.calculateCompletionRate(courses)
+        
+        // 处理课程数据
+        const processedCourses = courses.map(course => ({
+          ...course,
+          courseTitle: course.courseTitle || '未知课程',
+          registrationTypeText: this.getRegistrationTypeText(course.registrationType),
+          formattedCreatedAt: this.formatDate(course.createdAt),
+          progress: typeof course.progress === 'number' ? course.progress : 0,
+          isCompleted: Boolean(course.isCompleted)
+        }))
+
+        return {
+          userId: user.userId,
+          nickname: user.nickname || '未知用户',
+          avatarUrl: user.avatarUrl || '/static/images/default-avatar.png',
+          phone: user.phone || '',
+          email: user.email || '',
+          courseCount: user.courseCount || 0,
+          courses: processedCourses,
+          completionRate
+        }
+      })
+      
+      console.log('处理后的用户数据:', processedUserList) // 添加日志
+      
+      this.setData({
+        userList: processedUserList,
+        loading: false
+      })
       
     } catch (error) {
       console.error('加载用户列表失败:', error)
@@ -69,22 +84,6 @@ Page({
     } finally {
       this.setData({ loading: false })
       wx.hideLoading()
-    }
-  },
-
-  // 加载统计信息
-  async loadStatistics() {
-    try {
-      const response = await api.request('/admin/users/statistics', {}, 'GET')
-      
-      if (response && response.code === 200) {
-        this.setData({
-          statistics: response.data || {}
-        })
-      }
-      
-    } catch (error) {
-      console.error('加载统计信息失败:', error)
     }
   },
 
@@ -105,15 +104,18 @@ Page({
     try {
       wx.showLoading({ title: '加载中...' })
       
-      const response = await api.request(`/admin/users/${userId}/detail`, {}, 'GET')
+      const response = await api.request(`/api/admin/users/${userId}/detail`, {}, 'GET')
+      console.log('用户详情API响应:', response) // 添加调试日志
       
-      if (response && response.code === 200) {
-        const userDetail = response.data
-        
-        // 显示用户详情对话框
-        this.showUserDetailModal(userDetail)
+      // 根据您提供的数据结构，直接使用response作为数据
+      if (response && response.userInfo) {
+        // 显示用户详情表单
+        this.showUserDetailModal(response)
+      } else if (response && response.code === 200 && response.data) {
+        // 如果是标准格式，使用data字段
+        this.showUserDetailModal(response.data)
       } else {
-        throw new Error(response?.message || '获取用户详情失败')
+        throw new Error(response.message || '获取用户详情失败')
       }
       
     } catch (error) {
@@ -127,31 +129,50 @@ Page({
     }
   },
 
-  // 显示用户详情模态框
+  // 显示用户详情表单模态框
   showUserDetailModal(userDetail) {
-    const userInfo = userDetail.userInfo
-    const courses = userDetail.courses
+    const userInfo = userDetail.userInfo || {}
+    const courses = userDetail.courses || []
     
-    let content = `用户信息：\n`
-    content += `昵称：${userInfo.nickname}\n`
-    content += `角色：${userInfo.role}\n`
-    content += `等级：${userInfo.level}\n`
-    content += `注册时间：${userInfo.createdAt}\n\n`
+    // 格式化角色显示
+    const roleText = userInfo.role === 'admin' ? '管理员' : '普通用户'
     
-    content += `课程信息（${courses.length}门）：\n`
-    courses.forEach((course, index) => {
-      content += `${index + 1}. ${course.courseTitle}\n`
-      content += `   进度：${course.progress}%\n`
-      content += `   注册方式：${this.getRegistrationTypeText(course.registrationType)}\n`
-      content += `   状态：${course.isCompleted ? '已完成' : '学习中'}\n\n`
+    // 格式化注册时间
+    const registrationDate = this.formatDate(userInfo.createdAt) || '未知'
+    
+    // 计算完成情况
+    const totalCourses = courses.length
+    const completedCourses = courses.filter(course => course.isCompleted).length
+    const completionRate = totalCourses > 0 ? Math.round((completedCourses / totalCourses) * 100) : 0
+    
+    // 设置详情信息
+    this.setData({
+      showUserDetail: true,
+      userDetailInfo: {
+        nickname: userInfo.nickname,
+        phone: userInfo.phone,
+        email: userInfo.email,
+        roleText: roleText,
+        level: userInfo.level,
+        registrationDate: registrationDate,
+        totalCourses: totalCourses,
+        completedCourses: completedCourses,
+        completionRate: completionRate
+      }
     })
-    
-    wx.showModal({
-      title: '用户详情',
-      content: content,
-      showCancel: false,
-      confirmText: '确定'
+  },
+
+  // 隐藏用户详情模态框
+  hideUserDetail() {
+    this.setData({
+      showUserDetail: false,
+      userDetailInfo: {}
     })
+  },
+
+  // 阻止事件冒泡
+  stopPropagation() {
+    // 阻止点击模态框内容时关闭模态框
   },
 
   // 获取注册方式文本

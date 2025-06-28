@@ -30,7 +30,6 @@ Page({
         image: result.cover,
         duration: `${result.durationMinutes || 0}分钟`,
         students: result.studentCount || 0,
-        rating: result.rating || 0,
         progress: 0, // 进度暂时设为0，需要后续开发
         completedLessons: 0, // 暂时设为0
         totalLessons: result.chapterCount || 0,

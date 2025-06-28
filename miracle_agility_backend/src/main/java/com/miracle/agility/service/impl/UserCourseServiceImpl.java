@@ -152,22 +152,6 @@ public class UserCourseServiceImpl implements UserCourseService {
         }
     }
 
-    @Override
-    @Transactional
-    public void rateCourse(Long userId, Long courseId, int rating, String review) {
-        UpdateWrapper<UserCourse> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("user_id", userId)
-                    .eq("course_id", courseId)
-                    .eq("status", "active")
-                    .set("rating", Math.max(1, Math.min(5, rating)))
-                    .set("review", review);
-
-        int result = userCourseMapper.update(null, updateWrapper);
-        if (result > 0) {
-            log.info("用户{}对课程{}进行评价: {}分", userId, courseId, rating);
-        }
-    }
-
     /**
      * 获取用户课程关联记录
      */

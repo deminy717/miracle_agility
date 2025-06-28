@@ -88,16 +88,6 @@ public class CourseResponse {
     private Integer studentCount;
 
     /**
-     * 评分
-     */
-    private BigDecimal rating;
-
-    /**
-     * 评分人数
-     */
-    private Integer ratingCount;
-
-    /**
      * 标签数组
      */
     private String tags;

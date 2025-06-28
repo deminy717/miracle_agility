@@ -4,38 +4,6 @@
   min-height: 100vh;
 }
 
-/* 统计信息 */
-.statistics-section {
-  margin-bottom: 30rpx;
-}
-
-.stats-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20rpx;
-  padding: 30rpx;
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.3);
-}
-
-.stats-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
-
-.stats-number {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 8rpx;
-}
-
-.stats-label {
-  font-size: 24rpx;
-  opacity: 0.9;
-}
-
 /* 列表标题 */
 .user-list-section {
   background: white;
@@ -251,40 +219,41 @@
 }
 
 .progress-bar {
-  flex: 1;
-  height: 8rpx;
   background: #e9ecef;
-  border-radius: 4rpx;
+  height: 10rpx;
+  border-radius: 5rpx;
   overflow: hidden;
+  margin: 10rpx 0;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #28a745, #20c997);
-  transition: width 0.3s;
+  background: #203b9d;
+  border-radius: 5rpx;
+  transition: width 0.3s ease;
 }
 
 .progress-text {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #495057;
-  min-width: 60rpx;
-  text-align: center;
+  margin-left: 10rpx;
 }
 
 .status-badge {
-  font-size: 20rpx;
-  padding: 4rpx 10rpx;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
   border-radius: 10rpx;
-  color: white;
+  margin-left: 15rpx;
 }
 
 .status-badge.completed {
-  background: #28a745;
+  background: #d4edda;
+  color: #28a745;
 }
 
 .status-badge.learning {
-  background: #ffc107;
-  color: #212529;
+  background: #e9ecef;
+  color: #6c757d;
 }
 
 /* 空状态 */
@@ -292,14 +261,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80rpx 20rpx;
+  justify-content: center;
+  padding: 100rpx 0;
 }
 
 .empty-icon {
-  width: 120rpx;
-  height: 120rpx;
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
   opacity: 0.5;
-  margin-bottom: 20rpx;
 }
 
 .empty-text {
@@ -311,10 +281,129 @@
 .loading-state {
   display: flex;
   justify-content: center;
-  padding: 40rpx;
+  align-items: center;
+  padding: 40rpx 0;
 }
 
 .loading-text {
   font-size: 28rpx;
   color: #6c757d;
+}
+
+/* 用户详情模态框 */
+.user-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20rpx;
+  width: 100%;
+  max-width: 600rpx;
+  max-height: 80%;
+  overflow: hidden;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  background: #203b9d;
+  color: white;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.close-btn {
+  font-size: 36rpx;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-section {
+  margin-bottom: 40rpx;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* 用户详情模态框中的section-title样式 */
+.modal-body .section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-bottom: 10rpx;
+  background: transparent;
+  padding: 0;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  font-size: 26rpx;
+  color: #495057;
+  width: 200rpx;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.form-value {
+  font-size: 26rpx;
+  color: #212529;
+  flex: 1;
+  text-align: right;
+}
+
+.modal-footer {
+  padding: 30rpx;
+  border-top: 1rpx solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.confirm-btn {
+  background: #203b9d;
+  color: white;
+  border: none;
+  border-radius: 50rpx;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  width: 100%;
 } 

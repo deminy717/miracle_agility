@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,11 +156,12 @@ public class CourseAccessCodeController {
             // 通过授权码注册课程
             UserCourse userCourse = userCourseService.registerCourseByCode(currentUser.getId(), code);
             
-            Map<String, Object> result = Map.of(
-                "message", "课程注册成功",
-                "courseId", userCourse.getCourseId(),
-                "registrationId", userCourse.getId()
-            );
+            Map<String, Object> result = new HashMap(){{
+                put("message", "课程注册成功");
+                put("courseId", userCourse.getCourseId());
+                put("registrationId", userCourse.getId());
+            }};
+
             
             return ResponseEntity.ok(ApiResponse.success("授权码兑换成功", result));
             
@@ -186,16 +188,16 @@ public class CourseAccessCodeController {
                     .body(ApiResponse.error("授权码不存在"));
             }
             
-            Map<String, Object> result = Map.of(
-                "code", accessCode.getCode(),
-                "courseId", accessCode.getCourseId(),
-                "courseTitle", accessCode.getCourse() != null ? accessCode.getCourse().getTitle() : "未知课程",
-                "isUsable", accessCode.isUsable(),
-                "status", accessCode.getStatus(),
-                "usageLimit", accessCode.getUsageLimit(),
-                "usedCount", accessCode.getUsedCount(),
-                "validUntil", accessCode.getValidUntil()
-            );
+            Map<String, Object> result = new HashMap(){{
+                put("code", accessCode.getCode());
+                put("courseId", accessCode.getCourseId());
+                put("courseTitle", accessCode.getCourse() != null ? accessCode.getCourse().getTitle() : "未知课程");
+                put("isUsable", accessCode.isUsable());
+                put("status", accessCode.getStatus());
+                put("usageLimit", accessCode.getUsageLimit());
+                put("usedCount", accessCode.getUsedCount());
+                put("validUntil", accessCode.getValidUntil());
+            }};
             
             return ResponseEntity.ok(ApiResponse.success("授权码信息", result));
             
@@ -209,7 +211,7 @@ public class CourseAccessCodeController {
     /**
      * 禁用授权码（管理员）
      */
-    @PUT("/{codeId}/disable")
+    @PutMapping("/{codeId}/disable")
     public ResponseEntity<ApiResponse<String>> disableAccessCode(
             @PathVariable Long codeId,
             HttpServletRequest httpRequest) {
@@ -235,7 +237,7 @@ public class CourseAccessCodeController {
     /**
      * 启用授权码（管理员）
      */
-    @PUT("/{codeId}/enable")
+    @PutMapping("/{codeId}/enable")
     public ResponseEntity<ApiResponse<String>> enableAccessCode(
             @PathVariable Long codeId,
             HttpServletRequest httpRequest) {

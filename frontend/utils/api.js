@@ -137,6 +137,11 @@ module.exports = {
   updateUserInfo: (userInfo) => request('/api/user/update', userInfo, 'PUT'),
   logout: () => request('/api/user/logout', {}, 'POST'),
   
+  // 用户管理相关（管理员）
+  getUserList: () => request('/api/admin/users/list', {}, 'GET'),
+  getUserDetail: (userId) => request(`/api/admin/users/${userId}/detail`, {}, 'GET'),
+  getUserStatistics: () => request('/api/admin/users/statistics', {}, 'GET'),
+  
   // 课程相关
   // 管理员获取所有课程列表（后台管理）
   getCourseList: (params = {}) => {

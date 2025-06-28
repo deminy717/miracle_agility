@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS user_courses (
     total_study_minutes INT NOT NULL DEFAULT 0 COMMENT '总学习时间（分钟）',
     is_completed BOOLEAN NOT NULL DEFAULT FALSE COMMENT '是否完成',
     completed_at DATETIME NULL COMMENT '完成时间',
-    rating INT NULL COMMENT '评分（1-5分）',
-    review TEXT NULL COMMENT '评价内容',
     status VARCHAR(20) NOT NULL DEFAULT 'active' COMMENT '状态: active-正常, suspended-暂停, cancelled-取消',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

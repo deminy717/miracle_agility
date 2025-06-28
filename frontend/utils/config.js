@@ -13,9 +13,9 @@ const config = {
       description: 'Mock数据模式'
     },
     production: {
-      // baseUrl: 'http://localhost:8080', // 生产环境API地址
+      baseUrl: 'http://localhost:8085', // 生产环境API地址
       // baseUrl: 'http://bitable-plugin.momenta.cn', // 生产环境API地址
-      baseUrl: 'http://192.168.71.20:8085', // 生产环境API地址
+      // baseUrl: 'http://192.168.71.20:8085', // 生产环境API地址
       timeout: 10000,
       description: '生产环境API'
     }

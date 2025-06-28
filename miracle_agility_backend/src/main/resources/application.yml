@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8085
   servlet:
     context-path: /api
 
@@ -51,7 +51,7 @@ file:
   upload:
     path: ./data/uploads/        # 文件上传目录（相对于后端项目根目录）
   access:
-    domain: http://localhost:8080   # 文件访问域名
+    domain: http://localhost:8085   # 文件访问域名
 
 logging:
   level:

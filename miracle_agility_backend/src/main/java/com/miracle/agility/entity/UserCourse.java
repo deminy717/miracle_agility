@@ -78,18 +78,6 @@ public class UserCourse {
     private LocalDateTime completedAt;
 
     /**
-     * 评分
-     */
-    @TableField("rating")
-    private Integer rating;
-
-    /**
-     * 评价内容
-     */
-    @TableField("review")
-    private String review;
-
-    /**
      * 状态: active-正常, suspended-暂停, cancelled-取消
      */
     @TableField("status")

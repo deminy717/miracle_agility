@@ -96,18 +96,6 @@ public class Course {
     private Integer studentCount;
 
     /**
-     * 评分
-     */
-    @TableField("rating")
-    private BigDecimal rating;
-
-    /**
-     * 评分人数
-     */
-    @TableField("rating_count")
-    private Integer ratingCount;
-
-    /**
      * 标签数组(JSON)
      */
     @TableField("tags")
