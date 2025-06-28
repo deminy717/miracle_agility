@@ -90,11 +90,11 @@ Page({
         title: '加载中...'
       })
       
-      console.log('开始加载公开课程列表')
-      const courseData = await api.getPublicCourseList()
-      console.log('获取到公开课程数据:', courseData)
+      console.log('开始加载我的课程列表')
+      const courseData = await api.getMyCourses()
+      console.log('获取到我的课程数据:', courseData)
       
-      // 显示所有公开课程，转换数据格式以匹配页面显示
+      // 显示用户注册的课程，转换数据格式以匹配页面显示
       const courseList = courseData.map(course => ({
         id: course.id,
         title: course.title,
@@ -174,24 +174,24 @@ Page({
       }, 'POST')
 
       // 如果到达这里，说明请求成功了
-      wx.hideLoading()
-      
-      wx.showModal({
-        title: '兑换成功！',
-        content: `恭喜您成功兑换课程！\n\n是否立即查看课程？`,
-        confirmText: '立即查看',
-        cancelText: '稍后查看',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: `/pages/course-detail/course-detail?id=${result.courseId}`
-            })
-          } else {
-            // 刷新课程列表以显示新课程
-            this.loadCourseList()
+        wx.hideLoading()
+        
+        wx.showModal({
+          title: '兑换成功！',
+          content: `恭喜您成功兑换课程！\n\n是否立即查看课程？`,
+          confirmText: '立即查看',
+          cancelText: '稍后查看',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: `/pages/course-detail/course-detail?id=${result.courseId}`
+              })
+            } else {
+              // 刷新课程列表以显示新课程
+              this.loadCourseList()
+            }
           }
-        }
-      })
+        })
     } catch (error) {
       wx.hideLoading()
       console.error('兑换授权码失败:', error)

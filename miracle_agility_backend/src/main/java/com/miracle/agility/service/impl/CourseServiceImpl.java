@@ -4,8 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.miracle.agility.dto.CourseCreateRequest;
 import com.miracle.agility.dto.CourseResponse;
 import com.miracle.agility.entity.Course;
+import com.miracle.agility.entity.User;
+import com.miracle.agility.entity.UserCourse;
 import com.miracle.agility.mapper.CourseMapper;
+import com.miracle.agility.mapper.UserCourseMapper;
 import com.miracle.agility.service.CourseService;
+import com.miracle.agility.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +31,8 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private final CourseMapper courseMapper;
+    private final UserCourseMapper userCourseMapper;
+    private final UserService userService;
 
     @Override
     @Transactional
@@ -118,12 +124,46 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseResponse> getUserCourses(Long userId) {
         log.info("获取用户课程列表: userId={}", userId);
 
-        List<Course> courses = courseMapper.selectByCreatedBy(userId);
-        log.info("查询到课程数量: {}", courses.size());
+        // 获取用户信息来判断角色
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
         
-        return courses.stream()
-                     .map(this::convertToResponse)
-                     .collect(Collectors.toList());
+        boolean isAdmin = user.isAdmin();
+        log.info("用户角色检查: userId={}, role={}, isAdmin={}", userId, user.getRole(), isAdmin);
+        
+        if (isAdmin) {
+            log.info("管理员用户，返回所有已发布课程");
+            // 管理员：返回所有已发布的课程
+            return getCoursesByStatus("published");
+        } else {
+            log.info("普通用户，返回注册的已发布课程");
+            // 普通用户：返回注册的已发布课程
+            List<UserCourse> userCourses = userCourseMapper.getUserCoursesWithDetails(userId);
+            log.info("查询到用户注册的课程数量: {}", userCourses.size());
+            
+            return userCourses.stream()
+                    .filter(userCourse -> {
+                        if (userCourse.getCourseId() != null) {
+                            Course course = courseMapper.selectById(userCourse.getCourseId());
+                            boolean isPublished = course != null && "published".equals(course.getStatus());
+                            log.debug("课程ID: {}, 状态: {}, 是否已发布: {}", 
+                                    userCourse.getCourseId(), 
+                                    course != null ? course.getStatus() : "null", 
+                                    isPublished);
+                            return isPublished;
+                        }
+                        return false;
+                    })
+                    .map(userCourse -> {
+                        Course course = courseMapper.selectById(userCourse.getCourseId());
+                        CourseResponse response = convertToResponse(course);
+                        log.debug("返回已发布课程: {}", response.getTitle());
+                        return response;
+                    })
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
