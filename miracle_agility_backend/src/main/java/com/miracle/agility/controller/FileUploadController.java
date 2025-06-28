@@ -134,6 +134,52 @@ public class FileUploadController {
     }
 
     /**
+     * 上传课程文件（无需认证）
+     */
+    @PostMapping("/lesson-file")
+    public ResponseEntity<Map<String, Object>> uploadLessonFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "category", defaultValue = "lesson-files") String category) {
+        
+        log.info("上传课程文件请求: fileName={}, size={}, category={}", 
+                file.getOriginalFilename(), file.getSize(), category);
+        
+        try {
+            // 验证文件类型 - 只允许办公文档
+            if (!isValidDocumentFile(file)) {
+                return createErrorResponse("不支持的文件格式，仅支持: PDF、Word、PowerPoint、Excel文件");
+            }
+            
+            // 验证文件大小 (50MB)
+            if (file.getSize() > 50 * 1024 * 1024) {
+                return createErrorResponse("文件过大，请上传小于50MB的文件");
+            }
+            
+            // 保存文件
+            String fileName = saveFile(file, "documents", category);
+            String fileUrl = generateFileUrl(fileName, "documents", category);
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("url", fileUrl);
+            result.put("originalName", file.getOriginalFilename());
+            result.put("fileName", extractFileName(fileName));
+            result.put("size", formatFileSize(file.getSize()));
+            result.put("sizeBytes", file.getSize());
+            result.put("type", getDocumentFileType(file.getOriginalFilename()));
+            result.put("typeLabel", getDocumentFileTypeLabel(file.getOriginalFilename()));
+            result.put("category", category);
+            result.put("uploadTime", LocalDateTime.now());
+            
+            log.info("课程文件上传成功: url={}", fileUrl);
+            return createSuccessResponse("文件上传成功", result);
+            
+        } catch (Exception e) {
+            log.error("课程文件上传失败: {}", e.getMessage(), e);
+            return createErrorResponse("文件上传失败: " + e.getMessage());
+        }
+    }
+
+    /**
      * 上传通用文件
      */
     @PostMapping("/file")
@@ -302,6 +348,90 @@ public class FileUploadController {
             return userService.getUserByAccessToken(accessToken);
         } catch (Throwable throwable) {
             throw new AuthenticationException("获取用户信息失败,请重新登录");
+        }
+    }
+
+    /**
+     * 验证文档文件类型
+     */
+    private boolean isValidDocumentFile(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) return false;
+        
+        String extension = getFileExtension(originalFilename);
+        return extension.equals("pdf") || 
+               extension.equals("doc") || extension.equals("docx") ||
+               extension.equals("ppt") || extension.equals("pptx") ||
+               extension.equals("xls") || extension.equals("xlsx");
+    }
+
+    /**
+     * 从完整路径中提取文件名
+     */
+    private String extractFileName(String fullPath) {
+        if (fullPath == null) return "";
+        String[] parts = fullPath.split("/");
+        return parts[parts.length - 1];
+    }
+
+    /**
+     * 格式化文件大小
+     */
+    private String formatFileSize(long bytes) {
+        if (bytes == 0) return "0 B";
+        String[] units = {"B", "KB", "MB", "GB"};
+        int unitIndex = 0;
+        double size = bytes;
+        
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        
+        return String.format("%.2f %s", size, units[unitIndex]);
+    }
+
+    /**
+     * 根据文件名获取文档类型
+     */
+    private String getDocumentFileType(String filename) {
+        String extension = getFileExtension(filename);
+        switch (extension) {
+            case "pdf":
+                return "pdf";
+            case "doc":
+            case "docx":
+                return "word";
+            case "ppt":
+            case "pptx":
+                return "ppt";
+            case "xls":
+            case "xlsx":
+                return "excel";
+            default:
+                return "file";
+        }
+    }
+
+    /**
+     * 根据文件名获取文档类型标签
+     */
+    private String getDocumentFileTypeLabel(String filename) {
+        String extension = getFileExtension(filename);
+        switch (extension) {
+            case "pdf":
+                return "PDF 文档";
+            case "doc":
+            case "docx":
+                return "Word 文档";
+            case "ppt":
+            case "pptx":
+                return "PowerPoint 演示文稿";
+            case "xls":
+            case "xlsx":
+                return "Excel 表格";
+            default:
+                return "文件";
         }
     }
 } 

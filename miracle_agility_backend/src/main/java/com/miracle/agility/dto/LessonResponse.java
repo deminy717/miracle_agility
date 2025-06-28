@@ -65,6 +65,12 @@ public class LessonResponse {
         private String audioUrl;
         private String audioDuration;
         
+        // 文件相关字段
+        private String fileUrl;
+        private String fileName;
+        private String fileSize;
+        private String fileType;
+        
         // 重点卡片相关字段
         private List<String> highlightPoints;
         
@@ -97,6 +103,10 @@ public class LessonResponse {
                     .imageAlt(card.getImageAlt())
                     .audioUrl(card.getAudioUrl())
                     .audioDuration(card.getAudioDuration())
+                    .fileUrl(card.getFileUrl())
+                    .fileName(card.getFileName())
+                    .fileSize(card.getFileSize())
+                    .fileType(card.getFileType())
                     .highlightPoints(parseHighlightPoints(card.getHighlightPointsJson()))
                     .quizData(parseQuizData(card.getQuizDataJson()))
                     .status(card.getStatus())

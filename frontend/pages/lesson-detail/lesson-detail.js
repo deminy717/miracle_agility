@@ -195,6 +195,89 @@ Page({
 
   },
 
+
+
+  /**
+   * 查看文件（下载后预览）
+   */
+  downloadFile(e) {
+    const { url, name, type } = e.currentTarget.dataset;
+    
+    wx.showLoading({
+      title: '正在下载...',
+      mask: true
+    });
+
+    wx.downloadFile({
+      url: url,
+      success: (res) => {
+        wx.hideLoading();
+        
+        if (res.statusCode === 200) {
+          // 下载成功，尝试预览
+          const tempFilePath = res.tempFilePath;
+          
+          wx.openDocument({
+            filePath: tempFilePath,
+            fileType: this.getOpenDocumentFileType(type, name),
+            success: () => {
+              console.log('文件预览成功');
+            },
+            fail: (error) => {
+              console.log('文件预览失败:', error);
+              wx.showToast({
+                title: '无法预览该文件类型',
+                icon: 'none'
+              });
+            }
+          });
+        } else {
+          wx.showToast({
+            title: '下载失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('文件下载失败:', error);
+        wx.showToast({
+          title: '下载失败，请检查网络',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  /**
+   * 获取openDocument支持的文件类型
+   */
+  getOpenDocumentFileType(fileType, fileName) {
+    // 从文件名获取扩展名
+    const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.') + 1);
+    
+    // 微信小程序支持的文件类型
+    const supportedTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
+    
+    if (supportedTypes.includes(extension)) {
+      return extension;
+    }
+    
+    // 根据fileType映射
+    switch (fileType) {
+      case 'pdf':
+        return 'pdf';
+      case 'word':
+        return 'docx';
+      case 'excel':
+        return 'xlsx';
+      case 'ppt':
+        return 'pptx';
+      default:
+        return 'pdf'; // 默认尝试PDF格式
+    }
+  },
+
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */

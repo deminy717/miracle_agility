@@ -159,6 +159,86 @@
   border-radius: 16rpx;
 }
 
+/* 文件内容样式 */
+.content-file-section {
+  margin-bottom: 32rpx;
+}
+
+.file-preview-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  border: 1rpx solid #dee2e6;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+}
+
+.file-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.file-icon-large {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  font-size: 40rpx;
+}
+
+.file-preview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.file-preview-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.file-preview-type {
+  font-size: 24rpx;
+  color: #007AFF;
+  background-color: #e7f3ff;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  align-self: flex-start;
+}
+
+.file-preview-size {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.file-preview-actions {
+  display: flex;
+  gap: 12rpx;
+  justify-content: center;
+}
+
+.download-file-btn {
+  padding: 20rpx 40rpx;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.1);
+  background-color: #34C759;
+  color: #fff;
+  min-width: 200rpx;
+}
+
 /* 重点内容样式 */
 .content-highlight-section {
   margin-bottom: 32rpx;

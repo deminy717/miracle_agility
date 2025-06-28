@@ -35,10 +35,22 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + absolutePath);
         
+        // 配置新的文件上传目录映射
+        File fileUploadDir = new File("uploads/files/");
+        if (!fileUploadDir.isAbsolute()) {
+            fileUploadDir = new File(System.getProperty("user.dir"), "uploads/files/");
+        }
+        String fileUploadPath = fileUploadDir.getAbsolutePath() + File.separator;
+        
+        registry.addResourceHandler("/uploads/files/**")
+                .addResourceLocations("file:" + fileUploadPath);
+        
         // 日志输出配置信息
         System.out.println("静态资源映射配置:");
         System.out.println("URL映射: /uploads/**");
         System.out.println("文件路径: file:" + absolutePath);
+        System.out.println("文件上传映射: /uploads/files/**");
+        System.out.println("文件上传路径: file:" + fileUploadPath);
         System.out.println("当前工作目录: " + System.getProperty("user.dir"));
     }
 

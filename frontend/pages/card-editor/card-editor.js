@@ -223,6 +223,7 @@ Page({
       const lessonData = await api.getLessonById(this.data.lessonId);
       
       console.log('加载的课时数据:', lessonData);
+      console.log('课时卡片数据:', lessonData.lessonCards);
       
       // 设置页面标题为编辑模式
       wx.setNavigationBarTitle({
@@ -285,6 +286,18 @@ Page({
               cardData.audioUrl = card.audioUrl || '';
               cardData.duration = card.audioDuration || '';
               break;
+            case 'file':
+              cardData.title = card.title || '';
+              cardData.fileUrl = card.fileUrl || '';
+              cardData.fileName = card.fileName || '';
+              cardData.fileSize = card.fileSize || '';
+              cardData.fileType = card.fileType || '';
+              cardData.fileTypeLabel = this.getFileTypeLabel(card.fileType || '');
+              cardData.uploading = false;
+              cardData.uploadProgress = 100;
+              cardData.uploadError = '';
+              console.log('处理文件卡片:', cardData);
+              break;
             case 'quiz':
               cardData.title = card.title || '';
               cardData.content = card.content || '';
@@ -299,6 +312,7 @@ Page({
         
         updateData.contentCards = contentCards;
         updateData.cardIdCounter = Math.max(...contentCards.map(card => card.id)) + 1;
+        console.log('最终处理的内容卡片:', contentCards);
       } else {
         // 如果没有内容卡片，创建一个默认的
         updateData.contentCards = [
@@ -338,9 +352,21 @@ Page({
       'video': '视频',
       'highlight': '重点',
       'audio': '音频',
+      'file': '文件',
       'quiz': '测验'
     };
     return typeMap[cardType] || '文本';
+  },
+
+  // 获取文件类型标签
+  getFileTypeLabel(fileType) {
+    const typeMap = {
+      'pdf': 'PDF 文档',
+      'word': 'Word 文档',
+      'ppt': 'PowerPoint 演示文稿',
+      'excel': 'Excel 表格'
+    };
+    return typeMap[fileType] || '文件';
   },
 
   // 初始化课时创建模式
@@ -509,6 +535,21 @@ Page({
           typeName: '重点',
           title: '重点内容',
           points: ['']
+        };
+      case 'file':
+        return {
+          id,
+          type: 'file',
+          typeName: '文件',
+          title: '',
+          fileUrl: '',
+          fileName: '',
+          fileSize: '',
+          fileType: '',
+          fileTypeLabel: '',
+          uploading: false,
+          uploadProgress: 0,
+          uploadError: ''
         };
       default:
         return { id, type, typeName: '未知' };
@@ -1130,6 +1171,375 @@ Page({
     // 可以在这里添加确认输入时的处理逻辑
   },
 
+  // 文件标题输入
+  onFileTitleInput(e) {
+    const index = e.currentTarget.dataset.index;
+    const cards = this.data.contentCards;
+    cards[index].title = e.detail.value;
+    this.setData({ contentCards: cards });
+    this.saveFormDataToCache();
+  },
+
+  // 选择文件
+  selectFile(e) {
+    const index = e.currentTarget.dataset.index;
+    const that = this;
+    
+    wx.chooseMessageFile({
+      count: 1,
+      type: 'file',
+      success(res) {
+        const file = res.tempFiles[0];
+        console.log('选择文件成功:', file);
+        
+        // 检查文件大小（限制为50MB）
+        if (file.size > 50 * 1024 * 1024) {
+          wx.showToast({
+            title: '文件大小不能超过50MB',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        // 检查文件类型
+        const allowedTypes = [
+          'application/vnd.ms-powerpoint', // ppt
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation', // pptx
+          'application/pdf', // pdf
+          'application/msword', // doc
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
+          'application/vnd.ms-excel', // xls
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // xlsx
+        ];
+        
+        if (!allowedTypes.includes(file.type) && !that.isAllowedFileExtension(file.name)) {
+          wx.showToast({
+            title: '不支持该文件格式',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        that.uploadFile(index, file);
+      },
+      fail(error) {
+        console.log('选择文件失败:', error);
+        if (!error.errMsg.includes('cancel')) {
+          wx.showToast({
+            title: '选择文件失败',
+            icon: 'none'
+          });
+        }
+      }
+    });
+  },
+
+  // 检查文件扩展名
+  isAllowedFileExtension(fileName) {
+    const allowedExtensions = ['.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx'];
+    const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
+    return allowedExtensions.includes(extension);
+  },
+
+  // 上传文件
+  async uploadFile(index, file) {
+    const cards = this.data.contentCards;
+    
+    // 设置上传状态
+    cards[index].uploading = true;
+    cards[index].uploadProgress = 0;
+    cards[index].uploadError = '';
+    cards[index].fileName = file.name;
+    cards[index].fileSize = this.formatFileSize(file.size);
+    
+    // 确定文件类型
+    const fileTypeInfo = this.getFileTypeInfo(file.name, file.type);
+    cards[index].fileType = fileTypeInfo.type;
+    cards[index].fileTypeLabel = fileTypeInfo.label;
+    
+    this.setData({ contentCards: cards });
+    
+    try {
+      const api = require('../../utils/api.js');
+      
+      // 创建上传任务
+      const uploadTask = wx.uploadFile({
+        url: `${api.baseURL}/api/upload/lesson-file`,
+        filePath: file.path,
+        name: 'file',
+        formData: {
+          'category': 'lesson-files'
+        },
+        success: (res) => {
+          console.log('文件上传成功:', res);
+          
+          try {
+            const result = JSON.parse(res.data);
+            if (result.success) {
+              // 更新卡片信息
+              const fileData = result.data;
+              cards[index].fileUrl = fileData.url;
+              cards[index].fileName = fileData.originalName;
+              cards[index].fileSize = fileData.size;
+              cards[index].fileType = fileData.type;
+              cards[index].fileTypeLabel = fileData.typeLabel;
+              cards[index].uploading = false;
+              cards[index].uploadProgress = 100;
+              
+              this.setData({ contentCards: cards });
+              this.saveFormDataToCache();
+              
+              wx.showToast({
+                title: '文件上传成功',
+                icon: 'success'
+              });
+            } else {
+              throw new Error(result.message || '上传失败');
+            }
+          } catch (parseError) {
+            throw new Error('服务器响应格式错误');
+          }
+        },
+        fail: (error) => {
+          console.error('文件上传失败:', error);
+          cards[index].uploading = false;
+          cards[index].uploadError = error.errMsg || '上传失败';
+          this.setData({ contentCards: cards });
+          
+          wx.showToast({
+            title: '文件上传失败',
+            icon: 'none'
+          });
+        }
+      });
+      
+      // 监听上传进度
+      uploadTask.onProgressUpdate((res) => {
+        cards[index].uploadProgress = res.progress;
+        this.setData({
+          [`contentCards[${index}].uploadProgress`]: res.progress
+        });
+      });
+      
+    } catch (error) {
+      console.error('上传文件时出错:', error);
+      cards[index].uploading = false;
+      cards[index].uploadError = error.message || '上传失败';
+      this.setData({ contentCards: cards });
+    }
+  },
+
+  // 格式化文件大小
+  formatFileSize(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  },
+
+  // 获取文件类型信息
+  getFileTypeInfo(fileName, mimeType) {
+    const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
+    
+    switch (extension) {
+      case '.ppt':
+      case '.pptx':
+        return { type: 'ppt', label: 'PowerPoint 演示文稿' };
+      case '.pdf':
+        return { type: 'pdf', label: 'PDF 文档' };
+      case '.doc':
+      case '.docx':
+        return { type: 'word', label: 'Word 文档' };
+      case '.xls':
+      case '.xlsx':
+        return { type: 'excel', label: 'Excel 表格' };
+      default:
+        return { type: 'file', label: '文件' };
+    }
+  },
+
+  // 预览文件
+  previewFile(e) {
+    const index = e.currentTarget.dataset.index;
+    const card = this.data.contentCards[index];
+    
+    if (!card.fileUrl) {
+      wx.showToast({
+        title: '文件未上传完成',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 直接下载并预览文件
+    this.downloadAndPreviewFile(card.fileUrl, card.fileName, card.fileType);
+  },
+
+  // 查看文件并预览
+  downloadAndPreviewFile(url, fileName, fileType) {
+    wx.showLoading({
+      title: '正在下载...',
+      mask: true
+    });
+
+    wx.downloadFile({
+      url: url,
+      success: (res) => {
+        wx.hideLoading();
+        
+        if (res.statusCode === 200) {
+          // 下载成功，尝试预览
+          const tempFilePath = res.tempFilePath;
+          
+          wx.openDocument({
+            filePath: tempFilePath,
+            fileType: this.getOpenDocumentFileType(fileType, fileName),
+            success: () => {
+              console.log('文件预览成功');
+            },
+            fail: (error) => {
+              console.log('文件预览失败:', error);
+              wx.showToast({
+                title: '无法预览该文件类型',
+                icon: 'none'
+              });
+            }
+          });
+        } else {
+          wx.showToast({
+            title: '下载失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.error('文件下载失败:', error);
+        wx.showToast({
+          title: '下载失败，请检查网络',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 获取openDocument支持的文件类型
+  getOpenDocumentFileType(fileType, fileName) {
+    // 从文件名获取扩展名
+    const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.') + 1);
+    
+    // 微信小程序支持的文件类型
+    const supportedTypes = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf'];
+    
+    if (supportedTypes.includes(extension)) {
+      return extension;
+    }
+    
+    // 根据fileType映射
+    switch (fileType) {
+      case 'pdf':
+        return 'pdf';
+      case 'word':
+        return 'docx';
+      case 'excel':
+        return 'xlsx';
+      case 'ppt':
+        return 'pptx';
+      default:
+        return 'pdf'; // 默认尝试PDF格式
+    }
+  },
+
+
+
+  // 查看文件
+  downloadFile(e) {
+    const { url, name } = e.currentTarget.dataset;
+    
+    wx.showLoading({
+      title: '下载中...'
+    });
+    
+    wx.downloadFile({
+      url: url,
+      success: (res) => {
+        wx.hideLoading();
+        
+        if (res.statusCode === 200) {
+          wx.openDocument({
+            filePath: res.tempFilePath,
+            success: () => {
+              console.log('文件打开成功');
+            },
+            fail: (error) => {
+              console.log('文件打开失败:', error);
+              wx.showToast({
+                title: '文件下载成功，请在文件管理器中查看',
+                icon: 'success',
+                duration: 3000
+              });
+            }
+          });
+        } else {
+          wx.showToast({
+            title: '下载失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: (error) => {
+        wx.hideLoading();
+        console.log('下载失败:', error);
+        wx.showToast({
+          title: '下载失败',
+          icon: 'none'
+        });
+      }
+    });
+  },
+
+  // 删除文件
+  removeFile(e) {
+    const index = e.currentTarget.dataset.index;
+    const that = this;
+    
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这个文件吗？',
+      success(res) {
+        if (res.confirm) {
+          const cards = that.data.contentCards;
+          cards[index].fileUrl = '';
+          cards[index].fileName = '';
+          cards[index].fileSize = '';
+          cards[index].fileType = '';
+          cards[index].fileTypeLabel = '';
+          cards[index].uploading = false;
+          cards[index].uploadProgress = 0;
+          cards[index].uploadError = '';
+          
+          that.setData({ contentCards: cards });
+          that.saveFormDataToCache();
+          
+          wx.showToast({
+            title: '文件已删除',
+            icon: 'success'
+          });
+        }
+      }
+    });
+  },
+
+  // 重试文件上传
+  retryFileUpload(e) {
+    const index = e.currentTarget.dataset.index;
+    const card = this.data.contentCards[index];
+    
+    // 重新选择文件
+    this.selectFile(e);
+  },
+
   onHighlightTitleInput(e) {
     const index = e.currentTarget.dataset.index;
     const cards = this.data.contentCards;
@@ -1258,7 +1668,12 @@ Page({
           imageUrl: card.type === 'image' ? card.imageUrl : null,
           imageDescription: card.type === 'image' ? card.description : null,
           // 重点卡片相关字段
-          highlightPoints: card.type === 'highlight' ? card.points : null
+          highlightPoints: card.type === 'highlight' ? card.points : null,
+          // 文件相关字段
+          fileUrl: card.type === 'file' ? card.fileUrl : null,
+          fileName: card.type === 'file' ? card.fileName : null,
+          fileSize: card.type === 'file' ? card.fileSize : null,
+          fileType: card.type === 'file' ? card.fileType : null
         }))
       };
 
@@ -1342,7 +1757,12 @@ Page({
           imageUrl: card.type === 'image' ? card.imageUrl : null,
           imageDescription: card.type === 'image' ? card.description : null,
           // 重点卡片相关字段
-          highlightPoints: card.type === 'highlight' ? card.points : null
+          highlightPoints: card.type === 'highlight' ? card.points : null,
+          // 文件相关字段
+          fileUrl: card.type === 'file' ? card.fileUrl : null,
+          fileName: card.type === 'file' ? card.fileName : null,
+          fileSize: card.type === 'file' ? card.fileSize : null,
+          fileType: card.type === 'file' ? card.fileType : null
         }))
       };
 
@@ -1429,7 +1849,12 @@ Page({
           imageUrl: card.type === 'image' ? card.imageUrl : null,
           imageDescription: card.type === 'image' ? card.description : null,
           // 重点卡片相关字段
-          highlightPoints: card.type === 'highlight' ? card.points : null
+          highlightPoints: card.type === 'highlight' ? card.points : null,
+          // 文件相关字段
+          fileUrl: card.type === 'file' ? card.fileUrl : null,
+          fileName: card.type === 'file' ? card.fileName : null,
+          fileSize: card.type === 'file' ? card.fileSize : null,
+          fileType: card.type === 'file' ? card.fileType : null
         }))
       };
 
@@ -1502,7 +1927,12 @@ Page({
           imageUrl: card.type === 'image' ? card.imageUrl : null,
           imageDescription: card.type === 'image' ? card.description : null,
           // 重点卡片相关字段
-          highlightPoints: card.type === 'highlight' ? card.points : null
+          highlightPoints: card.type === 'highlight' ? card.points : null,
+          // 文件相关字段
+          fileUrl: card.type === 'file' ? card.fileUrl : null,
+          fileName: card.type === 'file' ? card.fileName : null,
+          fileSize: card.type === 'file' ? card.fileSize : null,
+          fileType: card.type === 'file' ? card.fileType : null
         }))
       };
 

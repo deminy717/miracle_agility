@@ -48,6 +48,32 @@
           </view>
         </view>
 
+        <!-- 文件内容 -->
+        <view wx:elif="{{item.cardType === 'file' && item.fileUrl}}" class="content-file-section">
+          <text wx:if="{{item.title}}" class="section-title">{{item.title}}</text>
+          <view class="file-preview-card">
+            <view class="file-preview-header">
+              <view class="file-icon-large">
+                <text wx:if="{{item.fileType === 'ppt'}}">📊</text>
+                <text wx:elif="{{item.fileType === 'pdf'}}">📄</text>
+                <text wx:elif="{{item.fileType === 'word'}}">📝</text>
+                <text wx:elif="{{item.fileType === 'excel'}}">📈</text>
+                <text wx:else>📎</text>
+              </view>
+              <view class="file-preview-info">
+                <text class="file-preview-name">{{item.fileName}}</text>
+                <text class="file-preview-type">{{item.fileType}}</text>
+                <text class="file-preview-size">{{item.fileSize}}</text>
+              </view>
+            </view>
+            <view class="file-preview-actions">
+              <button class="download-file-btn" bindtap="downloadFile" data-url="{{item.fileUrl}}" data-type="{{item.fileType}}" data-name="{{item.fileName}}">
+                <text>📖 查看文件</text>
+              </button>
+            </view>
+          </view>
+        </view>
+
         <!-- 音频内容 -->
         <view wx:elif="{{item.cardType === 'audio' && item.audioUrl}}" class="content-audio-section">
           <view class="audio-player">

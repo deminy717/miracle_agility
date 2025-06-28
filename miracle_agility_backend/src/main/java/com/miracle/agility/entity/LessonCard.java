@@ -73,6 +73,19 @@ public class LessonCard {
     @TableField("audio_duration")
     private String audioDuration;
     
+    // 文件相关字段
+    @TableField("file_url")
+    private String fileUrl;
+    
+    @TableField("file_name")
+    private String fileName;
+    
+    @TableField("file_size")
+    private String fileSize;
+    
+    @TableField("file_type")
+    private String fileType;
+    
     // 重点卡片相关字段 (存储为JSON字符串)
     @TableField("highlight_points")
     private String highlightPointsJson;
@@ -126,6 +139,10 @@ public class LessonCard {
     
     public boolean isAudio() {
         return "audio".equals(this.cardType);
+    }
+    
+    public boolean isFile() {
+        return "file".equals(this.cardType);
     }
     
     public boolean isActive() {

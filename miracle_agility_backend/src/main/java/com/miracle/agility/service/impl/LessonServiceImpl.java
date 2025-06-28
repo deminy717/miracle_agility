@@ -338,6 +338,12 @@ public class LessonServiceImpl implements LessonService {
         card.setAudioUrl(cardRequest.getAudioUrl());
         card.setAudioDuration(cardRequest.getAudioDuration());
         
+        // 文件相关字段
+        card.setFileUrl(cardRequest.getFileUrl());
+        card.setFileName(cardRequest.getFileName());
+        card.setFileSize(cardRequest.getFileSize());
+        card.setFileType(cardRequest.getFileType());
+        
         // 重点卡片相关字段
         if (cardRequest.getHighlightPoints() != null && !cardRequest.getHighlightPoints().isEmpty()) {
             card.setHighlightPointsJson(String.join(",", cardRequest.getHighlightPoints()));
@@ -383,6 +389,12 @@ public class LessonServiceImpl implements LessonService {
         // 音频相关字段
         card.setAudioUrl(cardRequest.getAudioUrl());
         card.setAudioDuration(cardRequest.getAudioDuration());
+        
+        // 文件相关字段
+        card.setFileUrl(cardRequest.getFileUrl());
+        card.setFileName(cardRequest.getFileName());
+        card.setFileSize(cardRequest.getFileSize());
+        card.setFileType(cardRequest.getFileType());
         
         // 重点卡片相关字段
         if (cardRequest.getHighlightPoints() != null && !cardRequest.getHighlightPoints().isEmpty()) {

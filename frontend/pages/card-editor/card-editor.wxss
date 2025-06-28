@@ -430,6 +430,275 @@
   resize: none;
 }
 
+/* 文件内容 */
+.file-content {
+  padding: 32rpx;
+}
+
+.file-upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 32rpx;
+  border: 2rpx dashed #d0d0d0;
+  border-radius: 12rpx;
+  background-color: #fafafa;
+  margin-top: 20rpx;
+}
+
+.upload-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 20rpx 32rpx;
+  background-color: #007AFF;
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.upload-icon {
+  font-size: 32rpx;
+}
+
+.upload-tip {
+  font-size: 24rpx;
+  color: #666;
+  text-align: center;
+}
+
+.file-info {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+  border: 1rpx solid #e0e0e0;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.file-icon-container {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+}
+
+.file-icon {
+  font-size: 40rpx;
+}
+
+.file-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.file-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  word-break: break-all;
+}
+
+.file-size {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.file-type-label {
+  font-size: 24rpx;
+  color: #007AFF;
+  background-color: #e7f3ff;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  align-self: flex-start;
+}
+
+.file-actions {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.file-action-btn {
+  padding: 16rpx 24rpx;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  flex: 1;
+  min-width: 120rpx;
+}
+
+.file-action-btn.preview {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+.file-action-btn.replace {
+  background-color: #FF9500;
+  color: #fff;
+}
+
+.file-action-btn.delete {
+  background-color: #FF3B30;
+  color: #fff;
+}
+
+.upload-progress {
+  margin-top: 20rpx;
+  padding: 16rpx;
+  background-color: #fff;
+  border-radius: 8rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8rpx;
+  background-color: #e0e0e0;
+  border-radius: 4rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #007AFF;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #666;
+  text-align: center;
+}
+
+.upload-error {
+  margin-top: 20rpx;
+  padding: 16rpx;
+  background-color: #ffebee;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.error-text {
+  font-size: 24rpx;
+  color: #d32f2f;
+  flex: 1;
+}
+
+.retry-btn {
+  padding: 8rpx 16rpx;
+  background-color: #FF3B30;
+  color: #fff;
+  border: none;
+  border-radius: 6rpx;
+  font-size: 24rpx;
+}
+
+/* 预览中的文件样式 */
+.preview-file-section {
+  margin-bottom: 32rpx;
+}
+
+.file-preview-card {
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e0e0e0;
+}
+
+.file-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.file-icon-large {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  font-size: 40rpx;
+}
+
+.file-preview-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.file-preview-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  word-break: break-all;
+}
+
+.file-preview-type {
+  font-size: 24rpx;
+  color: #007AFF;
+  background-color: #e7f3ff;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  align-self: flex-start;
+}
+
+.file-preview-size {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.file-preview-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.preview-file-btn,
+.download-file-btn {
+  flex: 1;
+  padding: 20rpx;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.preview-file-btn {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+.download-file-btn {
+  background-color: #34C759;
+  color: #fff;
+}
+
 /* 图片内容 */
 .image-content {
   padding: 32rpx;

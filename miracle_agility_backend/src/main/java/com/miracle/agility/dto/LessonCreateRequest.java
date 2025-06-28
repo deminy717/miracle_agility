@@ -65,6 +65,12 @@ public class LessonCreateRequest {
         private String audioUrl;
         private String audioDuration;
         
+        // 文件相关字段
+        private String fileUrl;
+        private String fileName;
+        private String fileSize;
+        private String fileType;
+        
         // 重点卡片相关字段
         private List<String> highlightPoints;
         

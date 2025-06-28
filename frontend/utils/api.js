@@ -129,6 +129,11 @@ function request(url, data = {}, method = 'POST', needAuth = true) {
 
 // 导出API接口
 module.exports = {
+  // 基础URL配置
+  get baseURL() {
+    return config.getCurrentConfig().baseUrl;
+  },
+  
   // 用户相关
   login: (code) => request('/api/user/login', { code }, 'POST', false),
   wxLogin: (loginData) => request('/api/user/wx-login', loginData, 'POST', false),

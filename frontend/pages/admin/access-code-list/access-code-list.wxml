@@ -1,4 +1,4 @@
-<view class="container">
+<view class="access-code-container">
   <!-- 课程信息头部 -->
   <view class="course-header">
     <view class="course-title">{{courseTitle}}</view>
@@ -48,14 +48,6 @@
         <!-- 课程有效期 -->
         <view class="info-row">
           <text class="info-text">课程有效期：{{item.courseValidityText}}</text>
-        </view>
-        
-        <!-- 课程截止时间 -->
-        <view class="info-row" wx:if="{{item.courseExpireTime}}">
-          <text class="info-text {{item.isCourseExpired ? 'expired' : ''}}">
-            课程截止：{{item.courseExpireTime}}
-            <text wx:if="{{item.isCourseExpired}}" class="expired-tag">已过期</text>
-          </text>
         </view>
         
         <!-- 使用情况 -->

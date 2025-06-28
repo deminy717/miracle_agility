@@ -173,6 +173,66 @@
           </view>
         </view>
 
+        <!-- 文件内容 -->
+        <view wx:elif="{{item.type === 'file'}}" class="file-content">
+          <input placeholder="文件标题（可选）" 
+                 value="{{item.title}}"
+                 bindinput="onFileTitleInput"
+                 data-index="{{index}}"
+                 class="form-input"/>
+          
+          <view class="file-upload-area" wx:if="{{!item.fileUrl}}">
+            <view class="upload-actions">
+              <button class="upload-btn" bindtap="selectFile" data-index="{{index}}">
+                <text class="upload-icon">📎</text>
+                <text>选择文件</text>
+              </button>
+            </view>
+            <text class="upload-tip">支持 PPT、PDF、Word、Excel 等文件格式</text>
+          </view>
+
+          <view class="file-info" wx:if="{{item.fileUrl}}">
+            <view class="file-preview">
+              <view class="file-icon-container">
+                <text class="file-icon" wx:if="{{item.fileType === 'ppt'}}">📊</text>
+                <text class="file-icon" wx:elif="{{item.fileType === 'pdf'}}">📄</text>
+                <text class="file-icon" wx:elif="{{item.fileType === 'word'}}">📝</text>
+                <text class="file-icon" wx:elif="{{item.fileType === 'excel'}}">📈</text>
+                <text class="file-icon" wx:else>📎</text>
+              </view>
+              <view class="file-details">
+                <text class="file-name">{{item.fileName || '未知文件'}}</text>
+                <text class="file-size">{{item.fileSize || '大小未知'}}</text>
+                <text class="file-type-label">{{item.fileTypeLabel || '文件'}}</text>
+              </view>
+            </view>
+            
+            <view class="file-actions">
+              <button class="file-action-btn preview" bindtap="previewFile" data-index="{{index}}">
+                <text>预览</text>
+              </button>
+              <button class="file-action-btn replace" bindtap="selectFile" data-index="{{index}}">
+                <text>替换</text>
+              </button>
+              <button class="file-action-btn delete" bindtap="removeFile" data-index="{{index}}">
+                <text>删除</text>
+              </button>
+            </view>
+
+            <view class="upload-progress" wx:if="{{item.uploading}}">
+              <view class="progress-bar">
+                <view class="progress-fill" style="width: {{item.uploadProgress || 0}}%"></view>
+              </view>
+              <text class="progress-text">上传中... {{item.uploadProgress || 0}}%</text>
+            </view>
+
+            <view class="upload-error" wx:if="{{item.uploadError}}">
+              <text class="error-text">{{item.uploadError}}</text>
+              <button class="retry-btn" bindtap="retryFileUpload" data-index="{{index}}">重试</button>
+            </view>
+          </view>
+        </view>
+
       </view>
     </view>
   </scroll-view>
@@ -201,6 +261,10 @@
         <view class="menu-option" bindtap="addCard" data-type="highlight">
           <text class="option-icon">⚡</text>
           <text>重点</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="file">
+          <text class="option-icon">📎</text>
+          <text>文件</text>
         </view>
       </view>
     </view>
@@ -291,6 +355,32 @@
                 <view wx:for="{{item.points}}" wx:key="pointIndex" wx:for-item="point" class="highlight-point">
                   <text class="point-marker">💡</text>
                   <text class="point-text">{{point}}</text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 文件内容 -->
+            <view wx:elif="{{item.type === 'file' && item.fileUrl}}" class="preview-file-section">
+              <text wx:if="{{item.title}}" class="section-title">{{item.title}}</text>
+              <view class="file-preview-card">
+                <view class="file-preview-header">
+                  <view class="file-icon-large">
+                    <text wx:if="{{item.fileType === 'ppt'}}">📊</text>
+                    <text wx:elif="{{item.fileType === 'pdf'}}">📄</text>
+                    <text wx:elif="{{item.fileType === 'word'}}">📝</text>
+                    <text wx:elif="{{item.fileType === 'excel'}}">📈</text>
+                    <text wx:else>📎</text>
+                  </view>
+                  <view class="file-preview-info">
+                    <text class="file-preview-name">{{item.fileName}}</text>
+                    <text class="file-preview-type">{{item.fileTypeLabel}}</text>
+                    <text class="file-preview-size">{{item.fileSize}}</text>
+                  </view>
+                </view>
+                <view class="file-preview-actions">
+                  <button class="download-file-btn" bindtap="downloadFile" data-url="{{item.fileUrl}}" data-name="{{item.fileName}}">
+                    <text>📖 查看文件</text>
+                  </button>
                 </view>
               </view>
             </view>
