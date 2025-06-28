@@ -168,33 +168,30 @@ Page({
     wx.showLoading({ title: '兑换中...' })
 
     try {
-      const response = await api.request('/courses/access-codes/redeem', {
+      // api.request() 成功时直接返回响应数据，不是完整的响应对象
+      const result = await api.request('/api/courses/access-codes/redeem', {
         code: code
       }, 'POST')
 
-      if (response && response.code === 200) {
-        const result = response.data
-        wx.hideLoading()
-        
-        wx.showModal({
-          title: '兑换成功！',
-          content: `恭喜您成功兑换课程！\n\n是否立即查看课程？`,
-          confirmText: '立即查看',
-          cancelText: '稍后查看',
-          success: (res) => {
-            if (res.confirm) {
-              wx.navigateTo({
-                url: `/pages/course-detail/course-detail?id=${result.courseId}`
-              })
-            } else {
-              // 刷新课程列表以显示新课程
-              this.loadCourseList()
-            }
+      // 如果到达这里，说明请求成功了
+      wx.hideLoading()
+      
+      wx.showModal({
+        title: '兑换成功！',
+        content: `恭喜您成功兑换课程！\n\n是否立即查看课程？`,
+        confirmText: '立即查看',
+        cancelText: '稍后查看',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: `/pages/course-detail/course-detail?id=${result.courseId}`
+            })
+          } else {
+            // 刷新课程列表以显示新课程
+            this.loadCourseList()
           }
-        })
-      } else {
-        throw new Error(response?.message || '兑换失败')
-      }
+        }
+      })
     } catch (error) {
       wx.hideLoading()
       console.error('兑换授权码失败:', error)

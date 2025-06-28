@@ -433,6 +433,224 @@ const mockData = {
     }
   },
 
+  // 授权码相关mock数据
+  accessCodes: {
+    // 生成授权码 - 这个会在getMockData方法中动态生成
+    '/courses/access-codes/generate': {
+      id: Date.now(),
+      code: 'MOCK0001', // 默认值，实际使用时会被动态生成的值替换
+      courseId: 1,
+      description: '管理员生成',
+      status: 'active',
+      usageLimit: 1,
+      usedCount: 0,
+      validUntil: null,
+      createdAt: new Date().toISOString(),
+      createdBy: 1,
+      usedBy: null,
+      usedAt: null
+    },
+
+    // 获取课程授权码列表
+    '/courses/access-codes/course/1': [
+      {
+        id: 1,
+        code: 'ABC123XY',
+        courseId: 1,
+        description: '快速授权码(24小时)',
+        status: 'active',
+        usageLimit: 1,
+        usedCount: 0,
+        validUntil: '2024-12-21T10:30:00.000Z',
+        createdAt: '2024-12-20T10:30:00.000Z',
+        createdBy: 1,
+        usedBy: null,
+        usedAt: null,
+        usedByUserName: null
+      },
+      {
+        id: 2,
+        code: 'DEF456UV',
+        courseId: 1,
+        description: '授权码(7天有效)',
+        status: 'used',
+        usageLimit: 1,
+        usedCount: 1,
+        validUntil: '2024-12-27T15:20:00.000Z',
+        createdAt: '2024-12-19T15:20:00.000Z',
+        createdBy: 1,
+        usedBy: 3,
+        usedAt: '2024-12-20T09:15:00.000Z',
+        usedByUserName: '张三'
+      },
+      {
+        id: 3,
+        code: 'GHI789ST',
+        courseId: 1,
+        description: '授权码(永久有效)',
+        status: 'expired',
+        usageLimit: 1,
+        usedCount: 0,
+        validUntil: '2024-12-19T20:00:00.000Z',
+        createdAt: '2024-12-18T20:00:00.000Z',
+        createdBy: 1,
+        usedBy: null,
+        usedAt: null,
+        usedByUserName: null
+      }
+    ],
+
+    // 获取所有授权码（管理员）
+    '/courses/access-codes/admin/list': [
+      {
+        id: 1,
+        code: 'ABC123XY',
+        courseId: 1,
+        courseTitle: '犬敏捷入门基础',
+        description: '快速授权码(24小时)',
+        status: 'active',
+        usageLimit: 1,
+        usedCount: 0,
+        validUntil: '2024-12-21T10:30:00.000Z',
+        createdAt: '2024-12-20T10:30:00.000Z'
+      },
+      {
+        id: 4,
+        code: 'JKL012QR',
+        courseId: 2,
+        courseTitle: '障碍物训练进阶',
+        description: '授权码(30天有效)',
+        status: 'active',
+        usageLimit: 1,
+        usedCount: 0,
+        validUntil: '2025-01-20T14:45:00.000Z',
+        createdAt: '2024-12-20T14:45:00.000Z'
+      }
+    ]
+  },
+
+  // 授权码生成方法集合
+  codeGenerators: {
+    
+    /**
+     * 方案1：Base32编码（推荐）
+     * 特点：8位固定长度，去除易混淆字符(0,1,O,I)，用户友好
+     * 字符集：23456789ABCDEFGHJKLMNPQRSTUVWXYZ (32个字符)
+     * 示例：A7K9M2N8
+     */
+    base32: () => {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
+      let result = ''
+      for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      return result
+    },
+
+    /**
+     * 方案2：时间戳+随机数组合
+     * 特点：前4位基于时间戳，后4位随机，保证唯一性
+     * 字符集：0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ (36个字符)
+     * 示例：K7M9-A2N8 (带分隔符) 或 K7M9A2N8
+     */
+    timestampRandom: (withSeparator = false) => {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      const now = Date.now()
+      
+      // 时间戳部分（4位）
+      let timeCode = ''
+      let timeValue = now % (36 * 36 * 36 * 36) // 确保4位内
+      for (let i = 0; i < 4; i++) {
+        timeCode = chars[timeValue % 36] + timeCode
+        timeValue = Math.floor(timeValue / 36)
+      }
+      
+      // 随机部分（4位）
+      let randomCode = ''
+      for (let i = 0; i < 4; i++) {
+        randomCode += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      
+      return withSeparator ? `${timeCode}-${randomCode}` : `${timeCode}${randomCode}`
+    },
+
+    /**
+     * 方案3：纯随机Base36
+     * 特点：完全随机，包含数字和字母
+     * 字符集：0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ (36个字符)
+     * 示例：A7K9M2N8
+     */
+    base36: () => {
+      const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      let result = ''
+      for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      return result
+    },
+
+    /**
+     * 方案4：分组式编码
+     * 特点：4+4分组，便于阅读和输入
+     * 字符集：23456789ABCDEFGHJKLMNPQRSTUVWXYZ (去除易混淆字符)
+     * 示例：A7K9-M2N8
+     */
+    grouped: () => {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
+      let part1 = '', part2 = ''
+      
+      for (let i = 0; i < 4; i++) {
+        part1 += chars.charAt(Math.floor(Math.random() * chars.length))
+        part2 += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      
+      return `${part1}-${part2}`
+    },
+
+    /**
+     * 方案5：校验位编码
+     * 特点：7位随机码+1位校验码，防止输入错误
+     * 字符集：23456789ABCDEFGHJKLMNPQRSTUVWXYZ
+     * 示例：A7K9M2N8 (最后一位是校验码)
+     */
+    withChecksum: () => {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
+      let code = ''
+      
+      // 生成7位随机码
+      for (let i = 0; i < 7; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      
+      // 计算校验码
+      let checksum = 0
+      for (let i = 0; i < code.length; i++) {
+        checksum += chars.indexOf(code[i])
+      }
+      const checksumChar = chars[checksum % chars.length]
+      
+      return code + checksumChar
+    }
+  },
+
+  // 生成Mock授权码的辅助方法（保留备用）
+  generateMockCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let result = ''
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return result
+  },
+
+  // 当前使用的授权码生成方法（可配置）
+  generateAccessCode(method = 'base32') {
+    if (this.codeGenerators[method]) {
+      return this.codeGenerators[method]()
+    }
+    console.warn(`未找到授权码生成方法: ${method}，使用默认方法`)
+    return this.codeGenerators.base32()
+  },
   // 通用方法：根据URL获取mock数据
   getMockData(url, data = {}, method = 'GET') {
     console.log(`[Mock] 请求: ${method} ${url}`, data)
@@ -487,15 +705,71 @@ const mockData = {
       return this.stats[cleanUrl] || null
     }
     
-    // 用户管理相关接口
-    if (cleanUrl.startsWith('/admin/')) {
-      // 处理用户详情请求，支持动态用户ID
-      if (cleanUrl.match(/^\/admin\/users\/\d+\/detail$/)) {
-        const userId = cleanUrl.split('/')[3]; // 提取用户ID
-        // 尝试获取指定用户ID的详情，如果不存在则返回第一个用户的详情
-        return this.admin[`/admin/users/${userId}/detail`] || this.admin['/admin/users/1/detail'];
+    // 课时和章节发布/下架相关接口
+    if (cleanUrl.includes('/lessons/') && (cleanUrl.includes('/publish') || cleanUrl.includes('/unpublish'))) {
+      console.log(`[Mock] 处理课时发布/下架接口: ${cleanUrl}`)
+      const lessonId = cleanUrl.split('/')[2] // 提取课时ID
+      const action = cleanUrl.includes('/publish') ? '发布' : '下架'
+      console.log(`[Mock] ${action}课时 ID: ${lessonId}`)
+      return { success: true, message: `课时${action}成功` }
+    }
+    
+    if (cleanUrl.includes('/chapters/') && (cleanUrl.includes('/publish') || cleanUrl.includes('/unpublish'))) {
+      console.log(`[Mock] 处理章节发布/下架接口: ${cleanUrl}`)
+      const chapterId = cleanUrl.split('/')[2] // 提取章节ID
+      const action = cleanUrl.includes('/publish') ? '发布' : '下架'
+      console.log(`[Mock] ${action}章节 ID: ${chapterId}`)
+      return { success: true, message: `章节${action}成功` }
+    }
+    
+    if (cleanUrl.includes('/courses/') && (cleanUrl.includes('/publish') || cleanUrl.includes('/unpublish'))) {
+      console.log(`[Mock] 处理课程发布/下架接口: ${cleanUrl}`)
+      const courseId = cleanUrl.split('/')[2] // 提取课程ID
+      const action = cleanUrl.includes('/publish') ? '发布' : '下架'
+      console.log(`[Mock] ${action}课程 ID: ${courseId}`)
+      return { success: true, message: `课程${action}成功` }
+    }
+
+    // 授权码相关接口
+    if (cleanUrl.startsWith('/courses/access-codes/')) {
+      console.log(`[Mock] 处理授权码接口: ${cleanUrl}`)
+      
+      // 生成授权码
+      if (cleanUrl === '/courses/access-codes/generate' && method === 'POST') {
+        // 使用新的授权码生成方法
+        const codeMethod = data.codeMethod || 'base32' // 默认使用base32方法
+        const randomCode = this.generateAccessCode(codeMethod)
+        
+        const newCode = {
+          ...this.accessCodes[cleanUrl],
+          id: Date.now(),
+          code: randomCode,
+          courseId: data.courseId || 1,
+          description: data.description || '管理员生成',
+          usageLimit: data.usageLimit || 1,
+          validUntil: data.validUntil || null,
+          createdAt: new Date().toISOString()
+        }
+        console.log(`[Mock] 生成新授权码 (${codeMethod}):`, newCode)
+        return newCode
       }
-      return this.admin[cleanUrl] || null
+      
+      // 获取课程授权码列表
+      if (cleanUrl.includes('/courses/access-codes/course/')) {
+        const courseId = cleanUrl.split('/').pop()
+        const courseCodesKey = `/courses/access-codes/course/${courseId}`
+        console.log(`[Mock] 获取课程 ${courseId} 的授权码列表`)
+        return this.accessCodes[courseCodesKey] || []
+      }
+      
+      // 获取所有授权码
+      if (cleanUrl === '/courses/access-codes/admin/list') {
+        console.log('[Mock] 获取所有授权码列表')
+        return this.accessCodes[cleanUrl] || []
+      }
+      
+      // 其他授权码接口的默认响应
+      return this.accessCodes[cleanUrl] || { success: true, message: '操作成功' }
     }
     
     console.log(`[Mock] 未找到匹配的数据: ${cleanUrl}`)

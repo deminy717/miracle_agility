@@ -184,6 +184,7 @@ module.exports = {
   updateChapter: (chapterId, chapterData) => request(`/api/chapters/${chapterId}`, chapterData, 'PUT'),
   deleteChapter: (chapterId) => request(`/api/chapters/${chapterId}`, {}, 'DELETE'),
   publishChapter: (chapterId) => request(`/api/chapters/${chapterId}/publish`, {}, 'POST'),
+  unpublishChapter: (chapterId) => request(`/api/chapters/${chapterId}/unpublish`, {}, 'POST'),
   archiveChapter: (chapterId) => request(`/api/chapters/${chapterId}/archive`, {}, 'POST'),
   updateChapterSort: (courseId, chapterIds) => request(`/api/chapters/course/${courseId}/sort`, { chapterIds }, 'POST'),
   getMyChapters: () => request('/api/chapters/my', {}, 'GET'),
@@ -199,6 +200,7 @@ module.exports = {
   updateLesson: (lessonId, lessonData) => request(`/api/lessons/${lessonId}`, lessonData, 'PUT'),
   deleteLesson: (lessonId) => request(`/api/lessons/${lessonId}`, {}, 'DELETE'),
   publishLesson: (lessonId) => request(`/api/lessons/${lessonId}/publish`, {}, 'POST'),
+  unpublishLesson: (lessonId) => request(`/api/lessons/${lessonId}/unpublish`, {}, 'POST'),
   archiveLesson: (lessonId) => request(`/api/lessons/${lessonId}/archive`, {}, 'POST'),
   updateLessonSort: (chapterId, lessonIds) => request(`/api/lessons/chapter/${chapterId}/sort`, lessonIds, 'POST'),
   getMyLessons: () => request('/api/lessons/my', {}, 'GET'),
@@ -213,6 +215,16 @@ module.exports = {
   // 保留原有的课程接口（兼容性）
   getLessonContent: (lessonId) => request('/api/lesson/content', { lessonId }, 'GET'),
   updateProgress: (lessonId, progress) => request('/api/lesson/progress', { lessonId, progress }, 'POST'),
+  
+  // 授权码相关
+  generateAccessCode: (params) => request('/api/courses/access-codes/generate', params, 'POST'),
+  getCourseAccessCodes: (courseId) => request(`/api/courses/access-codes/course/${courseId}`, {}, 'GET'),
+  getAllAccessCodes: () => request('/api/courses/access-codes/admin/list', {}, 'GET'),
+  redeemAccessCode: (code) => request('/api/courses/access-codes/redeem', { code }, 'POST'),
+  validateAccessCode: (code) => request(`/api/courses/access-codes/validate/${code}`, {}, 'GET'),
+  disableAccessCode: (codeId) => request(`/api/courses/access-codes/${codeId}/disable`, {}, 'PUT'),
+  enableAccessCode: (codeId) => request(`/api/courses/access-codes/${codeId}/enable`, {}, 'PUT'),
+  deleteAccessCode: (codeId) => request(`/api/courses/access-codes/${codeId}`, {}, 'DELETE'),
   
   // 资讯相关
   getNewsList: (page = 1, limit = 10) => request('/api/news/list', { page, limit }, 'GET'),

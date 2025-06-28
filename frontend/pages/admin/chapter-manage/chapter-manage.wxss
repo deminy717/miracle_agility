@@ -130,9 +130,10 @@
 
 .chapter-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 24rpx;
   transition: all 0.3s ease;
+  gap: 16rpx;
 }
 
 .chapter-header:active {
@@ -151,12 +152,12 @@
   justify-content: center;
   font-size: 24rpx;
   font-weight: bold;
-  margin-right: 24rpx;
+  flex-shrink: 0;
 }
 
 .chapter-info {
   flex: 1;
-  margin-right: 24rpx;
+  min-width: 0;
 }
 
 .chapter-title {
@@ -195,22 +196,36 @@
 /* 章节操作 */
 .chapter-actions {
   display: flex;
-  gap: 12rpx;
+  flex-direction: column;
+  gap: 8rpx;
+  align-items: flex-start;
+  flex-shrink: 0;
+  min-width: 200rpx;
 }
 
 .action-btn {
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 12rpx;
+  min-width: 120rpx;
+  height: 40rpx;
+  border-radius: 6rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24rpx;
+  font-size: 20rpx;
   transition: all 0.3s ease;
+  padding: 0 12rpx;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .action-btn:active {
   transform: scale(0.9);
+}
+
+.btn-text {
+  font-size: 20rpx;
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .add-subchapter-btn {
@@ -356,10 +371,11 @@
 
 .lesson-actions {
   display: flex;
+  flex-direction: column;
   gap: 8rpx;
   flex-shrink: 0;
-  min-width: 120rpx;
-  justify-content: flex-end;
+  min-width: 140rpx;
+  align-items: flex-start;
 }
 
 .edit-lesson-btn {
@@ -375,6 +391,88 @@
 .delete-lesson-btn {
   background: #ef4444;
   color: white;
+}
+
+/* 开关样式 */
+.switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 48rpx;
+}
+
+.switch {
+  width: 80rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.switch-on {
+  background-color: #34d399;
+}
+
+.switch-off {
+  background-color: #d1d5db;
+}
+
+.switch-handle {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 4rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.switch-on .switch-handle {
+  left: 40rpx;
+}
+
+.switch-off .switch-handle {
+  left: 4rpx;
+}
+
+/* 课时开关样式 */
+.lesson-switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80rpx;
+  height: 40rpx;
+}
+
+.lesson-switch {
+  width: 60rpx;
+  height: 32rpx;
+  border-radius: 16rpx;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.lesson-switch-handle {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 4rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.2);
+}
+
+.lesson-switch.switch-on .lesson-switch-handle {
+  left: 32rpx;
+}
+
+.lesson-switch.switch-off .lesson-switch-handle {
+  left: 4rpx;
 }
 
 /* 无课时状态 */

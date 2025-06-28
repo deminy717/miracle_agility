@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,15 +58,17 @@ public class CourseAccessCodeController {
             Integer usageLimit = request.get("usageLimit") != null ? 
                 Integer.valueOf(request.get("usageLimit").toString()) : 1;
             
-            // 处理有效期
+            // 处理有效期 - 修复日期解析问题
             LocalDateTime validFrom = null;
             LocalDateTime validUntil = null;
             
             if (request.get("validFrom") != null) {
-                validFrom = LocalDateTime.parse(request.get("validFrom").toString());
+                String validFromStr = request.get("validFrom").toString();
+                validFrom = parseDateTime(validFromStr);
             }
             if (request.get("validUntil") != null) {
-                validUntil = LocalDateTime.parse(request.get("validUntil").toString());
+                String validUntilStr = request.get("validUntil").toString();
+                validUntil = parseDateTime(validUntilStr);
             }
             
             CourseAccessCode accessCode = courseAccessCodeService.generateAccessCode(
@@ -77,6 +81,25 @@ public class CourseAccessCodeController {
             log.error("生成授权码失败: error={}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("生成授权码失败: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * 解析日期时间字符串，支持ISO 8601格式
+     */
+    private LocalDateTime parseDateTime(String dateTimeStr) {
+        try {
+            // 如果包含时区信息（Z或+/-时区偏移），使用OffsetDateTime解析
+            if (dateTimeStr.contains("Z") || dateTimeStr.matches(".*[+-]\\d{2}:?\\d{2}$")) {
+                OffsetDateTime offsetDateTime = OffsetDateTime.parse(dateTimeStr);
+                return offsetDateTime.toLocalDateTime();
+            } else {
+                // 否则直接使用LocalDateTime解析
+                return LocalDateTime.parse(dateTimeStr);
+            }
+        } catch (Exception e) {
+            log.error("解析日期时间失败: {}", dateTimeStr, e);
+            throw new RuntimeException("日期时间格式错误: " + dateTimeStr);
         }
     }
 

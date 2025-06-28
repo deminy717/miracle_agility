@@ -359,5 +359,120 @@ Page({
         icon: 'none'
       });
     }
+  },
+
+  // 切换章节状态
+  toggleChapterStatus(e) {
+    const chapterId = e.currentTarget.dataset.id;
+    const chapter = this.data.chapters.find(c => c.id == chapterId);
+    
+    if (!chapter) return;
+
+    const newStatus = chapter.status === 'published' ? 'draft' : 'published';
+    const actionText = newStatus === 'published' ? '发布' : '下架';
+
+    wx.showModal({
+      title: '确认操作',
+      content: `确定要${actionText}章节"${chapter.title}"吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          this.updateChapterStatus(chapterId, newStatus);
+        }
+      }
+    });
+  },
+
+  // 更新章节状态
+  async updateChapterStatus(chapterId, status) {
+    wx.showLoading({ title: '更新中...' });
+    
+    try {
+      const api = require('../../../utils/api.js');
+      
+      // 调用相应的API接口
+      if (status === 'published') {
+        await api.publishChapter(chapterId);
+      } else {
+        await api.unpublishChapter(chapterId);
+      }
+      
+      // 重新加载章节列表
+      await this.loadChapters();
+      
+      wx.hideLoading();
+      wx.showToast({
+        title: status === 'published' ? '发布成功' : '已下架',
+        icon: 'success'
+      });
+    } catch (error) {
+      console.error('更新章节状态失败:', error);
+      wx.hideLoading();
+      wx.showToast({
+        title: '操作失败，请重试',
+        icon: 'none'
+      });
+    }
+  },
+
+  // 切换课时状态
+  toggleLessonStatus(e) {
+    const lessonId = e.currentTarget.dataset.lessonId;
+    const lessonTitle = e.currentTarget.dataset.title;
+    
+    // 找到对应的课时
+    let lesson = null;
+    for (const chapter of this.data.chapters) {
+      if (chapter.lessons) {
+        lesson = chapter.lessons.find(l => l.id == lessonId);
+        if (lesson) break;
+      }
+    }
+    
+    if (!lesson) return;
+
+    const newStatus = lesson.status === 'published' ? 'draft' : 'published';
+    const actionText = newStatus === 'published' ? '发布' : '下架';
+
+    wx.showModal({
+      title: '确认操作',
+      content: `确定要${actionText}课时"${lessonTitle}"吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          this.updateLessonStatus(lessonId, newStatus);
+        }
+      }
+    });
+  },
+
+  // 更新课时状态
+  async updateLessonStatus(lessonId, status) {
+    wx.showLoading({ title: '更新中...' });
+    
+    try {
+      const api = require('../../../utils/api.js');
+      
+      // 调用相应的API接口
+      if (status === 'published') {
+        await api.publishLesson(lessonId);
+      } else {
+        await api.unpublishLesson(lessonId);
+      }
+      
+      // 重新加载章节列表
+      await this.loadChapters();
+      
+      wx.hideLoading();
+      wx.showToast({
+        title: status === 'published' ? '发布成功' : '已下架',
+        icon: 'success'
+      });
+    } catch (error) {
+      console.error('更新课时状态失败:', error);
+      wx.hideLoading();
+      wx.showToast({
+        title: '操作失败，请重试',
+        icon: 'none'
+      });
+    }
   }
 })

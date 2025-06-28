@@ -203,6 +203,28 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void unpublishChapter(Long chapterId, Long unpublishedBy) {
+        try {
+            Chapter chapter = chapterMapper.selectById(chapterId);
+            if (chapter == null) {
+                throw new RuntimeException("章节不存在");
+            }
+
+            // 将状态设置为草稿
+            chapter.setStatus("draft");
+            chapter.setPublishedAt(null);
+            chapter.setUpdatedAt(LocalDateTime.now());
+            chapterMapper.updateById(chapter);
+            log.info("章节下架成功: chapterId={}", chapterId);
+
+        } catch (Exception e) {
+            log.error("下架章节失败: chapterId={}, error={}", chapterId, e.getMessage());
+            throw new RuntimeException("下架章节失败", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void archiveChapter(Long chapterId, Long archivedBy) {
         try {
             Chapter chapter = chapterMapper.selectById(chapterId);

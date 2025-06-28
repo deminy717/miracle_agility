@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "授权码管理",
+  "navigationBarBackgroundColor": "#203b9d",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#f5f5f5",
+  "enablePullDownRefresh": true
+} 

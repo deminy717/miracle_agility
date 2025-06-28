@@ -44,16 +44,8 @@ Page({
     },
     lessonTypes: ['理论课', '实践课', '演示课', '练习课', '测试课'],
     lessonLevels: ['入门级', '初级', '中级', '高级', '专业级'],
-    contentCards: [
-      {
-        id: 1,
-        type: 'text',
-        typeName: '文本',
-        title: '课时概述',
-        content: '在这里输入课时的详细介绍和学习目标...'
-      }
-    ],
-    cardIdCounter: 2,
+    contentCards: [],
+    cardIdCounter: 1,
     showAddMenu: false,
     showPreview: false,
     pageInitialized: false,
@@ -356,21 +348,10 @@ Page({
     
     const updateData = {
       'courseInfo.title': '新建课时',
-      'courseInfo.subtitle': this.data.chapterTitle || '章节课时'
+      'courseInfo.subtitle': this.data.chapterTitle || '章节课时',
+      contentCards: [],
+      cardIdCounter: 1
     };
-    
-    // 只在没有现有内容卡片时才设置默认卡片
-    if (!this.data.contentCards || this.data.contentCards.length === 0) {
-      updateData.contentCards = [
-        {
-          id: 1,
-          type: 'text',
-          typeName: '文本',
-          title: '课时概述',
-          content: '在这里输入课时的详细介绍和学习目标...'
-        }
-      ];
-    }
     
     this.setData(updateData);
   },
@@ -379,21 +360,10 @@ Page({
   initChapterMode() {
     const updateData = {
       'courseInfo.title': '新建章节',
-      'courseInfo.subtitle': this.data.courseName || '课程章节'
+      'courseInfo.subtitle': this.data.courseName || '课程章节',
+      contentCards: [],
+      cardIdCounter: 1
     };
-    
-    // 只在没有现有内容卡片时才设置默认卡片
-    if (!this.data.contentCards || this.data.contentCards.length === 0) {
-      updateData.contentCards = [
-        {
-          id: 1,
-          type: 'text',
-          typeName: '文本',
-          title: '章节概述',
-          content: '在这里输入章节的详细介绍和学习目标...'
-        }
-      ];
-    }
     
     this.setData(updateData);
   },
@@ -402,21 +372,10 @@ Page({
   initSubChapterMode() {
     const updateData = {
       'courseInfo.title': '新增子章节内容',
-      'courseInfo.subtitle': this.data.chapterTitle || '章节内容'
+      'courseInfo.subtitle': this.data.chapterTitle || '章节内容',
+      contentCards: [],
+      cardIdCounter: 1
     };
-    
-    // 只在没有现有内容卡片时才设置默认卡片
-    if (!this.data.contentCards || this.data.contentCards.length === 0) {
-      updateData.contentCards = [
-        {
-          id: 1,
-          type: 'text',
-          typeName: '文本',
-          title: '子章节介绍',
-          content: '在这里输入子章节的具体内容...'
-        }
-      ];
-    }
     
     this.setData(updateData);
   },
@@ -1209,6 +1168,81 @@ Page({
     }
   },
 
+  // 保存草稿
+  async saveDraft() {
+    // 验证基本信息
+    if (!this.data.lessonInfo.title.trim()) {
+      wx.showToast({
+        title: '请输入课时标题',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.showLoading({
+      title: '保存草稿中...'
+    });
+
+    try {
+      const api = require('../../utils/api.js');
+      
+      // 构建请求数据
+      const requestData = {
+        chapterId: parseInt(this.data.chapterId),
+        courseId: parseInt(this.data.courseId),
+        title: this.data.lessonInfo.title.trim(),
+        description: this.data.lessonInfo.description.trim(),
+        durationMinutes: this.data.lessonInfo.duration ? parseInt(this.data.lessonInfo.duration) : null,
+        status: 'draft', // 明确设置为草稿状态
+        lessonCards: this.data.contentCards.map((card, index) => ({
+          cardType: card.type,
+          title: card.title || '',
+          content: card.content || '',
+          sortOrder: index + 1,
+          status: 'active',
+          // 视频相关字段
+          videoUrl: card.type === 'video' ? card.videoUrl : null,
+          videoDuration: card.type === 'video' ? card.duration : null,
+          videoViews: card.type === 'video' ? card.views : null,
+          videoThumbnail: card.type === 'video' ? card.thumbnail : null,
+          // 图片相关字段
+          imageUrl: card.type === 'image' ? card.imageUrl : null,
+          imageDescription: card.type === 'image' ? card.description : null,
+          // 重点卡片相关字段
+          highlightPoints: card.type === 'highlight' ? card.points : null
+        }))
+      };
+
+      console.log('保存草稿请求数据:', requestData);
+      
+      // 调用后端API创建草稿
+      const result = await api.request('/api/lessons/create', requestData, 'POST');
+      
+      wx.hideLoading();
+      
+      // 清除缓存数据
+      this.clearFormDataCache();
+      
+      wx.showToast({
+        title: '草稿保存成功',
+        icon: 'success'
+      });
+      
+      // 返回上一页
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+      
+    } catch (error) {
+      wx.hideLoading();
+      console.error('保存草稿失败:', error);
+      wx.showToast({
+        title: error.message || '保存失败，请重试',
+        icon: 'none'
+      });
+    }
+  },
+
   // 保存课时
   async saveLesson() {
     // 验证课时信息
@@ -1252,7 +1286,7 @@ Page({
         title: this.data.lessonInfo.title.trim(),
         description: this.data.lessonInfo.description.trim(),
         durationMinutes: this.data.lessonInfo.duration ? parseInt(this.data.lessonInfo.duration) : null,
-        status: 'draft',
+        status: isEditMode ? 'draft' : 'published',
         lessonCards: this.data.contentCards.map((card, index) => ({
           cardType: card.type,
           title: card.title || '',

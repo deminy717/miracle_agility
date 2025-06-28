@@ -36,13 +36,11 @@
       <text class="form-label">课程介绍 *</text>
       <textarea 
         class="form-textarea" 
-        placeholder="请输入课程介绍（10-500字符）"
+        placeholder="请输入课程介绍"
         value="{{formData.description}}"
         bindinput="onDescriptionInput"
-        maxlength="500"
         auto-height
       />
-      <view class="char-count">{{formData.description.length}}/500</view>
       <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
     </view>
 

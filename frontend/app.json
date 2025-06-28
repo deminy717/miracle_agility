@@ -22,6 +22,7 @@
     "pages/admin/article-create/article-create",
     "pages/admin/article-edit/article-edit",
     "pages/admin/user-manage/user-manage",
+    "pages/admin/access-code-list/access-code-list",
     "pages/edit-profile/edit-profile"
   ],
   "window": {

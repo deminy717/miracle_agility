@@ -197,16 +197,18 @@
   flex-direction: column;
   gap: 8rpx;
   flex-shrink: 0;
+  align-items: flex-start;
 }
 
 .action-btn {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 12rpx;
+  min-width: 120rpx;
+  height: 48rpx;
+  border-radius: 8rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  padding: 0 12rpx;
 }
 
 .edit-btn {
@@ -233,9 +235,57 @@
   transform: scale(0.95);
 }
 
-.btn-icon {
-  font-size: 28rpx;
+.btn-text {
+  font-size: 24rpx;
   color: white;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* 开关样式 */
+.switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8rpx 0;
+  width: 80rpx;
+  order: -1;
+}
+
+.switch {
+  width: 80rpx;
+  height: 44rpx;
+  border-radius: 22rpx;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.switch-on {
+  background-color: #34d399;
+}
+
+.switch-off {
+  background-color: #d1d5db;
+}
+
+.switch-handle {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 4rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.2);
+}
+
+.switch-on .switch-handle {
+  left: 40rpx;
+}
+
+.switch-off .switch-handle {
+  left: 4rpx;
 }
 
 /* 空状态 */
@@ -287,3 +337,6 @@
   color: white;
   font-weight: bold;
 }
+
+/* 引入课程有效期选择器样式 */
+@import "./course-validity-picker.wxss";

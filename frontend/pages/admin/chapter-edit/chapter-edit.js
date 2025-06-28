@@ -11,7 +11,6 @@ Page({
     chapterInfo: {
       title: '',
       description: '',
-      duration: '',
       status: 'draft'
     },
     loading: true
@@ -116,14 +115,8 @@ Page({
       
       console.log('章节详情:', chapterInfo);
       
-      // 字段映射：将后端的durationMinutes映射到前端的duration
-      const mappedChapterInfo = {
-        ...chapterInfo,
-        duration: chapterInfo.durationMinutes // 映射字段名
-      };
-      
       this.setData({
-        chapterInfo: mappedChapterInfo,
+        chapterInfo: chapterInfo,
         courseId: chapterInfo.courseId, // 从章节详情中获取courseId
         loading: false
       });
@@ -161,11 +154,7 @@ Page({
     });
   },
 
-  onDurationInput(e) {
-    this.setData({
-      'chapterInfo.duration': e.detail.value
-    });
-  },
+
 
   // 选择状态
   selectStatus(e) {
@@ -177,7 +166,7 @@ Page({
 
   // 保存章节
   async saveChapter() {
-    const { title, description, duration, status } = this.data.chapterInfo;
+    const { title, description, status } = this.data.chapterInfo;
     
     // 基础验证
     if (!title.trim()) {

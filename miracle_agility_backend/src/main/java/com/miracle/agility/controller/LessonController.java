@@ -208,6 +208,30 @@ public class LessonController {
         }
     }
 
+    /**
+     * 下架课时（转为草稿状态）
+     */
+    @PostMapping("/{lessonId}/unpublish")
+    public ResponseEntity<ApiResponse<String>> unpublishLesson(
+            @PathVariable Long lessonId,
+            HttpServletRequest httpRequest) {
+        
+        log.info("下架课时请求: lessonId={}", lessonId);
+        
+        try {
+            User currentUser = getCurrentUser(httpRequest);
+            
+            lessonService.unpublishLesson(lessonId, currentUser.getId());
+            return ResponseEntity.ok(ApiResponse.success("课时已下架", "unpublished"));
+            
+        } catch (AuthenticationException authenticationException) {
+            throw authenticationException;
+        } catch (Exception e) {
+            log.error("下架课时失败: lessonId={}, error={}", lessonId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("下架课时失败: " + e.getMessage()));
+        }
+    }
+
 
     /**
      * 从请求中获取当前用户信息

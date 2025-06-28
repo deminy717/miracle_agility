@@ -47,6 +47,11 @@ public interface ChapterService {
     void publishChapter(Long chapterId, Long publishedBy);
     
     /**
+     * 下架章节（转为草稿状态）
+     */
+    void unpublishChapter(Long chapterId, Long unpublishedBy);
+    
+    /**
      * 归档章节
      */
     void archiveChapter(Long chapterId, Long archivedBy);

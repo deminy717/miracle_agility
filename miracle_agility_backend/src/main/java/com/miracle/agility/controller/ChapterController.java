@@ -191,6 +191,30 @@ public class ChapterController {
     }
 
     /**
+     * 下架章节（转为草稿状态）
+     */
+    @PostMapping("/{chapterId}/unpublish")
+    public ResponseEntity<ApiResponse<String>> unpublishChapter(
+            @PathVariable Long chapterId,
+            HttpServletRequest httpRequest) {
+        
+        log.info("下架章节请求: chapterId={}", chapterId);
+        
+        try {
+            User currentUser = getCurrentUser(httpRequest);
+            
+            chapterService.unpublishChapter(chapterId, currentUser.getId());
+            return ResponseEntity.ok(ApiResponse.success("章节已下架", "unpublished"));
+            
+        } catch (AuthenticationException authenticationException) {
+            throw authenticationException;
+        } catch (Exception e) {
+            log.error("下架章节失败: chapterId={}, error={}", chapterId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("下架章节失败: " + e.getMessage()));
+        }
+    }
+
+    /**
      * 归档章节
      */
     @PostMapping("/{chapterId}/archive")

@@ -1,10 +1,5 @@
 <!--卡片式内容编辑器-->
 <view class="card-editor-container">
-  <!-- 头部 -->
-  <view class="header">
-    <text class="back-btn" bindtap="goBack">←</text>
-    <text class="page-title">{{editMode ? '编辑课时' : (editorType === 'lesson' ? '新增课时' : editorType === 'chapter' ? '新增章节' : '内容编辑器')}}</text>
-  </view>
 
   <!-- 课时创建信息 -->
   <view class="lesson-create-info" wx:if="{{editorType === 'lesson'}}">
@@ -30,14 +25,7 @@
                 show-confirm-bar="{{false}}">
       </textarea>
     </view>
-    <view class="form-group">
-      <text class="form-label">预计时长（分钟）</text>
-      <input class="form-input lesson-duration" 
-             placeholder="请输入课时时长（分钟）" 
-             value="{{lessonInfo.duration}}" 
-             bindinput="onLessonDurationInput"
-             type="number"/>
-    </view>
+
   </view>
 
   <!-- 课程信息 -->
@@ -99,7 +87,6 @@
             <video src="{{item.videoUrl}}" controls class="video-player"></video>
             <view class="video-stats">
               <text>🎬 {{item.duration || '30分钟'}}</text>
-              <text>👥 {{item.views || '156人学习'}}</text>
               <view wx:if="{{item.fileSize}}" class="file-size">📦 {{item.fileSize}}</view>
             </view>
             <!-- 上传失败提示 -->
@@ -231,9 +218,7 @@
              <text class="meta-item" wx:if="{{lessonInfo.typeIndex !== -1}}">
                🏷️ {{lessonTypes[lessonInfo.typeIndex]}}
              </text>
-             <text class="meta-item" wx:if="{{lessonInfo.duration}}">
-               ⏱️ {{lessonInfo.duration}}分钟
-             </text>
+
              <text class="meta-item" wx:if="{{lessonInfo.levelIndex !== -1}}">
                📊 {{lessonLevels[lessonInfo.levelIndex]}}
              </text>
@@ -273,7 +258,6 @@
               <video src="{{item.videoUrl}}" controls class="section-video" poster="{{item.thumbnail}}"></video>
               <view class="video-info">
                 <text class="video-duration">🎬 {{item.duration || '播放时长未知'}}</text>
-                <text class="video-views">👥 {{item.views || '学习人数统计中'}}</text>
               </view>
             </view>
             
@@ -348,6 +332,7 @@
   <view class="bottom-toolbar">
     <button class="toolbar-btn" bindtap="showPreview">预览</button>
     <button class="toolbar-btn" bindtap="clearAll">清空</button>
+    <button class="toolbar-btn draft" bindtap="saveDraft" wx:if="{{editorType === 'lesson' && !editMode}}">保存草稿</button>
     <button class="toolbar-btn primary" bindtap="saveContent">{{editMode ? (editorType === 'lesson' ? '更新课时' : '更新内容') : (editorType === 'lesson' ? '创建课时' : editorType === 'chapter' ? '创建章节' : '保存')}}</button>
   </view>
 </view>

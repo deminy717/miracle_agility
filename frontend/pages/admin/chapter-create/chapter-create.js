@@ -111,10 +111,6 @@ Page({
 
     if (!description.trim()) {
       errors.description = '请输入章节描述';
-    } else if (description.trim().length < 10) {
-      errors.description = '章节描述至少10个字符';
-    } else if (description.trim().length > 300) {
-      errors.description = '章节描述不能超过300个字符';
     }
 
     this.setData({ errors });

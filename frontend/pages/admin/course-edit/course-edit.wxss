@@ -1,1 +1,36 @@
 /* pages/admin/course-edit/course-edit.wxss */
+
+/* 输入框样式修复 */
+.form-input {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f9fafb;
+  box-sizing: border-box;
+  height: 88rpx;
+  line-height: 1.4;
+}
+
+.form-input:focus {
+  border-color: #3b82f6;
+  background: white;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f9fafb;
+  min-height: 200rpx;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+.form-textarea:focus {
+  border-color: #3b82f6;
+  background: white;
+}

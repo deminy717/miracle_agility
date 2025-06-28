@@ -21,18 +21,16 @@
       <view class="error-tip" wx:if="{{errors.title}}">{{errors.title}}</view>
     </view>
 
-    <!-- 章节描述 -->
+        <!-- 章节描述 -->
     <view class="form-item">
       <text class="form-label">章节描述 *</text>
       <textarea 
         class="form-textarea" 
-        placeholder="请输入章节描述（10-300字符）"
+        placeholder="请输入章节描述"
         value="{{formData.description}}"
         bindinput="onDescriptionInput"
-        maxlength="300"
         auto-height
       />
-            <view class="char-count">{{formData.description.length}}/300</view>
       <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
     </view>
   </view>

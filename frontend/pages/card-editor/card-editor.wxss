@@ -6,32 +6,7 @@
   flex-direction: column;
 }
 
-.header {
-  background-color: #fff;
-  padding: 20rpx 32rpx;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1rpx solid #e0e0e0;
-  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
-}
 
-.back-btn {
-  font-size: 36rpx;
-  color: #333;
-}
-
-.page-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.save-btn {
-  color: #007AFF;
-  font-size: 28rpx;
-  font-weight: 500;
-}
 
 .course-info {
   background-color: #fff;
@@ -153,6 +128,7 @@
   font-size: 28rpx;
   background-color: #fafafa;
   color: #333;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -170,6 +146,7 @@
   line-height: 1.5;
   background-color: #fafafa;
   color: #333;
+  box-sizing: border-box;
 }
 
 .form-textarea:focus {
@@ -306,6 +283,9 @@
   border: 1rpx solid #e0e0e0;
   border-radius: 8rpx;
   background-color: #fafafa;
+  box-sizing: border-box;
+  height: 60rpx;
+  line-height: 28rpx;
 }
 
 .text-area {
@@ -317,6 +297,7 @@
   font-size: 28rpx;
   line-height: 1.6;
   background-color: #fafafa;
+  box-sizing: border-box;
 }
 
 /* 图片内容 */
@@ -365,6 +346,7 @@
   border-radius: 8rpx;
   font-size: 28rpx;
   background-color: #fafafa;
+  box-sizing: border-box;
 }
 
 .highlight-content {
@@ -381,6 +363,9 @@
   border: 1rpx solid #e0e0e0;
   border-radius: 8rpx;
   background-color: #fff3cd;
+  box-sizing: border-box;
+  height: 60rpx;
+  line-height: 28rpx;
 }
 
 .highlight-points {
@@ -409,6 +394,10 @@
   color: #333;
   border: none;
   background: transparent;
+  height: 44rpx;
+  line-height: 44rpx;
+  padding: 0;
+  margin: 0;
 }
 
 .delete-point {
@@ -571,6 +560,8 @@
   flex: 1;
   padding: 0;
   background-color: #f8f9fa;
+  height: 100%;
+  overflow-y: auto;
 }
 
 /* 课时标题区域 */
@@ -910,27 +901,35 @@
   left: 0;
   right: 0;
   background-color: #fff;
-  padding: 24rpx 32rpx;
+  padding: 20rpx 24rpx;
   border-top: 1rpx solid #e0e0e0;
   display: flex;
-  gap: 24rpx;
+  gap: 16rpx;
   box-shadow: 0 -4rpx 12rpx rgba(0,0,0,0.1);
 }
 
 .toolbar-btn {
   flex: 1;
-  padding: 24rpx;
+  padding: 20rpx 16rpx;
   border-radius: 12rpx;
   border: 1rpx solid #e0e0e0;
   background-color: #fff;
   color: #333;
-  font-size: 28rpx;
+  font-size: 26rpx;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .toolbar-btn.primary {
   background-color: #007AFF;
   color: #fff;
   border-color: #007AFF;
+}
+
+.toolbar-btn.draft {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border-color: #dee2e6;
 }
 
 /* 调试日志样式 */

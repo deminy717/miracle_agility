@@ -1,0 +1,80 @@
+<view class="container">
+  <!-- 课程信息头部 -->
+  <view class="course-header">
+    <view class="course-title">{{courseTitle}}</view>
+    <view class="course-stats">
+      <view class="stat-item">
+        <view class="stat-number">{{accessCodes.length}}</view>
+        <view class="stat-label">总数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{usedCount}}</view>
+        <view class="stat-label">已使用</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{unusedCount}}</view>
+        <view class="stat-label">未使用</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 授权码列表 -->
+  <view class="access-code-list" wx:if="{{accessCodes.length > 0}}">
+    <view class="code-item" wx:for="{{accessCodes}}" wx:key="id">
+      <!-- 授权码信息 - 同一行显示 -->
+      <view class="code-header">
+        <text class="code-text" bindtap="copyCode" data-code="{{item.code}}">{{item.code}}</text>
+        <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      
+      <!-- 注册信息 - 每行显示完整信息 -->
+      <view class="code-info">
+        <view class="info-row">
+          <text class="info-text">注册用户：{{item.registeredUserName || '未注册'}}</text>
+        </view>
+        
+        <view class="info-row" wx:if="{{item.registeredAt}}">
+          <text class="info-text">注册时间：{{item.registeredAt}}</text>
+        </view>
+        
+        <!-- 授权码有效期 -->
+        <view class="info-row">
+          <text class="info-text {{item.isCodeExpired ? 'expired' : ''}}">
+            授权码有效期：{{item.codeValidUntil}}
+            <text wx:if="{{item.isCodeExpired && !item.registeredUserName}}" class="expired-tag">已失效</text>
+          </text>
+        </view>
+        
+        <!-- 课程有效期 -->
+        <view class="info-row">
+          <text class="info-text">课程有效期：{{item.courseValidityText}}</text>
+        </view>
+        
+        <!-- 课程截止时间 -->
+        <view class="info-row" wx:if="{{item.courseExpireTime}}">
+          <text class="info-text {{item.isCourseExpired ? 'expired' : ''}}">
+            课程截止：{{item.courseExpireTime}}
+            <text wx:if="{{item.isCourseExpired}}" class="expired-tag">已过期</text>
+          </text>
+        </view>
+        
+        <!-- 使用情况 -->
+        <view class="info-row">
+          <text class="info-text">使用情况：{{item.usedCount}}/{{item.usageLimit}}</text>
+        </view>
+        
+        <!-- 说明信息 -->
+        <view class="info-row" wx:if="{{item.description}}">
+          <text class="info-text">说明：{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{accessCodes.length === 0}}">
+    <view class="empty-icon">📄</view>
+    <view class="empty-text">该课程还没有任何授权码</view>
+    <view class="empty-desc">请在课程管理页面生成授权码</view>
+  </view>
+</view> 
