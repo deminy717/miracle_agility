@@ -1,17 +1,5 @@
 <!--pages/lesson-detail/lesson-detail.wxml-->
 <view class="lesson-detail-page">
-  <!-- 顶部导航栏 -->
-  <view class="top-nav">
-    <view class="nav-left" bindtap="goBack">
-      <text class="nav-back-icon">←</text>
-    </view>
-    <view class="nav-center">
-      <text class="nav-title">课时详情</text>
-    </view>
-    <view class="nav-right">
-    </view>
-  </view>
-
   <!-- 加载状态 -->
   <view class="loading-container" wx:if="{{loading}}">
     <text class="loading-text">加载中...</text>
@@ -23,28 +11,8 @@
     <!-- 课时标题区域 -->
     <view class="lesson-header-section">
       <view class="lesson-header-content">
-        <view class="lesson-badge-container">
-          <view class="lesson-badge badge-{{lessonInfo.status}}">
-            <text class="badge-icon">{{lessonInfo.status === 'published' ? '✓' : '📝'}}</text>
-            <text class="badge-text">{{lessonInfo.status === 'published' ? '已发布' : '草稿'}}</text>
-          </view>
-        </view>
-        
         <text class="lesson-main-title">{{lessonInfo.title || '课时标题'}}</text>
         <text class="lesson-subtitle">{{lessonInfo.description || '课时描述'}}</text>
-        
-        <view class="lesson-stats">
-          <view class="stat-item">
-            <text class="stat-icon">⏱</text>
-            <text class="stat-label">时长</text>
-            <text class="stat-value">{{lessonInfo.durationMinutes || 0}}分钟</text>
-          </view>
-          <view class="stat-item">
-            <text class="stat-icon">#</text>
-            <text class="stat-label">顺序</text>
-            <text class="stat-value">第{{lessonInfo.chapterLessonOrder || 1}}课时</text>
-          </view>
-        </view>
       </view>
     </view>
 
@@ -111,20 +79,8 @@
       <view class="no-content-illustration">
         <text class="no-content-icon">📝</text>
         <text class="no-content-title">暂无课时内容</text>
-        <text class="no-content-subtitle">点击底部编辑按钮添加学习内容</text>
+        <text class="no-content-subtitle">此课时尚无学习内容</text>
       </view>
-    </view>
-
-    <!-- 底部操作区域 -->
-    <view class="lesson-actions">
-      <button class="action-btn btn-secondary" bindtap="goBack">
-        <text class="btn-icon">←</text>
-        <text class="btn-text">返回</text>
-      </button>
-      <button class="action-btn btn-primary" bindtap="editLesson">
-        <text class="btn-icon">✏️</text>
-        <text class="btn-text">编辑课时</text>
-      </button>
     </view>
 
     <!-- 底部安全距离 -->
