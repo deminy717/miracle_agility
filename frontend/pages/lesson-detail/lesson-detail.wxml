@@ -1,0 +1,133 @@
+<!--pages/lesson-detail/lesson-detail.wxml-->
+<view class="lesson-detail-page">
+  <!-- 顶部导航栏 -->
+  <view class="top-nav">
+    <view class="nav-left" bindtap="goBack">
+      <text class="nav-back-icon">←</text>
+    </view>
+    <view class="nav-center">
+      <text class="nav-title">课时详情</text>
+    </view>
+    <view class="nav-right">
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 课时内容 -->
+  <scroll-view class="lesson-scroll-view" scroll-y wx:if="{{!loading}}">
+    
+    <!-- 课时标题区域 -->
+    <view class="lesson-header-section">
+      <view class="lesson-header-content">
+        <view class="lesson-badge-container">
+          <view class="lesson-badge badge-{{lessonInfo.status}}">
+            <text class="badge-icon">{{lessonInfo.status === 'published' ? '✓' : '📝'}}</text>
+            <text class="badge-text">{{lessonInfo.status === 'published' ? '已发布' : '草稿'}}</text>
+          </view>
+        </view>
+        
+        <text class="lesson-main-title">{{lessonInfo.title || '课时标题'}}</text>
+        <text class="lesson-subtitle">{{lessonInfo.description || '课时描述'}}</text>
+        
+        <view class="lesson-stats">
+          <view class="stat-item">
+            <text class="stat-icon">⏱</text>
+            <text class="stat-label">时长</text>
+            <text class="stat-value">{{lessonInfo.durationMinutes || 0}}分钟</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-icon">#</text>
+            <text class="stat-label">顺序</text>
+            <text class="stat-value">第{{lessonInfo.chapterLessonOrder || 1}}课时</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 内容区域 -->
+    <view class="lesson-content-area" wx:if="{{lessonInfo.lessonCards && lessonInfo.lessonCards.length > 0}}">
+      <view wx:for="{{lessonInfo.lessonCards}}" wx:key="id" class="content-section">
+        
+        <!-- 文本内容 -->
+        <view wx:if="{{item.cardType === 'text'}}" class="content-text-section">
+          <text wx:if="{{item.title}}" class="section-title">{{item.title}}</text>
+          <text class="section-content">{{item.content}}</text>
+        </view>
+        
+        <!-- 图片内容 -->
+        <view wx:elif="{{item.cardType === 'image' && item.imageUrl}}" class="content-image-section">
+          <image src="{{item.imageUrl}}" mode="widthFix" class="section-image"></image>
+          <text wx:if="{{item.imageDescription}}" class="image-caption">{{item.imageDescription}}</text>
+        </view>
+        
+        <!-- 视频内容 -->
+        <view wx:elif="{{item.cardType === 'video' && item.videoUrl}}" class="content-video-section">
+          <video src="{{item.videoUrl}}" controls class="section-video" poster="{{item.videoThumbnail}}"></video>
+        </view>
+        
+        <!-- 重点内容 -->
+        <view wx:elif="{{item.cardType === 'highlight'}}" class="content-highlight-section">
+          <text wx:if="{{item.title}}" class="highlight-section-title">{{item.title}}</text>
+          <view class="highlight-box">
+            <view wx:for="{{item.highlightPoints}}" wx:key="pointIndex" wx:for-item="point" class="highlight-point">
+              <text class="point-marker">💡</text>
+              <text class="point-text">{{point}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 音频内容 -->
+        <view wx:elif="{{item.cardType === 'audio' && item.audioUrl}}" class="content-audio-section">
+          <view class="audio-player">
+            <text class="audio-icon">🎵</text>
+            <text class="audio-title">{{item.title || '音频内容'}}</text>
+            <text class="audio-duration">{{item.audioDuration || '时长未知'}}</text>
+          </view>
+        </view>
+
+        <!-- 测验内容 -->
+        <view wx:elif="{{item.cardType === 'quiz'}}" class="content-quiz-section">
+          <view class="quiz-box">
+            <text class="quiz-icon">❓</text>
+            <text class="quiz-title">{{item.title || '互动测验'}}</text>
+            <text class="quiz-description">点击开始答题</text>
+          </view>
+        </view>
+
+        <!-- 空内容提示 -->
+        <view wx:else class="content-empty-section">
+          <text class="empty-text">内容为空或类型不支持显示</text>
+        </view>
+
+      </view>
+    </view>
+
+    <!-- 无内容提示 -->
+    <view wx:if="{{!lessonInfo.lessonCards || lessonInfo.lessonCards.length === 0}}" class="no-content-area">
+      <view class="no-content-illustration">
+        <text class="no-content-icon">📝</text>
+        <text class="no-content-title">暂无课时内容</text>
+        <text class="no-content-subtitle">点击底部编辑按钮添加学习内容</text>
+      </view>
+    </view>
+
+    <!-- 底部操作区域 -->
+    <view class="lesson-actions">
+      <button class="action-btn btn-secondary" bindtap="goBack">
+        <text class="btn-icon">←</text>
+        <text class="btn-text">返回</text>
+      </button>
+      <button class="action-btn btn-primary" bindtap="editLesson">
+        <text class="btn-icon">✏️</text>
+        <text class="btn-text">编辑课时</text>
+      </button>
+    </view>
+
+    <!-- 底部安全距离 -->
+    <view class="bottom-safe-area"></view>
+  </scroll-view>
+</view> 

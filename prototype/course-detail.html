@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程详情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-bar {
+            background: linear-gradient(135deg, #000, #333);
+            height: 44px;
+        }
+        .tab-bar {
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        .course-banner {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(29, 78, 216, 0.9));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .chapter-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .chapter-header {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .chapter-header:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+        }
+        .lesson-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        .lesson-item:hover {
+            background: #f8fafc;
+        }
+        .lesson-item:last-child {
+            border-bottom: none;
+        }
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .completed { background: #10b981; }
+        .current { background: #f59e0b; }
+        .pending { background: #d1d5db; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316'
+                    }
+                }
+            }
+        }
+        
+        function toggleChapter(chapterId) {
+            const content = document.getElementById(chapterId);
+            const icon = document.querySelector(`[data-chapter="${chapterId}"] i`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- iOS状态栏 -->
+    <div class="status-bar flex items-center justify-between px-6 text-white text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="bg-white rounded-sm px-1 py-0.5">
+                <span class="text-black text-xs">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="bg-white px-4 py-3 border-b border-gray-100">
+        <div class="flex items-center">
+            <button class="mr-4 text-club-blue">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </button>
+            <h1 class="text-lg font-bold text-gray-800 flex-1 text-center mr-8">课程详情</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="flex-1 overflow-y-auto">
+        <!-- 课程Banner -->
+        <div class="course-banner p-6 relative">
+            <!-- 装饰性元素 -->
+            <div class="absolute top-4 right-4 text-4xl opacity-20"><i class="fas fa-bullseye"></i></div>
+            <div class="absolute bottom-4 left-4 text-3xl opacity-15"><i class="fas fa-paw"></i></div>
+            
+            <div class="flex items-start space-x-4">
+                <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=100&h=100&fit=crop" 
+                     alt="课程封面" class="w-24 h-24 rounded-xl shadow-lg">
+                <div class="flex-1">
+                    <h2 class="text-2xl font-bold mb-2">基础敏捷训练</h2>
+                    <p class="text-blue-100 text-sm mb-3 leading-relaxed">
+                        从零开始学习犬类敏捷训练的基础知识和技能，通过系统性的课程设计，让您和爱犬建立默契配合。
+                    </p>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span><i class="fas fa-clock mr-1"></i>8周课程</span>
+                        <span><i class="fas fa-users mr-1"></i>156人学习</span>
+                        <span><i class="fas fa-star mr-1"></i>4.8分</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 进度条 -->
+            <div class="mt-6 pt-4 border-t border-blue-300/30">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-blue-100 text-sm">学习进度</span>
+                    <span class="text-white font-semibold">60% (12/20)</span>
+                </div>
+                <div class="bg-blue-300/30 rounded-full h-2">
+                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 课程章节 -->
+        <div class="p-4">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-list-ul text-club-blue mr-2"></i>
+                课程章节
+                <div class="ml-2 text-yellow-400"><i class="fas fa-book"></i></div>
+            </h3>
+
+            <!-- 第一章 -->
+            <div class="chapter-section">
+                <div class="chapter-header" data-chapter="chapter1" onclick="toggleChapter('chapter1')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="text-2xl mr-3 text-club-blue"><i class="fas fa-dog"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">第一章：认识敏捷训练</h4>
+                                <p class="text-sm text-gray-600">基础理论和准备工作</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">3/3完成</span>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="chapter1" class="hidden">
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot completed"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">1.1 什么是犬敏捷训练</h5>
+                                <p class="text-xs text-gray-500">15分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                    </div>
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot completed"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">1.2 训练前的准备工作</h5>
+                                <p class="text-xs text-gray-500">20分钟 • 图文</p>
+                            </div>
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                    </div>
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot completed"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">1.3 安全注意事项</h5>
+                                <p class="text-xs text-gray-500">10分钟 • 图文</p>
+                            </div>
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二章 -->
+            <div class="chapter-section">
+                <div class="chapter-header" data-chapter="chapter2" onclick="toggleChapter('chapter2')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="text-2xl mr-3 text-club-orange"><i class="fas fa-running"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">第二章：基础动作训练</h4>
+                                <p class="text-sm text-gray-600">基本指令和动作</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded">2/4进行中</span>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="chapter2" class="hidden">
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot completed"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">2.1 基础指令练习</h5>
+                                <p class="text-xs text-gray-500">25分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-check-circle text-green-500"></i>
+                        </div>
+                    </div>
+                    <div class="lesson-item bg-yellow-50">
+                        <div class="flex items-center">
+                            <div class="progress-dot current"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">2.2 直线行走训练</h5>
+                                <p class="text-xs text-gray-500">30分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-play-circle text-yellow-500"></i>
+                        </div>
+                    </div>
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot pending"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">2.3 转弯和停止</h5>
+                                <p class="text-xs text-gray-500">20分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot pending"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">2.4 速度控制训练</h5>
+                                <p class="text-xs text-gray-500">25分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三章 -->
+            <div class="chapter-section">
+                <div class="chapter-header" data-chapter="chapter3" onclick="toggleChapter('chapter3')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="text-2xl mr-3 text-purple-600"><i class="fas fa-bullseye"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">第三章：障碍物训练</h4>
+                                <p class="text-sm text-gray-600">跨栏和穿越训练</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">0/5未开始</span>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="chapter3" class="hidden">
+                    <div class="lesson-item">
+                        <div class="flex items-center">
+                            <div class="progress-dot pending"></div>
+                            <div class="flex-1">
+                                <h5 class="font-medium text-gray-800">3.1 低栏跨越训练</h5>
+                                <p class="text-xs text-gray-500">35分钟 • 视频</p>
+                            </div>
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                    </div>
+                    <!-- 更多课程... -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-bar flex items-center justify-around px-6">
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-home text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">主页</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <i class="fas fa-graduation-cap text-club-blue text-xl mb-1"></i>
+                <div class="absolute -top-1 -right-1 text-yellow-400 text-xs"><i class="fas fa-paw"></i></div>
+            </div>
+            <span class="text-xs text-club-blue font-medium">课程</span>
+        </div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-user text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">我的</span>
+        </div>
+    </div>
+</body>
+</html> 

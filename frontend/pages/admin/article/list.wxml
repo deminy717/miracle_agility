@@ -1,0 +1,62 @@
+<view class="article-manage-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <input class="search-input" 
+             placeholder="搜索文章标题或内容..." 
+             value="{{searchKeyword}}"
+             bindinput="onSearchInput"
+             confirm-type="search"
+             bindconfirm="onSearch" />
+      <view class="search-btn" bindtap="onSearch">🔍</view>
+    </view>
+    <button class="create-btn" bindtap="createArticle">新建</button>
+  </view>
+
+  <!-- 文章列表 -->
+  <view class="article-list">
+    <view wx:for="{{articles}}" wx:key="id" class="article-item">
+      <view class="article-cover">
+        <image wx:if="{{item.coverImage}}" 
+               src="{{item.coverImage}}" 
+               mode="aspectFill" 
+               class="cover-image" />
+        <view wx:else class="no-cover">📝</view>
+      </view>
+      
+      <view class="article-content">
+        <view class="article-title">{{item.title}}</view>
+        <view class="article-desc">{{item.desc || '暂无描述'}}</view>
+        <view class="article-meta">
+          <text class="meta-item">作者: {{item.author || '未知'}}</text>
+          <text class="meta-item">浏览: {{item.views}}</text>
+          <text class="meta-item">{{item.createTime}}</text>
+        </view>
+      </view>
+      
+      <view class="article-actions">
+        <button class="action-btn edit-btn" bindtap="editArticle" data-id="{{item.id}}">编辑</button>
+        <button class="action-btn delete-btn" bindtap="deleteArticle" data-id="{{item.id}}" data-title="{{item.title}}">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{articles.length === 0}}" class="empty-state">
+    <view class="empty-icon">📄</view>
+    <view class="empty-text">暂无文章</view>
+    <button class="empty-action" bindtap="createArticle">创建第一篇文章</button>
+  </view>
+
+  <!-- 分页 -->
+  <view wx:if="{{hasMore}}" class="pagination">
+    <button class="load-more-btn" bindtap="loadMore" loading="{{loadingMore}}">
+      {{loadingMore ? '加载中...' : '加载更多'}}
+    </button>
+  </view>
+</view> 

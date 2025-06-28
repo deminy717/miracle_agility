@@ -1,0 +1,118 @@
+<view class="upload-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">文件上传</text>
+    <text class="page-subtitle">上传图片、视频等媒体文件</text>
+  </view>
+
+  <!-- 文件类型选择 -->
+  <view class="category-section">
+    <view class="section-title">文件类型</view>
+    <view class="category-tabs">
+      <view class="tab-item {{selectedCategory === 'images' ? 'active' : ''}}" 
+            bindtap="selectCategory" 
+            data-category="images">
+        <view class="tab-icon">🖼️</view>
+        <text class="tab-text">图片</text>
+      </view>
+      <view class="tab-item {{selectedCategory === 'videos' ? 'active' : ''}}" 
+            bindtap="selectCategory" 
+            data-category="videos">
+        <view class="tab-icon">🎥</view>
+        <text class="tab-text">视频</text>
+      </view>
+      <view class="tab-item {{selectedCategory === 'documents' ? 'active' : ''}}" 
+            bindtap="selectCategory" 
+            data-category="documents">
+        <view class="tab-icon">📄</view>
+        <text class="tab-text">文档</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 上传区域 -->
+  <view class="upload-section">
+    <view class="section-title">选择文件</view>
+    
+    <!-- 图片上传 -->
+    <view wx:if="{{selectedCategory === 'images'}}" class="upload-area">
+      <button class="upload-btn" bindtap="chooseImages">
+        <view class="upload-icon">📸</view>
+        <text class="upload-text">选择图片</text>
+        <text class="upload-hint">支持JPG、PNG、GIF等格式，最大10MB</text>
+      </button>
+    </view>
+
+    <!-- 视频上传 -->
+    <view wx:elif="{{selectedCategory === 'videos'}}" class="upload-area">
+      <button class="upload-btn" bindtap="chooseVideo">
+        <view class="upload-icon">🎬</view>
+        <text class="upload-text">选择视频</text>
+        <text class="upload-hint">支持MP4、AVI、MOV等格式，最大100MB</text>
+      </button>
+    </view>
+
+    <!-- 文档上传 -->
+    <view wx:else class="upload-area">
+      <button class="upload-btn" bindtap="chooseFiles">
+        <view class="upload-icon">📁</view>
+        <text class="upload-text">选择文档</text>
+        <text class="upload-hint">支持PDF、DOC、XLS等格式，最大50MB</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 待上传文件列表 -->
+  <view wx:if="{{selectedFiles.length > 0}}" class="files-section">
+    <view class="section-title">待上传文件 ({{selectedFiles.length}})</view>
+    <view class="file-list">
+      <view wx:for="{{selectedFiles}}" wx:key="index" class="file-item">
+        <view class="file-info">
+          <view class="file-name">{{item.name || '文件' + (index + 1)}}</view>
+          <view class="file-size">{{item.sizeText}}</view>
+        </view>
+        <button class="remove-btn" bindtap="removeFile" data-index="{{index}}">×</button>
+      </view>
+    </view>
+    
+    <button class="upload-all-btn" 
+            bindtap="uploadAllFiles" 
+            loading="{{uploading}}"
+            disabled="{{uploading}}">
+      {{uploading ? '上传中...' : '开始上传'}}
+    </button>
+  </view>
+
+  <!-- 上传进度 -->
+  <view wx:if="{{uploading}}" class="progress-section">
+    <view class="section-title">上传进度</view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{uploadProgress}}%"></view>
+    </view>
+    <text class="progress-text">{{uploadedCount}}/{{totalCount}} ({{uploadProgress}}%)</text>
+  </view>
+
+  <!-- 上传结果 -->
+  <view wx:if="{{uploadResults.length > 0}}" class="results-section">
+    <view class="section-title">上传结果</view>
+    <view class="result-list">
+      <view wx:for="{{uploadResults}}" wx:key="index" class="result-item">
+        <view class="result-info">
+          <view class="result-name">{{item.fileName}}</view>
+          <view class="result-status {{item.success ? 'success' : 'error'}}">
+            {{item.success ? '上传成功' : '上传失败'}}
+          </view>
+        </view>
+        
+        <view wx:if="{{item.success}}" class="result-actions">
+          <button class="copy-btn" bindtap="copyUrl" data-url="{{item.url}}">复制链接</button>
+          <button class="preview-btn" bindtap="previewFile" data-url="{{item.url}}" data-type="{{selectedCategory}}">预览</button>
+        </view>
+        
+        <view wx:else class="error-message">
+          {{item.error}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

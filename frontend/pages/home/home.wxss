@@ -1,0 +1,274 @@
+.home-page {
+  padding: 32rpx;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* 俱乐部介绍区域 */
+.club-section {
+  margin-bottom: 0rpx;
+}
+
+/* Logo 主图容器 */
+.main-logo-container {
+  position: relative;
+  width: calc(100% + 64rpx);
+  height: 480rpx;
+  margin: -32rpx -32rpx 0 -32rpx;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.main-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Logo 阴影叠加层 */
+.logo-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+
+/* 俱乐部介绍文字 */
+.club-intro {
+  padding: 32rpx 24rpx 16rpx 24rpx;
+  text-align: center;
+  margin-bottom: 0rpx;
+}
+
+.intro-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 8rpx;
+}
+
+.intro-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #64748b;
+  margin-bottom: 16rpx;
+}
+
+.intro-description {
+  display: block;
+  font-size: 26rpx;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* 骨头分割线 */
+.bone-divider {
+  text-align: center;
+  margin: 16rpx 0 30rpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bone-icon {
+  width: 70rpx;
+  height: 70rpx;
+  opacity: 0.5;
+  margin: 0 13px;
+  flex-shrink: 0;
+}
+
+/* 资讯标题 */
+.news-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.news-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-right: 16rpx;
+}
+
+.news-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #374151;
+  flex: 1;
+}
+
+.bone-small {
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: 16rpx;
+  opacity: 0.6;
+}
+
+/* 资讯列表 */
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32rpx;
+}
+
+.news-card {
+  background: white;
+  border-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.news-card:active {
+  transform: translateY(4rpx);
+}
+
+.news-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 24rpx;
+}
+
+.news-image {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 24rpx;
+  flex-shrink: 0;
+}
+
+.news-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 16rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-summary {
+  font-size: 28rpx;
+  color: #6b7280;
+  margin-bottom: 24rpx;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.news-date {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.news-likes {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+
+
+/* 更多资讯 */
+.more-news {
+  margin: 40rpx 30rpx;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-radius: 16rpx;
+  text-align: center;
+  border: 2rpx dashed #203b9d;
+  transition: all 0.3s ease;
+}
+
+.more-news:active {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  transform: scale(0.98);
+}
+
+.more-text {
+  color: #203b9d;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+/* 编辑器入口区域 */
+.editors-section {
+  margin: 32rpx 0;
+  padding: 0 30rpx;
+}
+
+.editor-entry {
+  margin-bottom: 24rpx;
+}
+
+.editor-card {
+  background: linear-gradient(135deg, #f0f9ff, #e0e7ff);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 8rpx 25rpx rgba(32, 59, 157, 0.15);
+  border: 2rpx solid #e0e7ff;
+  transition: all 0.3s ease;
+}
+
+.editor-card:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 15rpx rgba(32, 59, 157, 0.2);
+  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+}
+
+.editor-icon {
+  width: 64rpx;
+  height: 64rpx;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.editor-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #203b9d;
+  margin-bottom: 8rpx;
+}
+
+.editor-desc {
+  font-size: 26rpx;
+  color: #4c1d95;
+  opacity: 0.8;
+}
+
+.editor-arrow {
+  font-size: 36rpx;
+  color: #203b9d;
+  font-weight: bold;
+  margin-left: 16rpx;
+} 

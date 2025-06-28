@@ -1,0 +1,109 @@
+<!--pages/developer-home/developer-home.wxml-->
+<view class="container">
+  
+  <!-- 页面标题 -->
+  <view class="header">
+    <text class="title">🛠️ 开发者工具</text>
+    <text class="subtitle">调试和测试功能</text>
+  </view>
+
+  <!-- 当前状态 -->
+  <view class="status-section">
+    <view class="status-card">
+      <view class="status-item">
+        <text class="status-label">当前环境</text>
+        <text class="status-value {{currentEnv === 'development' ? 'dev' : 'prod'}}">
+          {{currentEnv === 'development' ? '开发环境' : '生产环境'}}
+        </text>
+      </view>
+      <view class="status-item">
+        <text class="status-label">用户类型</text>
+        <text class="status-value user">{{currentUserType === 'admin' ? '管理员' : currentUserType === 'developer' ? '开发者' : '普通用户'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 环境管理 -->
+  <view class="section">
+    <view class="section-title">🌐 环境管理</view>
+    <view class="action-grid">
+      <button class="action-btn primary" bindtap="toggleEnvironment">
+        切换环境
+      </button>
+      <button class="action-btn secondary" bindtap="refreshData">
+        刷新数据
+      </button>
+    </view>
+  </view>
+
+  <!-- 用户管理 -->
+  <view class="section">
+    <view class="section-title">👤 用户管理</view>
+    <view class="action-grid">
+      <button class="action-btn primary" bindtap="toggleUserType">
+        切换用户类型
+      </button>
+    </view>
+  </view>
+
+  <!-- API测试 -->
+  <view class="section">
+    <view class="section-title">🔧 API测试</view>
+    <view class="action-grid">
+      <button class="action-btn test" bindtap="testUserAPI">
+        测试用户API
+      </button>
+      <button class="action-btn test" bindtap="testCourseAPI">
+        测试课程API
+      </button>
+      <button class="action-btn test" bindtap="testNewsAPI">
+        测试资讯API
+      </button>
+    </view>
+  </view>
+
+  <!-- 开发工具 -->
+  <view class="section">
+    <view class="section-title">🛠️ 开发工具</view>
+    <view class="action-grid">
+      <button class="action-btn warning" bindtap="clearStorage">
+        清空存储
+      </button>
+      <button class="action-btn info" bindtap="viewLogs">
+        查看日志
+      </button>
+    </view>
+  </view>
+
+  <!-- 测试结果 -->
+  <view class="section" wx:if="{{testResult}}">
+    <view class="section-title">📋 测试结果</view>
+    <view class="test-result">
+      <text>{{testResult}}</text>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="section">
+    <view class="section-title">📊 系统统计</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalUsers}}</text>
+        <text class="stat-label">总用户数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalCourses}}</text>
+        <text class="stat-label">总课程数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.totalArticles}}</text>
+        <text class="stat-label">总文章数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.todayActiveUsers}}</text>
+        <text class="stat-label">今日活跃</text>
+      </view>
+    </view>
+  </view>
+
+</view>

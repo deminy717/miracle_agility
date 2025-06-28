@@ -1,0 +1,112 @@
+<view class="article-create-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">新增文章</text>
+    <text class="page-subtitle">创建新的资讯内容</text>
+  </view>
+
+  <!-- 表单内容 -->
+  <view class="form-container">
+    <!-- 文章标题 -->
+    <view class="form-item">
+      <text class="form-label">文章标题 *</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入文章标题（5-100字符）"
+        value="{{formData.title}}"
+        bindinput="onTitleInput"
+        maxlength="100"
+      />
+      <view class="char-count">{{formData.title.length}}/100</view>
+      <view class="error-tip" wx:if="{{errors.title}}">{{errors.title}}</view>
+    </view>
+
+    <!-- 文章摘要 -->
+    <view class="form-item">
+      <text class="form-label">文章摘要 *</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请输入文章摘要（10-200字符）"
+        value="{{formData.summary}}"
+        bindinput="onSummaryInput"
+        maxlength="200"
+        auto-height
+      />
+      <view class="char-count">{{formData.summary.length}}/200</view>
+      <view class="error-tip" wx:if="{{errors.summary}}">{{errors.summary}}</view>
+    </view>
+
+    <!-- 文章分类 -->
+    <view class="form-item">
+      <text class="form-label">文章分类 *</text>
+      <picker 
+        class="form-picker" 
+        bindchange="onCategoryChange" 
+        value="{{categoryIndex}}" 
+        range="{{categoryOptions}}"
+      >
+        <view class="picker-text">{{categoryOptions[categoryIndex]}}</view>
+      </picker>
+      <view class="error-tip" wx:if="{{errors.category}}">{{errors.category}}</view>
+    </view>
+
+    <!-- 封面图片 -->
+    <view class="form-item">
+      <text class="form-label">封面图片 *</text>
+      <view class="image-upload">
+        <view class="image-preview" wx:if="{{formData.cover}}">
+          <image src="{{formData.cover}}" mode="aspectFill" />
+          <view class="image-delete" bindtap="deleteCover">
+            <text class="delete-icon">×</text>
+          </view>
+        </view>
+        <view class="upload-btn" wx:else bindtap="chooseCover">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">选择封面图片</text>
+        </view>
+      </view>
+      <view class="error-tip" wx:if="{{errors.cover}}">{{errors.cover}}</view>
+    </view>
+
+    <!-- 文章内容 -->
+    <view class="form-item">
+      <text class="form-label">文章内容 *</text>
+      <view class="content-editor">
+        <button class="editor-btn" bindtap="editContent">
+          <text class="editor-icon">📝</text>
+          <text class="editor-text">
+            {{formData.content ? '编辑文章内容' : '添加文章内容'}}
+          </text>
+        </button>
+        <view class="content-preview" wx:if="{{formData.content}}">
+          <text class="preview-text">{{contentPreview}}</text>
+        </view>
+      </view>
+      <view class="error-tip" wx:if="{{errors.content}}">{{errors.content}}</view>
+    </view>
+
+    <!-- 文章标签 -->
+    <view class="form-item">
+      <text class="form-label">文章标签</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入标签，用逗号分隔"
+        value="{{formData.tags}}"
+        bindinput="onTagsInput"
+      />
+      <view class="form-tip">例如：训练技巧,新手指南,专业知识</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn btn-secondary" bindtap="saveDraft" disabled="{{saving}}">
+      <text wx:if="{{saving}}">保存中...</text>
+      <text wx:else>保存草稿</text>
+    </button>
+    <button class="btn btn-primary" bindtap="publishArticle" disabled="{{saving}}">
+      <text wx:if="{{saving}}">发布中...</text>
+      <text wx:else>立即发布</text>
+    </button>
+  </view>
+</view>

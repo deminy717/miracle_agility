@@ -1,0 +1,384 @@
+.course-create-page {
+  padding: 32rpx;
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 200rpx;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 60rpx;
+  background: white;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.loading-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  animation: loading-rotate 2s linear infinite;
+}
+
+@keyframes loading-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 32rpx;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* 页面标题 */
+.page-header {
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.page-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+/* 表单容器 */
+.form-container {
+  background: white;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 表单项 */
+.form-item {
+  margin-bottom: 48rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f9fafb;
+}
+
+.form-input:focus {
+  border-color: #3b82f6;
+  background: white;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  background: #f9fafb;
+  min-height: 200rpx;
+}
+
+.form-textarea:focus {
+  border-color: #3b82f6;
+  background: white;
+}
+
+.form-picker {
+  padding: 24rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  background: #f9fafb;
+}
+
+.picker-text {
+  font-size: 28rpx;
+  color: #374151;
+}
+
+/* 字符计数 */
+.char-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: #9ca3af;
+  margin-top: 8rpx;
+}
+
+/* 表单提示 */
+.form-tip {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-top: 8rpx;
+}
+
+/* 错误提示 */
+.error-tip {
+  font-size: 24rpx;
+  color: #ef4444;
+  margin-top: 8rpx;
+}
+
+/* 图片上传 */
+.image-upload {
+  border: 2rpx dashed #d1d5db;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80rpx;
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.upload-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.upload-text {
+  font-size: 28rpx;
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  height: 400rpx;
+}
+
+.image-preview image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-delete {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-icon {
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+/* 上传遮罩层 */
+.upload-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+}
+
+.upload-progress {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8rpx;
+  padding: 16rpx 32rpx;
+  color: #374151;
+  font-size: 28rpx;
+}
+
+/* 禁用状态的上传按钮 */
+.upload-btn[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 标签容器 */
+.tags-container {
+  background: #f8f9fb;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #e5e7eb;
+}
+
+.tag-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  background: white;
+  border-radius: 8rpx;
+  padding: 12rpx 16rpx;
+  box-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.1);
+}
+
+.tag-icon {
+  color: #3b82f6;
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.tag-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #374151;
+  border: none;
+  background: transparent;
+  padding: 8rpx 0;
+}
+
+.tag-input::placeholder {
+  color: #9ca3af;
+}
+
+.delete-tag {
+  color: #ef4444;
+  font-size: 32rpx;
+  margin-left: 16rpx;
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fef2f2;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.delete-tag:hover {
+  background: #fecaca;
+  transform: scale(1.1);
+}
+
+.add-tag {
+  color: #3b82f6;
+  font-size: 28rpx;
+  display: block;
+  text-align: center;
+  padding: 16rpx;
+  background: white;
+  border-radius: 8rpx;
+  border: 2rpx dashed #cbd5e1;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.add-tag:active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  transform: scale(0.98);
+}
+
+/* 操作按钮 */
+.action-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32rpx;
+  background: white;
+  border-top: 1rpx solid #e5e7eb;
+  display: flex;
+  gap: 24rpx;
+  z-index: 100;
+}
+
+.btn {
+  flex: 1;
+  padding: 28rpx;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 2rpx solid #d1d5db;
+}
+
+.btn-secondary:active {
+  background: #e5e7eb;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .course-create-page {
+    padding: 24rpx;
+  }
+  
+  .form-container {
+    padding: 24rpx;
+  }
+  
+  .action-buttons {
+    padding: 24rpx;
+    flex-direction: column;
+  }
+  
+  .btn {
+    margin-bottom: 16rpx;
+  }
+  
+  .btn:last-child {
+    margin-bottom: 0;
+  }
+}

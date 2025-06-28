@@ -1,0 +1,353 @@
+<!--卡片式内容编辑器-->
+<view class="card-editor-container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="back-btn" bindtap="goBack">←</text>
+    <text class="page-title">{{editMode ? '编辑课时' : (editorType === 'lesson' ? '新增课时' : editorType === 'chapter' ? '新增章节' : '内容编辑器')}}</text>
+  </view>
+
+  <!-- 课时创建信息 -->
+  <view class="lesson-create-info" wx:if="{{editorType === 'lesson'}}">
+    <view class="section-header">
+      <text class="section-title">课时基本信息</text>
+      <text class="chapter-name">章节：{{chapterTitle}}</text>
+    </view>
+    <view class="form-group">
+      <text class="form-label">课时标题 *</text>
+      <input class="form-input lesson-title" 
+             placeholder="请输入课时标题（例如：2.1 犬敏捷基础动作训练）" 
+             value="{{lessonInfo.title}}" 
+             bindinput="onLessonTitleInput"
+             maxlength="50"/>
+    </view>
+    <view class="form-group">
+      <text class="form-label">课时简介 *</text>
+      <textarea class="form-textarea lesson-description" 
+                placeholder="请简要描述本课时的学习内容和目标（50-300字）" 
+                value="{{lessonInfo.description}}" 
+                bindinput="onLessonDescriptionInput"
+                maxlength="300"
+                show-confirm-bar="{{false}}">
+      </textarea>
+    </view>
+    <view class="form-group">
+      <text class="form-label">预计时长（分钟）</text>
+      <input class="form-input lesson-duration" 
+             placeholder="请输入课时时长（分钟）" 
+             value="{{lessonInfo.duration}}" 
+             bindinput="onLessonDurationInput"
+             type="number"/>
+    </view>
+  </view>
+
+  <!-- 课程信息 -->
+  <view class="course-info" wx:if="{{editorType !== 'chapter' && editorType !== 'lesson'}}">
+    <input class="course-title" 
+           placeholder="请输入课程标题" 
+           value="{{courseInfo.title}}" 
+           bindinput="onTitleInput"/>
+    <input class="course-subtitle" 
+           placeholder="请输入章节信息" 
+           value="{{courseInfo.subtitle}}" 
+           bindinput="onSubtitleInput"/>
+  </view>
+
+  <!-- 章节创建信息 -->
+  <view class="chapter-info" wx:if="{{editorType === 'chapter'}}">
+    <view class="section-header">
+      <text class="section-title">章节基本信息</text>
+      <text class="course-name">课程：{{courseName}}</text>
+    </view>
+    <view class="form-group">
+      <text class="form-label">章节标题 *</text>
+      <input class="form-input chapter-title" 
+             placeholder="请输入章节标题（例如：第一章 犬敏捷基础概念）" 
+             value="{{chapterInfo.title}}" 
+             bindinput="onChapterTitleInput"
+             maxlength="50"/>
+    </view>
+    <view class="form-group">
+      <text class="form-label">章节描述 *</text>
+      <textarea class="form-textarea chapter-description" 
+                placeholder="请简要描述本章节的学习内容和目标（50-200字）" 
+                value="{{chapterInfo.description}}" 
+                bindinput="onChapterDescriptionInput"
+                maxlength="200"
+                show-confirm-bar="{{false}}">
+      </textarea>
+    </view>
+  </view>
+
+  <!-- 内容卡片 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <view class="content-cards">
+      <view class="content-card" wx:for="{{contentCards}}" wx:key="id">
+        
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="card-type {{item.type}}">{{item.typeName}}</view>
+          <view class="card-actions">
+            <text class="action-btn" bindtap="moveUp" data-index="{{index}}">↑</text>
+            <text class="action-btn" bindtap="moveDown" data-index="{{index}}">↓</text>
+            <text class="action-btn delete" bindtap="deleteCard" data-index="{{index}}">×</text>
+          </view>
+        </view>
+
+        <!-- 视频卡片 -->
+        <view wx:if="{{item.type === 'video'}}" class="video-content">
+          <view wx:if="{{item.videoUrl}}" class="video-preview">
+            <video src="{{item.videoUrl}}" controls class="video-player"></video>
+            <view class="video-stats">
+              <text>🎬 {{item.duration || '30分钟'}}</text>
+              <text>👥 {{item.views || '156人学习'}}</text>
+              <view wx:if="{{item.fileSize}}" class="file-size">📦 {{item.fileSize}}</view>
+            </view>
+            <!-- 上传失败提示 -->
+            <view wx:if="{{item.uploadFailed}}" class="upload-error">
+              <text class="error-icon">⚠️</text>
+              <text class="error-text">上传失败: {{item.errorMessage}}</text>
+              <text class="retry-btn" bindtap="retryUpload" data-index="{{index}}" data-type="video">重试</text>
+            </view>
+          </view>
+          <view wx:else class="video-placeholder" bindtap="selectVideo" data-index="{{index}}">
+            <text class="placeholder-icon">📹</text>
+            <text>点击添加视频</text>
+          </view>
+        </view>
+
+        <!-- 文本卡片 -->
+        <view wx:elif="{{item.type === 'text'}}" class="text-content">
+          <input placeholder="段落标题" 
+                 value="{{item.title}}"
+                 bindinput="onTextTitleInput"
+                 data-index="{{index}}"
+                 class="text-title"/>
+          <textarea placeholder="请输入文本内容..." 
+                    value="{{item.content}}"
+                    bindinput="onTextContentInput"
+                    data-index="{{index}}"
+                    class="text-area">
+          </textarea>
+        </view>
+
+        <!-- 图片卡片 -->
+        <view wx:elif="{{item.type === 'image'}}" class="image-content">
+          <view wx:if="{{item.imageUrl}}" class="image-preview">
+            <image src="{{item.imageUrl}}" mode="aspectFill" class="image-display"></image>
+            <view class="image-info">
+              <text class="change-image-btn" bindtap="selectImage" data-index="{{index}}">更换图片</text>
+              <view wx:if="{{item.fileSize}}" class="file-size">📦 {{item.fileSize}}</view>
+            </view>
+            <!-- 上传失败提示 -->
+            <view wx:if="{{item.uploadFailed}}" class="upload-error">
+              <text class="error-icon">⚠️</text>
+              <text class="error-text">上传失败: {{item.errorMessage}}</text>
+              <text class="retry-btn" bindtap="retryUpload" data-index="{{index}}" data-type="image">重试</text>
+            </view>
+          </view>
+          <view wx:else class="image-placeholder" bindtap="selectImage" data-index="{{index}}">
+            <text class="placeholder-icon">🖼️</text>
+            <text>点击添加图片</text>
+          </view>
+          <textarea placeholder="图片描述（可选）" 
+                    value="{{item.description}}"
+                    bindinput="onImageDescriptionInput"
+                    data-index="{{index}}"
+                    class="image-description">
+          </textarea>
+        </view>
+
+        <!-- 重点卡片 -->
+        <view wx:elif="{{item.type === 'highlight'}}" class="highlight-content">
+          <input placeholder="重点标题" 
+                 value="{{item.title}}"
+                 bindinput="onHighlightTitleInput"
+                 data-index="{{index}}"
+                 class="highlight-title"/>
+          <view class="highlight-points">
+            <view wx:for="{{item.points}}" wx:key="pointIndex" wx:for-item="point" wx:for-index="pointIndex" class="point-item">
+              <text class="point-bullet">•</text>
+              <input placeholder="重点内容" 
+                     value="{{point}}"
+                     bindinput="onPointInput"
+                     data-index="{{index}}"
+                     data-point-index="{{pointIndex}}"
+                     class="point-input"/>
+              <text class="delete-point" 
+                    bindtap="deletePoint" 
+                    data-index="{{index}}" 
+                    data-point-index="{{pointIndex}}">×</text>
+            </view>
+            <text class="add-point" bindtap="addPoint" data-index="{{index}}">+ 添加重点</text>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 添加按钮 -->
+  <view class="add-fab" bindtap="showAddMenu">+</view>
+
+  <!-- 添加菜单 -->
+  <view class="add-menu {{showAddMenu ? 'show' : ''}}" wx:if="{{showAddMenu}}">
+    <view class="menu-overlay" bindtap="hideAddMenu"></view>
+    <view class="menu-content">
+      <text class="menu-title">选择内容类型</text>
+      <view class="menu-options">
+        <view class="menu-option" bindtap="addCard" data-type="video">
+          <text class="option-icon">📹</text>
+          <text>视频</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="text">
+          <text class="option-icon">📝</text>
+          <text>文本</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="image">
+          <text class="option-icon">🖼️</text>
+          <text>图片</text>
+        </view>
+        <view class="menu-option" bindtap="addCard" data-type="highlight">
+          <text class="option-icon">⚡</text>
+          <text>重点</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预览模态框 -->
+  <view class="preview-modal {{showPreview ? 'show' : ''}}" wx:if="{{showPreview}}">
+    <view class="preview-content">
+      <view class="preview-header">
+        <text class="preview-title">课时预览</text>
+        <text class="close-btn" bindtap="closePreview">×</text>
+      </view>
+      <scroll-view class="preview-body" scroll-y>
+        <!-- 课时标题和描述 -->
+        <view class="preview-lesson-header" wx:if="{{editorType === 'lesson'}}">
+          <text class="preview-lesson-title">{{lessonInfo.title || '未设置标题'}}</text>
+          <text class="preview-lesson-description">{{lessonInfo.description || '未设置描述'}}</text>
+                     <view class="preview-lesson-meta">
+             <text class="meta-item" wx:if="{{lessonInfo.typeIndex !== -1}}">
+               🏷️ {{lessonTypes[lessonInfo.typeIndex]}}
+             </text>
+             <text class="meta-item" wx:if="{{lessonInfo.duration}}">
+               ⏱️ {{lessonInfo.duration}}分钟
+             </text>
+             <text class="meta-item" wx:if="{{lessonInfo.levelIndex !== -1}}">
+               📊 {{lessonLevels[lessonInfo.levelIndex]}}
+             </text>
+           </view>
+        </view>
+
+        <!-- 章节标题和描述 -->
+        <view class="preview-chapter-header" wx:elif="{{editorType === 'chapter'}}">
+          <text class="preview-chapter-title">{{chapterInfo.title || '未设置标题'}}</text>
+          <text class="preview-chapter-description">{{chapterInfo.description || '未设置描述'}}</text>
+        </view>
+
+        <!-- 课程标题和描述 -->
+        <view class="preview-course-header" wx:else>
+          <text class="preview-course-title">{{courseInfo.title || '未设置标题'}}</text>
+          <text class="preview-course-subtitle">{{courseInfo.subtitle || '未设置副标题'}}</text>
+        </view>
+
+        <!-- 内容区域 -->
+        <view class="preview-content-area">
+          <view wx:for="{{contentCards}}" wx:key="id" class="preview-section">
+            
+            <!-- 文本内容 -->
+            <view wx:if="{{item.type === 'text'}}" class="preview-text-section">
+              <text wx:if="{{item.title}}" class="section-title">{{item.title}}</text>
+              <text class="section-content">{{item.content}}</text>
+            </view>
+            
+            <!-- 图片内容 -->
+            <view wx:elif="{{item.type === 'image' && item.imageUrl}}" class="preview-image-section">
+              <image src="{{item.imageUrl}}" mode="widthFix" class="section-image"></image>
+              <text wx:if="{{item.description}}" class="image-caption">{{item.description}}</text>
+            </view>
+            
+            <!-- 视频内容 -->
+            <view wx:elif="{{item.type === 'video' && item.videoUrl}}" class="preview-video-section">
+              <video src="{{item.videoUrl}}" controls class="section-video" poster="{{item.thumbnail}}"></video>
+              <view class="video-info">
+                <text class="video-duration">🎬 {{item.duration || '播放时长未知'}}</text>
+                <text class="video-views">👥 {{item.views || '学习人数统计中'}}</text>
+              </view>
+            </view>
+            
+            <!-- 重点内容 -->
+            <view wx:elif="{{item.type === 'highlight'}}" class="preview-highlight-section">
+              <text wx:if="{{item.title}}" class="highlight-section-title">{{item.title}}</text>
+              <view class="highlight-box">
+                <view wx:for="{{item.points}}" wx:key="pointIndex" wx:for-item="point" class="highlight-point">
+                  <text class="point-marker">💡</text>
+                  <text class="point-text">{{point}}</text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 音频内容 -->
+            <view wx:elif="{{item.type === 'audio' && item.audioUrl}}" class="preview-audio-section">
+              <view class="audio-player">
+                <text class="audio-icon">🎵</text>
+                <text class="audio-title">{{item.title || '音频内容'}}</text>
+                <text class="audio-duration">{{item.duration || '时长未知'}}</text>
+              </view>
+            </view>
+
+            <!-- 测验内容 -->
+            <view wx:elif="{{item.type === 'quiz'}}" class="preview-quiz-section">
+              <view class="quiz-box">
+                <text class="quiz-icon">❓</text>
+                <text class="quiz-title">{{item.title || '互动测验'}}</text>
+                <text class="quiz-description">点击开始答题</text>
+              </view>
+            </view>
+
+            <!-- 空内容提示 -->
+            <view wx:else class="preview-empty-section">
+              <text class="empty-text">内容为空或类型不支持预览</text>
+            </view>
+
+          </view>
+
+          <!-- 无内容提示 -->
+          <view wx:if="{{contentCards.length === 0}}" class="preview-no-content">
+            <text class="no-content-icon">📝</text>
+            <text class="no-content-text">暂无内容，请添加学习材料</text>
+          </view>
+        </view>
+
+        <!-- 预览底部信息 -->
+        <view class="preview-footer">
+          <text class="footer-info">预览模式 - 以上为课时内容效果展示</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 调试日志显示区域 -->
+  <view class="debug-log-section" wx:if="{{showDebugLog}}">
+    <view class="debug-header" bindtap="toggleDebugLog">
+      <text class="debug-title">🐛 调试日志</text>
+      <text class="debug-toggle">{{debugLogExpanded ? '收起' : '展开'}}</text>
+    </view>
+    <scroll-view class="debug-log-content {{debugLogExpanded ? 'expanded' : ''}}" scroll-y scroll-top="{{debugLogs.length * 30}}">
+      <view wx:for="{{debugLogs}}" wx:key="index" class="debug-log-item">
+        <text class="debug-log-text">{{item}}</text>
+      </view>
+      <view wx:if="{{debugLogs.length === 0}}" class="debug-log-empty">
+        <text>暂无调试日志</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部工具栏 -->
+  <view class="bottom-toolbar">
+    <button class="toolbar-btn" bindtap="showPreview">预览</button>
+    <button class="toolbar-btn" bindtap="clearAll">清空</button>
+    <button class="toolbar-btn primary" bindtap="saveContent">{{editMode ? (editorType === 'lesson' ? '更新课时' : '更新内容') : (editorType === 'lesson' ? '创建课时' : editorType === 'chapter' ? '创建章节' : '保存')}}</button>
+  </view>
+</view>

@@ -1,0 +1,485 @@
+# Miracle Agility 微信小程序项目规则
+
+## 项目概述
+Miracle Agility（奇迹犬敏捷）是一个专注于犬类敏捷训练的微信小程序，提供课程学习、资讯阅读、内容发布等功能。
+
+## 技术栈
+- 框架：微信小程序原生开发
+- 语言：JavaScript (ES6+)
+- 样式：WXSS
+- 模板：WXML
+- 工具：微信开发者工具
+
+## 项目结构
+```
+miracle_agility/
+├── app.js                     # 应用入口
+├── app.json                   # 全局配置
+├── app.wxss                   # 全局样式
+├── pages/                     # 页面目录
+│   ├── home/                  # 主页
+│   ├── article-list/          # 文章列表
+│   ├── article-detail/        # 文章详情
+│   ├── course/                # 课程
+│   ├── profile/               # 个人中心
+│   ├── rich-text-editor/      # 富文本编辑器
+│   └── admin/                 # 管理后台
+├── utils/                     # 工具函数
+│   ├── api.js                 # API封装
+│   ├── config.js              # 配置文件
+│   ├── util.js                # 通用工具
+│   └── mockData.js            # 模拟数据
+└── static/                    # 静态资源
+```
+
+## 编码规范
+
+### 命名规范
+- 文件名：使用 kebab-case（如：article-list.js）
+- 变量名：使用 camelCase（如：articleList）
+- 常量名：使用 UPPER_SNAKE_CASE（如：API_BASE_URL）
+- 页面名：与文件夹名保持一致
+- 组件名：使用 PascalCase（如：ArticleCard）
+
+### JavaScript 规范
+- 使用 ES6+ 语法
+- 优先使用 const，需要重新赋值时使用 let
+- 使用箭头函数简化代码
+- 使用模板字符串进行字符串拼接
+- 使用解构赋值简化代码
+- 异步操作使用 async/await 或 Promise
+
+### 页面结构规范
+每个页面必须包含四个文件：
+- .js 文件：页面逻辑
+- .json 文件：页面配置
+- .wxml 文件：页面结构
+- .wxss 文件：页面样式
+
+### 页面生命周期
+标准的页面生命周期方法顺序：
+```javascript
+Page({
+  data: {
+    // 页面数据
+  },
+  
+  onLoad(options) {
+    // 页面加载
+  },
+  
+  onShow() {
+    // 页面显示
+  },
+  
+  onReady() {
+    // 页面初次渲染完成
+  },
+  
+  onHide() {
+    // 页面隐藏
+  },
+  
+  onUnload() {
+    // 页面卸载
+  },
+  
+  onPullDownRefresh() {
+    // 下拉刷新
+  },
+  
+  onReachBottom() {
+    // 上拉加载
+  },
+  
+  onShareAppMessage() {
+    // 分享
+  },
+  
+  // 自定义方法
+})
+```
+
+## API 调用规范
+
+### API 封装使用
+始终使用 utils/api.js 中封装的方法：
+```javascript
+const api = require('../../utils/api.js')
+
+// 正确的API调用方式
+try {
+  wx.showLoading({ title: '加载中...' })
+  const result = await api.getNewsList(1, 10)
+  this.setData({ articles: result.list })
+} catch (error) {
+  console.error('加载失败:', error)
+  wx.showToast({ title: '加载失败', icon: 'none' })
+} finally {
+  wx.hideLoading()
+}
+```
+
+### 错误处理
+- 所有API调用必须包含错误处理
+- 使用 try-catch 处理异步错误
+- 显示用户友好的错误信息
+- 记录详细的错误日志
+
+## 数据管理规范
+
+### 全局数据
+使用 app.js 的 globalData 存储全局共享数据：
+```javascript
+// app.js
+App({
+  globalData: {
+    userInfo: null,
+    latestArticles: [],
+    systemInfo: null
+  }
+})
+
+// 在页面中访问
+const app = getApp()
+const userInfo = app.globalData.userInfo
+```
+
+### 本地存储
+使用微信提供的存储API：
+```javascript
+// 存储数据
+wx.setStorageSync('key', value)
+
+// 读取数据
+const value = wx.getStorageSync('key')
+
+// 删除数据
+wx.removeStorageSync('key')
+```
+
+### 页面数据更新
+使用 setData 更新页面数据：
+```javascript
+this.setData({
+  'object.key': value,  // 更新对象属性
+  'array[0]': value,    // 更新数组元素
+  newProperty: value    // 新增属性
+})
+```
+
+## 样式规范
+
+### WXSS 编写规范
+- 使用 rpx 作为尺寸单位
+- 遵循 BEM 命名规范
+- 使用 CSS3 flexbox 布局
+- 避免使用 !important
+
+### 布局规范
+```wxss
+/* 容器样式 */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: #fff;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.1);
+  margin-bottom: 20rpx;
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background-color: #203b9d;
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 20rpx 40rpx;
+}
+```
+
+## 组件使用规范
+
+### 常用组件
+- 使用 `<scroll-view>` 实现滚动区域
+- 使用 `<swiper>` 实现轮播图
+- 使用 `<rich-text>` 显示富文本内容
+- 使用 `<image>` 显示图片，设置 mode 属性
+
+### 事件处理
+```wxml
+<!-- 绑定事件 -->
+<button bindtap="onButtonClick" data-id="{{item.id}}">点击</button>
+
+<!-- 事件处理函数 -->
+<script>
+onButtonClick(e) {
+  const id = e.currentTarget.dataset.id
+  // 处理逻辑
+}
+</script>
+```
+
+## 性能优化规范
+
+### 图片优化
+- 使用适当的图片格式和尺寸
+- 实现图片懒加载
+- 使用 CDN 加速图片加载
+
+### 数据加载优化
+- 实现分页加载
+- 使用本地缓存减少网络请求
+- 避免频繁的 setData 调用
+
+### 代码优化
+- 及时清理定时器和监听器
+- 避免在 onShow 中执行重复操作
+- 使用节流和防抖优化用户交互
+
+## 调试和测试
+
+### 调试技巧
+- 使用 console.log 输出调试信息
+- 使用微信开发者工具的调试面板
+- 使用 Network 面板监控网络请求
+
+### 测试规范
+- 测试不同设备和屏幕尺寸
+- 测试网络异常情况
+- 测试用户权限和登录状态
+
+## 安全规范
+
+### 数据安全
+- 不在客户端存储敏感信息
+- 对用户输入进行验证和过滤
+- 使用 HTTPS 进行数据传输
+
+### 权限控制
+- 检查用户登录状态
+- 验证用户操作权限
+- 保护管理员功能
+
+## 发布规范
+
+### 代码检查
+- 检查代码规范性
+- 移除调试代码和注释
+- 优化代码性能
+
+### 版本管理
+- 使用语义化版本号
+- 编写详细的更新日志
+- 做好代码备份
+
+## 特定功能规范
+
+### 富文本编辑器
+- 使用统一的编辑器组件
+- 支持图片和视频插入
+- 实现自动保存功能
+
+### 文章系统
+- 支持分类和标签
+- 实现点赞和收藏功能
+- 提供搜索和筛选功能
+
+### 课程系统
+- 支持视频播放
+- 记录学习进度
+- 实现成就系统
+
+### 管理后台
+- 实现权限控制
+- 提供数据统计
+- 支持内容审核
+
+## 常见问题解决
+
+### 页面跳转
+```javascript
+// 保留当前页面，跳转到应用内的某个页面
+wx.navigateTo({
+  url: '/pages/detail/detail?id=123'
+})
+
+// 关闭当前页面，跳转到应用内的某个页面
+wx.redirectTo({
+  url: '/pages/index/index'
+})
+
+// 跳转到 tabBar 页面
+wx.switchTab({
+  url: '/pages/home/home'
+})
+```
+
+### 数据传递
+```javascript
+// 页面间传递数据
+wx.navigateTo({
+  url: `/pages/detail/detail?id=${id}&title=${title}`
+})
+
+// 在目标页面接收数据
+onLoad(options) {
+  const { id, title } = options
+  this.setData({ id, title })
+}
+```
+
+### 网络请求
+```javascript
+// 使用封装的API方法
+const api = require('../../utils/api.js')
+
+async loadData() {
+  try {
+    const result = await api.request('/api/data', {}, 'GET')
+    this.setData({ data: result })
+  } catch (error) {
+    wx.showToast({ title: '加载失败', icon: 'none' })
+  }
+}
+```
+
+## 代码审查要点
+
+### 必须检查的项目
+- [ ] 代码符合命名规范
+- [ ] 包含适当的错误处理
+- [ ] 性能优化得当
+- [ ] 安全措施到位
+- [ ] 注释清晰完整
+- [ ] 测试覆盖充分
+
+### 禁止的做法
+- 不要在 wxml 中写复杂的逻辑
+- 不要在 data 中存储大量数据
+- 不要忘记清理定时器和监听器
+- 不要在循环中进行异步操作
+- 不要直接修改 data 中的数据
+
+## 最佳实践
+
+### 代码组织
+- 按功能模块组织代码
+- 提取公共方法到 utils
+- 使用合适的设计模式
+- 保持代码简洁易读
+
+### 用户体验
+- 提供加载状态反馈
+- 实现错误状态处理
+- 优化页面加载速度
+- 保证操作流畅性
+
+### 维护性
+- 编写清晰的注释
+- 使用有意义的变量名
+- 保持代码结构清晰
+- 及时更新文档，包括docs下的所有文件，包括README.md,api文档，项目结构文档，功能文档，以及技术架构文档。
+
+## 💼 项目需求处理规范
+
+### 需求分析前的准备工作
+当接收到新的功能需求或bug修复请求时，必须严格按照以下步骤执行：
+
+#### 1. 全面代码检查
+- **强制要求**: 在开始任何代码修改之前，必须先检查所有相关的现有代码
+- **检查范围**: 
+  - 相关功能模块的所有文件
+  - 工具函数和配置文件
+  - 页面逻辑和数据流
+  - API接口和数据模型
+- **检查方法**: 使用 `read_file`、`codebase_search`、`grep_search` 等工具全面了解现有实现
+
+#### 2. 文档资料研读
+- **强制要求**: 必须读取 `docs/` 目录下的所有相关文档
+- **必读文档**:
+  - `README.md` - 项目整体概况
+  - `project-structure.md` - 项目结构说明
+  - `technical-architecture.md` - 技术架构文档
+  - `feature-documentation.md` - 功能文档
+  - `api-documentation.md` - API接口文档
+  - 相关的专项指南文档
+- **读取方法**: 逐一使用 `read_file` 工具读取相关文档内容
+
+#### 3. 环境配置检查
+- **配置文件检查**: 
+  - `utils/config.js` - 环境配置
+  - `app.js` - 应用启动配置
+  - 后端配置文件
+- **环境状态验证**: 确认当前是开发模式还是生产模式
+- **数据流分析**: 理解Mock数据和真实API的切换逻辑
+
+#### 4. 依赖关系分析
+- **模块依赖**: 分析修改可能影响的其他模块
+- **数据流向**: 理解数据在前后端之间的流动
+- **状态管理**: 检查全局状态和本地状态的管理方式
+
+### 实施规范
+
+#### 修改前验证
+- **现状确认**: 完全理解当前功能的实现方式
+- **问题定位**: 准确识别需要修改的具体位置
+- **影响评估**: 评估修改可能带来的副作用
+
+#### 修改实施
+- **渐进式修改**: 采用小步快跑的方式，逐步实现目标
+- **配套更新**: 修改代码的同时，同步更新相关文档
+- **测试验证**: 确保修改后的功能正常工作
+
+#### 文档维护
+- **同步更新**: 任何功能修改都必须同步更新相关文档
+- **完整性保证**: 确保文档反映最新的实现状态
+- **清晰描述**: 新增功能必须有清晰的文档说明
+
+### 典型错误防范
+
+#### 避免盲目修改
+- ❌ **错误做法**: 不了解现有代码就开始修改
+- ✅ **正确做法**: 先全面了解现有实现，再进行针对性修改
+
+#### 避免局部思维
+- ❌ **错误做法**: 只关注单个文件或模块
+- ✅ **正确做法**: 考虑整个系统的一致性和协调性
+
+#### 避免文档滞后
+- ❌ **错误做法**: 只修改代码，不更新文档
+- ✅ **正确做法**: 代码和文档同步更新，保持一致性
+
+### 质量检查清单
+
+#### 代码质量
+- [ ] 是否遵循项目编码规范
+- [ ] 是否与现有架构保持一致
+- [ ] 是否考虑了错误处理
+- [ ] 是否进行了充分测试
+
+#### 文档质量
+- [ ] 是否更新了相关的技术文档
+- [ ] 是否添加了必要的代码注释
+- [ ] 是否更新了API文档（如适用）
+- [ ] 是否更新了用户指南（如适用）
+
+#### 系统一致性
+- [ ] 是否与其他模块保持兼容
+- [ ] 是否遵循了统一的数据格式
+- [ ] 是否保持了UI/UX的一致性
+- [ ] 是否考虑了不同环境的兼容性
+
+### 紧急情况处理
+
+在遇到紧急bug或critical问题时：
+1. **快速定位**: 优先使用工具快速定位问题所在
+2. **最小修改**: 采用最小化修改原则，降低风险
+3. **后续完善**: 紧急修复后，必须安排时间进行完善和文档更新
+
+---
+
+遵循以上规范，确保代码质量和项目的可维护性。如有疑问，请参考项目文档或咨询技术负责人。 

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-bar {
+            background: linear-gradient(135deg, #000, #333);
+            height: 44px;
+        }
+        .tab-bar {
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        .paw-decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .club-card {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .news-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .news-card:hover {
+            transform: translateY(-2px);
+        }
+        .bone-divider {
+            color: #f97316;
+            font-size: 24px;
+            opacity: 0.3;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- iOS状态栏 -->
+    <div class="status-bar flex items-center justify-between px-6 text-white text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="bg-white rounded-sm px-1 py-0.5">
+                <span class="text-black text-xs">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="flex-1 overflow-y-auto relative">
+        <!-- 装饰性图标 -->
+        <div class="paw-decoration top-4 right-4 text-3xl text-club-orange"><i class="fas fa-paw"></i></div>
+        <div class="paw-decoration top-24 left-8 text-2xl text-yellow-400 transform rotate-12"><i class="fas fa-bone"></i></div>
+
+        <!-- 俱乐部介绍卡片 -->
+        <div class="p-4">
+            <div class="club-card p-6 mb-6 relative">
+                <!-- 装饰性元素 -->
+                <div class="absolute top-4 right-4 text-4xl opacity-20"><i class="fas fa-trophy"></i></div>
+                <div class="absolute bottom-4 left-4 text-2xl opacity-15"><i class="fas fa-dog"></i></div>
+                
+                <div class="flex items-center mb-4">
+                    <img src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=80&h=80&fit=crop&crop=face" 
+                         alt="俱乐部Logo" class="w-16 h-16 rounded-full border-3 border-white shadow-lg">
+                    <div class="ml-4">
+                        <h1 class="text-xl font-bold">犬敏捷俱乐部</h1>
+                        <p class="text-blue-100 text-sm">专业 • 友爱 • 成长</p>
+                    </div>
+                </div>
+                <p class="text-blue-50 text-sm leading-relaxed">
+                    欢迎来到犬敏捷俱乐部！我们致力于为每一位狗狗和主人提供专业的敏捷训练课程，让您的爱犬在快乐中成长，在挑战中进步。
+                </p>
+            </div>
+
+            <!-- 骨头分割线 -->
+            <div class="text-center my-6">
+                <i class="fas fa-bone bone-divider"></i>
+                <i class="fas fa-bone bone-divider mx-2"></i>
+                <i class="fas fa-bone bone-divider"></i>
+            </div>
+
+            <!-- 最新资讯标题 -->
+            <div class="flex items-center mb-4">
+                <i class="fas fa-newspaper text-club-blue text-xl mr-2"></i>
+                <h2 class="text-lg font-bold text-gray-800">最新资讯</h2>
+                <div class="ml-2 text-yellow-400"><i class="fas fa-bone"></i></div>
+            </div>
+
+            <!-- 资讯列表 -->
+            <div class="space-y-4">
+                <!-- 资讯卡片1 -->
+                <div class="news-card p-4">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://images.unsplash.com/photo-1560743173-567a3b5658b1?w=60&h=60&fit=crop" 
+                             alt="新闻图片" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-1">春季敏捷训练营即将开始！</h3>
+                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">为期6周的专业训练课程，让您的爱犬掌握基础敏捷技能...</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-03-15</span>
+                                <div class="flex items-center text-club-orange">
+                                    <i class="fas fa-heart text-xs mr-1"></i>
+                                    <span class="text-xs">128</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 资讯卡片2 -->
+                <div class="news-card p-4">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=60&h=60&fit=crop" 
+                             alt="新闻图片" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-1">全国犬敏捷大赛报名开启</h3>
+                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">比赛将于4月20日在北京举行，欢迎各级别选手参与...</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-03-12</span>
+                                <div class="flex items-center text-club-orange">
+                                    <i class="fas fa-heart text-xs mr-1"></i>
+                                    <span class="text-xs">86</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 资讯卡片3 -->
+                <div class="news-card p-4">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=60&h=60&fit=crop" 
+                             alt="新闻图片" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800 mb-1">新会员福利：免费体验课程</h3>
+                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">加入俱乐部即可获得一次免费体验课程，让您和爱犬零距离感受敏捷训练...</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-400">2024-03-10</span>
+                                <div class="flex items-center text-club-orange">
+                                    <i class="fas fa-heart text-xs mr-1"></i>
+                                    <span class="text-xs">203</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-bar flex items-center justify-around px-6">
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <i class="fas fa-home text-club-blue text-xl mb-1"></i>
+                <div class="absolute -top-1 -right-1 text-yellow-400 text-xs"><i class="fas fa-paw"></i></div>
+            </div>
+            <span class="text-xs text-club-blue font-medium">主页</span>
+        </div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-graduation-cap text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">课程</span>
+        </div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-user text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">我的</span>
+        </div>
+    </div>
+</body>
+</html> 

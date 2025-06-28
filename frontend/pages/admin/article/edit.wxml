@@ -1,0 +1,89 @@
+<view class="edit-article-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">编辑文章</text>
+  </view>
+
+  <!-- 表单内容 -->
+  <form bindsubmit="submitForm" wx:if="{{!loading}}">
+    <view class="form-section">
+      <!-- 文章标题 -->
+      <view class="form-item">
+        <label class="form-label">文章标题 *</label>
+        <input class="form-input" 
+               placeholder="请输入文章标题" 
+               value="{{formData.title}}"
+               bindinput="onTitleInput" 
+               maxlength="100" />
+      </view>
+
+      <!-- 文章描述 -->
+      <view class="form-item">
+        <label class="form-label">文章描述</label>
+        <textarea class="form-textarea" 
+                  placeholder="请输入文章描述"
+                  value="{{formData.desc}}"
+                  bindinput="onDescInput"
+                  maxlength="200" />
+      </view>
+
+      <!-- 封面图片 -->
+      <view class="form-item">
+        <label class="form-label">封面图片</label>
+        <view class="cover-upload">
+          <view wx:if="{{formData.coverImage}}" class="cover-preview">
+            <image src="{{formData.coverImage}}" mode="aspectFill" />
+            <view class="cover-remove" bindtap="removeCover">×</view>
+          </view>
+          <button wx:else class="upload-btn" bindtap="chooseCover">
+            <text class="upload-icon">📷</text>
+            <text class="upload-text">选择封面</text>
+          </button>
+        </view>
+      </view>
+
+      <!-- 文章内容 -->
+      <view class="form-item">
+        <label class="form-label">文章内容 *</label>
+        <textarea class="form-textarea large" 
+                  placeholder="请输入文章内容"
+                  value="{{formData.content}}"
+                  bindinput="onContentInput" />
+      </view>
+
+      <!-- 作者 -->
+      <view class="form-item">
+        <label class="form-label">作者</label>
+        <input class="form-input" 
+               placeholder="请输入作者姓名" 
+               value="{{formData.author}}"
+               bindinput="onAuthorInput" />
+      </view>
+
+      <!-- 标签 -->
+      <view class="form-item">
+        <label class="form-label">标签</label>
+        <input class="form-input" 
+               placeholder="多个标签用逗号分隔" 
+               value="{{formData.tags}}"
+               bindinput="onTagsInput" />
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="cancel-btn" bindtap="goBack">取消</button>
+      <button class="submit-btn" 
+              formType="submit"
+              loading="{{submitting}}"
+              disabled="{{submitting}}">
+        {{submitting ? '保存中...' : '保存修改'}}
+      </button>
+    </view>
+  </form>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</view> 

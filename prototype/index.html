@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>犬敏捷俱乐部小程序原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .phone-container {
+            width: 393px;
+            height: 852px;
+            background: #000;
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            border-radius: 42px;
+            overflow: hidden;
+            position: relative;
+        }
+        .prototype-section {
+            margin: 30px 0;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .prototype-title {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        iframe {
+            border: none;
+            background: white;
+        }
+        .paw-print {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316',
+                        'paw-brown': '#8b4513'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <!-- 装饰性图标 -->
+    <div class="paw-print top-10 left-10 text-6xl text-club-blue"><i class="fas fa-paw"></i></div>
+    <div class="paw-print top-32 right-20 text-4xl text-club-orange transform rotate-45"><i class="fas fa-bone"></i></div>
+    <div class="paw-print bottom-20 left-32 text-5xl text-paw-brown transform -rotate-12"><i class="fas fa-paw"></i></div>
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold text-center mb-4 text-gray-800">
+            <i class="fas fa-dog mr-3 text-club-blue"></i>
+            犬敏捷俱乐部小程序原型
+            <i class="fas fa-bone ml-3 text-club-orange"></i>
+        </h1>
+        <p class="text-center text-gray-600 mb-12">基于iPhone 15 Pro设计规范的高保真原型</p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            <!-- 主页 -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-home mr-2"></i>主页
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="home.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课程页面（未登录） -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-graduation-cap mr-2"></i>课程页面（未登录）
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="course-login.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课程页面（已登录） -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-user-graduate mr-2"></i>课程页面（已登录）
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="course.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课程详情 -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-book-open mr-2"></i>课程详情
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="course-detail.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课程内容 -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-play-circle mr-2"></i>课程内容
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="course-content.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人资料 -->
+            <div class="prototype-section">
+                <div class="prototype-title">
+                    <i class="fas fa-user mr-2"></i>个人资料
+                </div>
+                <div class="flex justify-center bg-gray-50 p-4">
+                    <div class="phone-container">
+                        <div class="screen">
+                            <iframe src="profile.html" width="100%" height="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设计说明 -->
+        <div class="mt-12 bg-white rounded-xl p-8 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">
+                <i class="fas fa-palette mr-2 text-club-blue"></i>设计规范
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-lg mb-3 text-club-blue">
+                        <i class="fas fa-color-palette mr-2"></i>色彩规范
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-blue-500 rounded mr-3"></div>
+                            <span>主色调：俱乐部蓝 (#3b82f6)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-orange-500 rounded mr-3"></div>
+                            <span>强调色：温暖橙 (#f97316)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 bg-yellow-400 rounded mr-3"></div>
+                            <span>宠物元素：金黄色 (#fbbf24)</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-3 text-club-orange">
+                        <i class="fas fa-mobile-alt mr-2"></i>设备规范
+                    </h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• 屏幕尺寸：393×852px (iPhone 15 Pro)</li>
+                        <li>• 圆角半径：42px</li>
+                        <li>• 状态栏高度：44px</li>
+                        <li>• Tab栏高度：83px</li>
+                        <li>• 安全区域适配</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

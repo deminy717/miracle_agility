@@ -1,0 +1,39 @@
+# Spring Boot 项目 .gitignore
+
+# 文件上传目录
+data/uploads/**
+!data/uploads/.gitkeep
+
+# Maven 构建目录
+target/
+
+# IDE 相关
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# 日志文件
+*.log
+logs/
+
+# 操作系统相关
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+*~
+
+# Spring Boot 相关
+application-local.yml
+application-local.properties
+
+# 数据库相关
+*.db
+*.sqlite 

@@ -1,0 +1,169 @@
+.course-content-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* 课程标题 */
+.lesson-header {
+  background: white;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.lesson-title-section {
+  flex: 1;
+}
+
+.lesson-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 8rpx;
+}
+
+.chapter-title {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+/* 内容容器 */
+.content-container {
+  flex: 1;
+  padding-bottom: 80rpx;
+  background: white;
+}
+
+/* 章节样式 */
+.section {
+  padding: 32rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 24rpx;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: #4b5563;
+  line-height: 1.8;
+  margin-bottom: 24rpx;
+}
+
+/* 内容模块 */
+.content-item {
+  margin-bottom: 32rpx;
+}
+
+.content-item-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 16rpx;
+}
+
+.content-item-text {
+  font-size: 28rpx;
+  color: #4b5563;
+  line-height: 1.8;
+  white-space: pre-line;
+  margin-bottom: 16rpx;
+}
+
+.content-image {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 16rpx;
+  margin-top: 16rpx;
+}
+
+/* 视频容器 */
+.content-video-container {
+  margin-top: 16rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  border: 1rpx solid #e5e7eb;
+}
+
+.content-video {
+  width: 100%;
+  height: 400rpx;
+  background: #000;
+}
+
+/* 规则列表 */
+.rules-list {
+  margin-top: 24rpx;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.rule-number {
+  font-size: 28rpx;
+  color: #3b82f6;
+  font-weight: bold;
+  margin-right: 12rpx;
+  min-width: 32rpx;
+}
+
+.rule-text {
+  font-size: 28rpx;
+  color: #4b5563;
+  line-height: 1.6;
+  flex: 1;
+}
+
+
+
+/* 底部导航 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1rpx solid #e5e7eb;
+  padding: 12rpx 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  gap: 24rpx;
+}
+
+.nav-btn {
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 24rpx;
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  border: none;
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 140rpx;
+}
+
+.nav-btn.prev {
+  background: #f3f4f6;
+}
+
+.nav-btn.next {
+  background: #3b82f6;
+  color: white;
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+} 

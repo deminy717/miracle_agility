@@ -1,0 +1,79 @@
+<view class="article-detail-page">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 文章内容 -->
+  <view wx:else class="article-container">
+    <!-- 文章头部信息 -->
+    <view class="article-header">
+      <text class="article-title">{{article.title}}</text>
+      <view class="article-meta">
+        <text class="article-author">作者：{{article.author}}</text>
+        <text class="article-time">{{article.publishTime}}</text>
+        <text class="article-category">{{article.category}}</text>
+      </view>
+      <view class="article-stats">
+        <text class="stat-item">阅读 {{article.readCount}}</text>
+        <text class="stat-item">点赞 {{article.likeCount}}</text>
+      </view>
+    </view>
+
+    <!-- 文章封面 -->
+    <view class="article-cover" wx:if="{{article.cover}}">
+      <image class="cover-image" src="{{article.cover}}" mode="aspectFill" />
+    </view>
+
+    <!-- 文章内容 -->
+    <view class="article-content">
+      <rich-text nodes="{{article.content}}" />
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="article-actions">
+      <button 
+        class="action-btn like-btn {{isLiked ? 'liked' : ''}}" 
+        bindtap="toggleLike"
+      >
+        <text class="action-icon">{{isLiked ? '♥' : '♡'}}</text>
+        <text class="action-text">{{isLiked ? '已点赞' : '点赞'}}</text>
+      </button>
+      
+      <button 
+        class="action-btn collect-btn {{isCollected ? 'collected' : ''}}" 
+        bindtap="toggleCollect"
+      >
+        <text class="action-icon">{{isCollected ? '★' : '☆'}}</text>
+        <text class="action-text">{{isCollected ? '已收藏' : '收藏'}}</text>
+      </button>
+    </view>
+
+    <!-- 相关文章推荐 -->
+    <view class="related-articles" wx:if="{{relatedArticles.length > 0}}">
+      <view class="related-header">
+        <text class="related-title">相关文章</text>
+      </view>
+      
+      <view class="related-list">
+        <view 
+          class="related-item"
+          wx:for="{{relatedArticles}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="goToRelatedArticle"
+        >
+          <image class="related-cover" src="{{item.cover}}" mode="aspectFill" />
+          <view class="related-info">
+            <text class="related-item-title">{{item.title}}</text>
+            <text class="related-summary">{{item.summary}}</text>
+            <view class="related-meta">
+              <text class="related-author">{{item.author}}</text>
+              <text class="related-reads">{{item.readCount}}次阅读</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

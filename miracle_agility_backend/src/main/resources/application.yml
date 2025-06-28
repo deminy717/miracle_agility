@@ -1,0 +1,66 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: miracle-agility-backend
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/miracle_agility?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Hhm980510
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 100MB      # 单个文件最大大小
+      max-request-size: 200MB   # 请求最大大小
+      enabled: true
+      file-size-threshold: 0
+    
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.miracle.agility.entity
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 微信小程序配置
+wechat:
+  mini-program:
+    app-id: wx48dc282ebc13fd32  # 替换为你的真实AppID
+    app-secret: d1869569a8cb366debbbc0c97a39e8f3  # 替换为你的真实AppSecret
+    api-url: https://api.weixin.qq.com
+
+# JWT配置
+jwt:
+  secret: miracle_agility_jwt_secret_key_2024_development
+  access-token-expiration: 7200 # 2小时（秒）
+  refresh-token-expiration: 604800 # 7天（秒）
+
+# 文件上传配置
+file:
+  upload:
+    path: ./data/uploads/        # 文件上传目录（相对于后端项目根目录）
+  access:
+    domain: http://localhost:8080   # 文件访问域名
+
+logging:
+  level:
+    com.miracle.agility: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.web.servlet.mvc.method.annotation: DEBUG
+    org.springframework.web.servlet.handler: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 

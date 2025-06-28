@@ -1,0 +1,100 @@
+<view class="course-manage-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">📚 课程管理</text>
+    <text class="page-subtitle">管理所有课程内容</text>
+  </view>
+
+  <!-- 统计概览 -->
+  <view class="stats-overview">
+    <view class="stat-card">
+      <text class="stat-number">{{stats.total}}</text>
+      <text class="stat-label">总课程数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.published}}</text>
+      <text class="stat-label">已发布</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.draft}}</text>
+      <text class="stat-label">草稿</text>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选 -->
+  <view class="search-section">
+    <view class="search-box">
+      <input 
+        class="search-input" 
+        placeholder="搜索课程名称..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <text class="search-icon">🔍</text>
+    </view>
+    <picker 
+      class="filter-picker" 
+      bindchange="onStatusFilter" 
+      value="{{statusIndex}}" 
+      range="{{statusOptions}}"
+    >
+      <view class="picker-text">{{statusOptions[statusIndex]}}</view>
+    </picker>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="courses-list">
+    <view 
+      class="course-item" 
+      wx:for="{{filteredCourses}}" 
+      wx:key="id"
+      bindtap="viewCourse"
+      data-course="{{item}}"
+    >
+      <view class="course-cover">
+        <image src="{{item.cover}}" mode="aspectFill" />
+        <view class="course-status status-{{item.status}}">
+          {{item.status === 'published' ? '已发布' : '草稿'}}
+        </view>
+      </view>
+      
+      <view class="course-info">
+        <text class="course-title">{{item.title}}</text>
+        <text class="course-description">{{item.description}}</text>
+        <view class="course-meta">
+          <text class="meta-item">👥 {{item.studentCount}}人学习</text>
+          <text class="meta-item">📖 {{item.chapterCount}}章节</text>
+          <text class="meta-item">👤 {{item.teacherName || '未知作者'}}</text>
+          <text class="meta-item">⏰ {{item.updateTime}}</text>
+        </view>
+      </view>
+      
+      <view class="course-actions">
+        <view class="action-btn edit-btn" catchtap="editCourse" data-id="{{item.id}}">
+          <text class="btn-icon">✏️</text>
+        </view>
+        <view class="action-btn chapter-btn" catchtap="manageChapters" data-id="{{item.id}}">
+          <text class="btn-icon">📖</text>
+        </view>
+        <view class="action-btn status-btn" catchtap="toggleStatus" data-id="{{item.id}}">
+          <text class="btn-icon">{{item.status === 'published' ? '📴' : '📡'}}</text>
+        </view>
+        <view class="action-btn delete-btn" catchtap="deleteCourse" data-id="{{item.id}}">
+          <text class="btn-icon">🗑️</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{filteredCourses.length === 0}}">
+    <text class="empty-icon">📚</text>
+    <text class="empty-text">暂无课程数据</text>
+    <text class="empty-tip">点击右下角按钮创建第一个课程</text>
+  </view>
+
+  <!-- 浮动添加按钮 -->
+  <view class="fab-button" bindtap="createCourse">
+    <text class="fab-icon">+</text>
+  </view>
+</view>

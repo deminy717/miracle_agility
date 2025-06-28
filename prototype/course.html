@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程 - 已登录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-bar {
+            background: linear-gradient(135deg, #000, #333);
+            height: 44px;
+        }
+        .tab-bar {
+            height: 83px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        .user-card {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .course-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            height: 6px;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .level-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            padding: 4px 12px;
+            font-weight: 600;
+        }
+        .paw-decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'club-blue': '#3b82f6',
+                        'club-orange': '#f97316'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- iOS状态栏 -->
+    <div class="status-bar flex items-center justify-between px-6 text-white text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <div class="bg-white rounded-sm px-1 py-0.5">
+                <span class="text-black text-xs">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div class="bg-white px-4 py-3 border-b border-gray-100">
+        <div class="flex items-center justify-center">
+            <h1 class="text-lg font-bold text-gray-800">
+                <i class="fas fa-graduation-cap text-club-blue mr-2"></i>
+                我的课程
+                <div class="inline-block ml-2 text-yellow-400"><i class="fas fa-graduation-cap"></i></div>
+            </h1>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="flex-1 overflow-y-auto relative">
+        <!-- 装饰性图标 -->
+        <div class="paw-decoration top-4 right-4 text-2xl text-club-orange"><i class="fas fa-paw"></i></div>
+        <div class="paw-decoration top-20 left-8 text-xl text-yellow-400 transform rotate-12"><i class="fas fa-bone"></i></div>
+
+        <div class="p-4 space-y-6">
+            <!-- 用户信息卡片 -->
+            <div class="user-card p-6 relative">
+                <!-- 装饰性元素 -->
+                <div class="absolute top-4 right-4 text-3xl opacity-20"><i class="fas fa-trophy"></i></div>
+                <div class="absolute bottom-4 left-4 text-2xl opacity-15"><i class="fas fa-paw"></i></div>
+                
+                <div class="flex items-center space-x-4">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face" 
+                         alt="用户头像" class="w-16 h-16 rounded-full border-3 border-white shadow-lg">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold mb-1">张三</h2>
+                        <div class="flex items-center space-x-2">
+                            <span class="level-badge">中级训练师</span>
+                            <div class="text-orange-100 text-sm"><i class="fas fa-dog mr-1"></i>已训练3只爱犬</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-orange-300/30">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-orange-100 text-sm">本月学习进度</span>
+                        <span class="text-white font-semibold">75%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 课程列表 -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-book-open text-club-blue mr-2"></i>
+                        我的课程
+                    </h3>
+                    <span class="text-sm text-gray-500">共3门课程</span>
+                </div>
+
+                <!-- 课程卡片1 -->
+                <div class="course-card p-5">
+                    <div class="paw-decoration top-2 right-2 text-lg text-yellow-400"><i class="fas fa-paw"></i></div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=80&h=80&fit=crop" 
+                             alt="课程封面" class="w-20 h-20 rounded-xl object-cover">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">基础敏捷训练</h4>
+                                <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">进行中</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                                从零开始学习犬类敏捷训练的基础知识和技能，适合初学者和新手主人。
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                    <span><i class="fas fa-play-circle mr-1"></i>12/20课时</span>
+                                    <span><i class="fas fa-clock mr-1"></i>还需4小时</span>
+                                </div>
+                                <div class="text-club-orange text-lg"><i class="fas fa-running"></i></div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 课程卡片2 -->
+                <div class="course-card p-5">
+                    <div class="paw-decoration top-2 right-2 text-lg text-club-blue"><i class="fas fa-bone"></i></div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=80&h=80&fit=crop" 
+                             alt="课程封面" class="w-20 h-20 rounded-xl object-cover">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">障碍跨越专项</h4>
+                                <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">已完成</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                                专门针对跨越障碍的高级训练课程，提升狗狗的跳跃技巧和协调能力。
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                    <span><i class="fas fa-check-circle mr-1"></i>15/15课时</span>
+                                    <span><i class="fas fa-star mr-1"></i>获得证书</span>
+                                </div>
+                                <div class="text-yellow-400 text-lg"><i class="fas fa-futbol"></i></div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-green-400" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 课程卡片3 -->
+                <div class="course-card p-5">
+                    <div class="paw-decoration top-2 right-2 text-lg text-club-orange"><i class="fas fa-trophy"></i></div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <img src="https://images.unsplash.com/photo-1558618666-fbd2c5cd8c6c?w=80&h=80&fit=crop" 
+                             alt="课程封面" class="w-20 h-20 rounded-xl object-cover">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-bold text-gray-800">比赛准备训练</h4>
+                                <span class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">即将开始</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                                为参加正式比赛做准备的综合性训练课程，包含策略制定和心理准备。
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4 text-xs text-gray-500">
+                                    <span><i class="fas fa-calendar mr-1"></i>3月20日开课</span>
+                                    <span><i class="fas fa-users mr-1"></i>限制8人</span>
+                                </div>
+                                <div class="text-red-400 text-lg"><i class="fas fa-medal"></i></div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-gray-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-bar flex items-center justify-around px-6">
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-home text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">主页</span>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="relative">
+                <i class="fas fa-graduation-cap text-club-blue text-xl mb-1"></i>
+                <div class="absolute -top-1 -right-1 text-yellow-400 text-xs"><i class="fas fa-paw"></i></div>
+            </div>
+            <span class="text-xs text-club-blue font-medium">课程</span>
+        </div>
+        <div class="flex flex-col items-center opacity-60">
+            <i class="fas fa-user text-gray-500 text-xl mb-1"></i>
+            <span class="text-xs text-gray-500">我的</span>
+        </div>
+    </div>
+</body>
+</html> 

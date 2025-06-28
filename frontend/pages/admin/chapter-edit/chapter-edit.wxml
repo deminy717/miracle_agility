@@ -1,0 +1,82 @@
+<!--pages/admin/chapter-edit/chapter-edit.wxml-->
+<view class="chapter-edit-page">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="nav-bar">
+      <view class="nav-back" bindtap="goBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <text class="nav-title">编辑章节</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 编辑表单 -->
+  <view class="edit-form" wx:else>
+    <!-- 章节标题 -->
+    <view class="form-group">
+      <text class="form-label">章节标题</text>
+      <input 
+        class="form-input" 
+        value="{{chapterInfo.title}}"
+        placeholder="请输入章节标题"
+        bindinput="onTitleInput"
+      />
+    </view>
+
+    <!-- 章节描述 -->
+    <view class="form-group">
+      <text class="form-label">章节描述</text>
+      <textarea 
+        class="form-textarea" 
+        value="{{chapterInfo.description}}"
+        placeholder="请输入章节描述"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+      />
+    </view>
+
+    <!-- 时长 -->
+    <view class="form-group">
+      <text class="form-label">预计时长（分钟）</text>
+      <input 
+        class="form-input" 
+        type="number"
+        value="{{chapterInfo.duration}}"
+        placeholder="请输入预计时长"
+        bindinput="onDurationInput"
+      />
+    </view>
+
+    <!-- 状态 -->
+    <view class="form-group">
+      <text class="form-label">状态</text>
+      <view class="status-selector">
+        <view 
+          class="status-option {{chapterInfo.status === 'draft' ? 'active' : ''}}"
+          bindtap="selectStatus"
+          data-status="draft"
+        >
+          <text class="status-text">草稿</text>
+        </view>
+        <view 
+          class="status-option {{chapterInfo.status === 'published' ? 'active' : ''}}"
+          bindtap="selectStatus"
+          data-status="published"
+        >
+          <text class="status-text">已发布</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-cancel" bindtap="goBack">取消</button>
+      <button class="btn btn-save" bindtap="saveChapter">保存</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,28 @@
+/* 复用文章创建页面的样式 */
+@import '../article/create.wxss';
+
+/* 课程创建页面特有样式 */
+.create-course-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 32rpx;
+}
+
+/* 选择器显示样式 */
+.picker-display {
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  border: 2rpx solid #e5e5e5;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #fff;
+}
+
+.picker-display:after {
+  content: '▼';
+  float: right;
+  color: #999;
+  font-size: 24rpx;
+} 

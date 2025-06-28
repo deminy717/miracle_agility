@@ -1,0 +1,163 @@
+<view class="edit-profile-page">
+  <!-- 头像编辑 -->
+  <view class="avatar-section">
+    <view class="section-title">头像</view>
+    <view class="avatar-container">
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image 
+          class="avatar-preview" 
+          src="{{userInfo.avatar}}" 
+          mode="aspectFill"
+        />
+        <view class="avatar-overlay">
+          <text class="camera-icon">📷</text>
+          <text class="avatar-hint">点击更换头像</text>
+        </view>
+      </button>
+      <view class="avatar-tip">支持从微信头像或相册选择</view>
+    </view>
+  </view>
+
+  <!-- 昵称编辑 -->
+  <view class="form-section">
+    <view class="section-title">昵称</view>
+    <view class="input-container">
+      <input 
+        class="nickname-input"
+        type="nickname"
+        placeholder="请输入昵称"
+        value="{{userInfo.nickname}}"
+        bindinput="onNicknameInput"
+        maxlength="20"
+      />
+      <view class="input-counter">{{nicknameLength}}/20</view>
+    </view>
+  </view>
+
+  <!-- 个人信息表单 -->
+  <view class="form-section">
+    <view class="section-title">个人信息</view>
+    
+    <!-- 性别选择 -->
+    <view class="form-item">
+      <view class="form-label">性别</view>
+      <picker 
+        class="form-picker"
+        mode="selector" 
+        range="{{genderList}}" 
+        range-key="name"
+        value="{{genderIndex}}"
+        bindchange="onGenderChange"
+      >
+        <view class="picker-text {{genderIndex === -1 ? 'placeholder' : ''}}">
+          {{genderIndex !== -1 ? genderList[genderIndex].name : '请选择性别'}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 手机号 -->
+    <view class="form-item">
+      <view class="form-label">手机号</view>
+      <input 
+        class="form-input"
+        type="number"
+        placeholder="请输入手机号"
+        value="{{userInfo.phone}}"
+        bindinput="onPhoneInput"
+        maxlength="11"
+      />
+    </view>
+
+    <!-- 地区选择 -->
+    <view class="form-item">
+      <view class="form-label">所在地区</view>
+      <picker 
+        class="form-picker"
+        mode="region" 
+        value="{{region}}"
+        bindchange="onRegionChange"
+      >
+        <view class="picker-text">
+          {{region[0]}} {{region[1]}} {{region[2]}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 职业 -->
+    <view class="form-item">
+      <view class="form-label">职业</view>
+      <input 
+        class="form-input"
+        type="text"
+        placeholder="请输入职业"
+        value="{{userInfo.profession}}"
+        bindinput="onProfessionInput"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 个人简介 -->
+    <view class="form-item bio-item">
+      <view class="form-label">个人简介</view>
+      <textarea 
+        class="bio-textarea"
+        placeholder="介绍一下你和你的狗狗吧"
+        value="{{userInfo.bio}}"
+        bindinput="onBioInput"
+        maxlength="200"
+        show-confirm-bar="{{false}}"
+        auto-height
+      />
+      <view class="textarea-counter">{{bioLength}}/200</view>
+    </view>
+  </view>
+
+  <!-- 训练经验 -->
+  <view class="form-section">
+    <view class="section-title">训练经验</view>
+    
+    <!-- 训练年限 -->
+    <view class="form-item">
+      <view class="form-label">训练年限</view>
+      <picker 
+        class="form-picker"
+        mode="selector" 
+        range="{{experienceList}}" 
+        range-key="name"
+        value="{{experienceIndex}}"
+        bindchange="onExperienceChange"
+      >
+        <view class="picker-text {{experienceIndex === -1 ? 'placeholder' : ''}}">
+          {{experienceIndex !== -1 ? experienceList[experienceIndex].name : '请选择训练年限'}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 擅长项目 -->
+    <view class="form-item">
+      <view class="form-label">擅长项目</view>
+      <input 
+        class="form-input"
+        type="text"
+        placeholder="如：敏捷训练、服从训练等"
+        value="{{userInfo.specialties}}"
+        bindinput="onSpecialtiesInput"
+        maxlength="50"
+      />
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-container">
+    <button 
+      class="save-btn {{canSave ? 'active' : 'disabled'}}" 
+      bindtap="onSave"
+      disabled="{{!canSave}}"
+    >
+      保存修改
+    </button>
+  </view>
+
+  <!-- 底部安全距离 -->
+  <view class="safe-area-bottom"></view>
+</view> 

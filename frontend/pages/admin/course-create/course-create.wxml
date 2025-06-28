@@ -1,0 +1,122 @@
+<view class="course-create-page">
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <view class="loading-content">
+      <view class="loading-icon">⏳</view>
+      <text class="loading-text">加载课程数据中...</text>
+    </view>
+  </view>
+
+  <!-- 页面内容 -->
+  <view wx:else>
+    <!-- 页面标题 -->
+    <view class="page-header">
+      <text class="page-title">{{isEditMode ? '编辑课程' : '新增课程'}}</text>
+      <text class="page-subtitle">{{isEditMode ? '修改课程信息' : '创建一个新的训练课程'}}</text>
+    </view>
+
+    <!-- 表单内容 -->
+    <view class="form-container">
+    <!-- 课程标题 -->
+    <view class="form-item">
+      <text class="form-label">课程标题 *</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入课程标题（3-50字符）"
+        value="{{formData.title}}"
+        bindinput="onTitleInput"
+        maxlength="50"
+      />
+      <view class="char-count">{{formData.title.length}}/50</view>
+      <view class="error-tip" wx:if="{{errors.title}}">{{errors.title}}</view>
+    </view>
+
+    <!-- 课程介绍 -->
+    <view class="form-item">
+      <text class="form-label">课程介绍 *</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请输入课程介绍（10-500字符）"
+        value="{{formData.description}}"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+        auto-height
+      />
+      <view class="char-count">{{formData.description.length}}/500</view>
+      <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
+    </view>
+
+    <!-- 课程封面 -->
+    <view class="form-item">
+      <text class="form-label">课程封面 *</text>
+      <view class="image-upload">
+        <view class="image-preview" wx:if="{{formData.cover}}">
+          <image src="{{formData.cover}}" mode="aspectFill" />
+          <view class="image-delete" bindtap="deleteCover" wx:if="{{!uploading}}">
+            <text class="delete-icon">×</text>
+          </view>
+          <view class="upload-mask" wx:if="{{uploading}}">
+            <view class="upload-progress">
+              <text>上传中...</text>
+            </view>
+          </view>
+        </view>
+        <view class="upload-btn" wx:else bindtap="chooseCover" disabled="{{uploading}}">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">{{uploading ? '上传中...' : '选择封面图片'}}</text>
+        </view>
+      </view>
+      <view class="error-tip" wx:if="{{errors.cover}}">{{errors.cover}}</view>
+    </view>
+
+    <!-- 课程分类 -->
+    <view class="form-item">
+      <text class="form-label">课程分类</text>
+      <picker 
+        class="form-picker" 
+        bindchange="onCategoryChange" 
+        value="{{categoryIndex}}" 
+        range="{{categoryOptions}}"
+      >
+        <view class="picker-text">{{categoryOptions[categoryIndex]}}</view>
+      </picker>
+    </view>
+
+    <!-- 课程标签 -->
+    <view class="form-item">
+      <text class="form-label">课程标签</text>
+      <view class="tags-container">
+        <view wx:for="{{formData.tags}}" wx:key="tagIndex" wx:for-item="tag" wx:for-index="tagIndex" class="tag-item">
+          <text class="tag-icon">🏷️</text>
+          <input 
+            placeholder="输入标签名称" 
+            value="{{tag}}"
+            bindinput="onTagInput"
+            data-tag-index="{{tagIndex}}"
+            class="tag-input"
+            maxlength="20"
+          />
+          <text class="delete-tag" 
+                bindtap="deleteTag" 
+                data-tag-index="{{tagIndex}}"
+                wx:if="{{formData.tags.length > 1}}">×</text>
+        </view>
+        <text class="add-tag" bindtap="addTag">+ 添加标签</text>
+      </view>
+      <view class="form-tip">建议添加3-5个相关标签，帮助用户更好地找到课程</view>
+    </view>
+  </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-secondary" bindtap="saveDraft" disabled="{{saving || loading}}">
+        <text wx:if="{{saving}}">{{isEditMode ? '更新中...' : '保存中...'}}</text>
+        <text wx:else>{{isEditMode ? '保存修改' : '保存草稿'}}</text>
+      </button>
+      <button class="btn btn-primary" bindtap="publishCourse" disabled="{{saving || loading}}">
+        <text wx:if="{{saving}}">{{isEditMode ? '更新中...' : '发布中...'}}</text>
+        <text wx:else>{{isEditMode ? '保存并发布' : '立即发布'}}</text>
+      </button>
+    </view>
+  </view>
+</view>
