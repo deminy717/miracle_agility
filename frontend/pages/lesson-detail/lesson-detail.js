@@ -168,39 +168,6 @@ Page({
   },
 
   /**
-   * 编辑课时
-   */
-  editLesson() {
-    // 传递必要的参数，包括courseId和chapterId（如果存在）
-    const params = [
-      `lessonId=${this.data.lessonId}`,
-      `type=lesson`,
-      `mode=edit`
-    ];
-    
-    // 如果课时信息中有courseId，也传递过去
-    if (this.data.lessonInfo && this.data.lessonInfo.courseId) {
-      params.push(`courseId=${this.data.lessonInfo.courseId}`);
-    }
-    
-    // 如果课时信息中有chapterId，也传递过去
-    if (this.data.lessonInfo && this.data.lessonInfo.chapterId) {
-      params.push(`chapterId=${this.data.lessonInfo.chapterId}`);
-    }
-    
-    wx.navigateTo({
-      url: `/pages/card-editor/card-editor?${params.join('&')}`
-    });
-  },
-
-  /**
-   * 返回上一页
-   */
-  goBack() {
-    wx.navigateBack();
-  },
-
-  /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
@@ -233,7 +200,6 @@ Page({
    */
   onPullDownRefresh() {
     this.loadLessonDetail();
-    wx.stopPullDownRefresh();
   },
 
   /**
@@ -247,6 +213,9 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-
+    return {
+      title: this.data.lessonInfo.title || '课时内容',
+      path: `/pages/lesson-detail/lesson-detail?lessonId=${this.data.lessonId}`
+    }
   }
 }) 
