@@ -62,28 +62,27 @@
         <text class="course-title">{{item.title}}</text>
         <text class="course-description">{{item.description}}</text>
         <view class="course-meta">
-          <text class="meta-item">👥 {{item.studentCount}}人学习</text>
-          <text class="meta-item">📖 {{item.chapterCount}}章节</text>
-          <text class="meta-item">👤 {{item.teacherName || '未知作者'}}</text>
           <text class="meta-item">⏰ {{item.updateTime}}</text>
         </view>
       </view>
       
       <view class="course-actions">
         <view class="action-btn edit-btn" catchtap="editCourse" data-id="{{item.id}}">
-          <text class="btn-icon">✏️</text>
+          <text class="btn-text">编辑课程</text>
         </view>
         <view class="action-btn chapter-btn" catchtap="manageChapters" data-id="{{item.id}}">
-          <text class="btn-icon">📖</text>
+          <text class="btn-text">编辑章节</text>
         </view>
-        <view class="action-btn code-btn" catchtap="manageAccessCodes" data-id="{{item.id}}" data-title="{{item.title}}">
-          <text class="btn-icon">🎫</text>
-        </view>
-        <view class="action-btn status-btn" catchtap="toggleStatus" data-id="{{item.id}}">
-          <text class="btn-icon">{{item.status === 'published' ? '📴' : '📡'}}</text>
+        <view class="switch-container" catchtap="toggleStatus" data-id="{{item.id}}">
+          <view class="switch {{item.status === 'published' ? 'switch-on' : 'switch-off'}}">
+            <view class="switch-handle"></view>
+          </view>
         </view>
         <view class="action-btn delete-btn" catchtap="deleteCourse" data-id="{{item.id}}">
-          <text class="btn-icon">🗑️</text>
+          <text class="btn-text">删除课程</text>
+        </view>
+        <view class="action-btn code-btn" catchtap="manageAccessCodes" data-id="{{item.id}}" data-title="{{item.title}}">
+          <text class="btn-text">授权码</text>
         </view>
       </view>
     </view>
@@ -99,5 +98,60 @@
   <!-- 浮动添加按钮 -->
   <view class="fab-button" bindtap="createCourse">
     <text class="fab-icon">+</text>
+  </view>
+</view>
+
+<!-- 课程有效期选择器弹窗 -->
+<view class="validity-picker-modal {{showValidityPicker ? 'show' : ''}}" catchtap="hideValidityPicker">
+  <view class="modal-content" catchtap="stopPropagation">
+    <!-- 弹窗标题 -->
+    <view class="modal-header">
+      <text class="modal-title">🎯 选择课程有效期</text>
+      <view class="close-btn" bindtap="hideValidityPicker">✕</view>
+    </view>
+    
+    <!-- 课程信息 -->
+    <view class="course-info">
+      <text class="course-title">课程：{{selectedCourseTitle}}</text>
+      <text class="course-tip">通过授权码获得的课程访问权限有效时间</text>
+    </view>
+    
+    <!-- 下拉选择器 -->
+    <view class="picker-container">
+      <picker 
+        mode="selector" 
+        range="{{validityOptions}}" 
+        range-key="displayName"
+        value="{{selectedValidityIndex}}" 
+        bindchange="onValidityChange"
+        class="validity-picker">
+        <view class="picker-display">
+          <text class="picker-text">{{validityOptions[selectedValidityIndex].displayName}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 选择说明 -->
+    <view class="selection-info">
+      <view class="info-item">
+        <text class="info-label">课程权限：</text>
+        <text class="info-value">{{validityOptions[selectedValidityIndex].displayText}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">授权码有效期：</text>
+        <text class="info-value">24小时</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">使用次数：</text>
+        <text class="info-value">1次</text>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="hideValidityPicker">取消</button>
+      <button class="btn-confirm" bindtap="confirmGenerateCode">立即生成</button>
+    </view>
   </view>
 </view>

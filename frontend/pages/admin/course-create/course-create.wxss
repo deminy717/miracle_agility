@@ -93,6 +93,9 @@
   border-radius: 12rpx;
   font-size: 28rpx;
   background: #f9fafb;
+  box-sizing: border-box;
+  height: 88rpx;
+  line-height: 1.4;
 }
 
 .form-input:focus {
@@ -108,6 +111,8 @@
   font-size: 28rpx;
   background: #f9fafb;
   min-height: 200rpx;
+  box-sizing: border-box;
+  line-height: 1.6;
 }
 
 .form-textarea:focus {

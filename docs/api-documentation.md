@@ -18,6 +18,7 @@
 12. **反馈和举报接口** - 用户反馈、内容举报等
 13. **支付相关接口** - 订单创建、状态查询等
 14. **富文本编辑器接口** - 草稿保存、管理等
+15. **授权码管理接口** - 课程授权码生成、查看、管理等
 
 ## 基础配置
 
@@ -1906,4 +1907,354 @@ Page({
 1. 测试正常流程和异常流程
 2. 测试网络异常情况
 3. 测试不同用户权限的接口访问
-4. 测试分页和搜索功能 
+4. 测试分页和搜索功能
+
+## 15. 授权码管理相关接口
+
+### 15.1 生成授权码
+
+**接口地址**：`/api/courses/access-codes/generate`
+**请求方式**：POST
+**说明**：为指定课程生成新的授权码
+
+**请求参数**：
+```json
+{
+  "courseId": 1,
+  "description": "快速授权码(24小时)",
+  "usageLimit": 1,
+  "validHours": 24,
+  "validDays": 7,
+  "validUntil": "2024-12-25T00:00:00.000Z",
+  "codeMethod": "base32"
+}
+```
+
+**参数说明**：
+- `courseId`：课程ID（必填）
+- `description`：授权码描述（可选）
+- `usageLimit`：使用次数限制，默认为1（可选）
+- `validHours`：有效小时数（可选）
+- `validDays`：有效天数（可选）
+- `validUntil`：具体过期时间（可选）
+- `codeMethod`：编码方式（可选，默认base32）
+
+**编码方式说明**：
+
+#### 5种编码方式对比
+
+| 编码方式 | 格式 | 字符集 | 特点 | 推荐场景 |
+|---------|------|--------|------|----------|
+| **base32** ⭐ | `A7K9M2N8` | 去除混淆字符的32字符集 | 用户友好，无0/O/1/I混淆 | **通用推荐** |
+| **timestampRandom** | `K7M9A2N8` | 36字符集(0-9,A-Z) | 带时间信息，保证唯一性 | 需要追溯生成时间 |
+| **base36** | `A7K9M2N8` | 36字符集(0-9,A-Z) | 标准随机，包含所有字符 | 不在意混淆字符 |
+| **grouped** | `A7K9-M2N8` | 去除混淆字符+分隔符 | 分组显示，便于阅读输入 | 用户手动输入较多 |
+| **withChecksum** | `A7K9M2N8` | 去除混淆字符+校验位 | 最后一位是校验位 | 需要防输入错误 |
+
+**字符集详细说明**：
+- **标准36字符集**：`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ`
+- **用户友好32字符集**：`23456789ABCDEFGHJKLMNPQRSTUVWXYZ`（去除0,1,O,I）
+
+**编码方式选择建议**：
+
+1. **base32（推荐）**：
+   - ✅ 去除易混淆字符（0/O、1/I/l）
+   - ✅ 8位固定长度，简洁明了
+   - ✅ 高随机性，32^8 ≈ 1万亿种组合
+   - ✅ 用户体验最佳
+   - 📱 **最适合微信小程序用户输入**
+
+2. **timestampRandom（唯一性保证）**：
+   - ✅ 前4位包含时间信息，理论上永不重复
+   - ✅ 可追溯生成时间
+   - ⚠️ 包含可能混淆的字符
+   - 🎯 **适合需要时间追溯的场景**
+
+3. **grouped（易读性）**：
+   - ✅ 4-4分组，便于人工阅读
+   - ✅ 用户友好字符集
+   - ⚠️ 长度增加到9位（含分隔符）
+   - 📋 **适合需要频繁人工操作的场景**
+
+4. **withChecksum（防错性）**：
+   - ✅ 最后一位校验码可检测输入错误
+   - ✅ 7位随机码+1位校验码
+   - ⚠️ 实际随机位数减少
+   - 🔒 **适合对准确性要求极高的场景**
+
+5. **base36（标准随机）**：
+   - ✅ 标准做法，兼容性好
+   - ✅ 最大字符集，最高随机性
+   - ❌ 包含混淆字符，用户体验较差
+   - 🔧 **适合系统内部使用，不面向用户**
+
+**推荐配置**：
+- **常规使用**：`codeMethod: "base32"`
+- **高并发场景**：`codeMethod: "timestampRandom"`
+- **用户输入较多**：`codeMethod: "grouped"`
+- **安全要求高**：`codeMethod: "withChecksum"`
+
+### 15.2 获取课程的所有授权码（管理员）
+**接口地址**: `/courses/access-codes/course/{courseId}`  
+**请求方法**: `GET`  
+**是否需要认证**: 是（需要管理员权限）
+
+**功能描述**: 获取指定课程的所有授权码，包括使用情况和用户信息
+
+**请求参数**: 无（courseId在URL中）
+
+**响应数据**:
+```json
+{
+  "error": 0,
+  "message": "获取成功",
+  "body": [
+    {
+      "id": 1,
+      "code": "ABC123XY",
+      "courseId": 1,
+      "description": "快速授权码(24小时)",
+      "status": "active",
+      "usageLimit": 1,
+      "usedCount": 0,
+      "validUntil": "2024-12-21T10:30:00.000Z",
+      "createdAt": "2024-12-20T10:30:00.000Z",
+      "createdBy": 1,
+      "usedBy": null,
+      "usedAt": null,
+      "usedByUserName": null
+    },
+    {
+      "id": 2,
+      "code": "DEF456UV",
+      "courseId": 1,
+      "description": "授权码(7天有效)",
+      "status": "used",
+      "usageLimit": 1,
+      "usedCount": 1,
+      "validUntil": "2024-12-27T15:20:00.000Z",
+      "createdAt": "2024-12-19T15:20:00.000Z",
+      "createdBy": 1,
+      "usedBy": 3,
+      "usedAt": "2024-12-20T09:15:00.000Z",
+      "usedByUserName": "张三"
+    }
+  ]
+}
+```
+
+### 15.3 获取所有授权码（管理员）
+**接口地址**: `/courses/access-codes/admin/list`  
+**请求方法**: `GET`  
+**是否需要认证**: 是（需要管理员权限）
+
+**功能描述**: 获取系统中的所有授权码
+
+**响应数据**:
+```json
+{
+  "error": 0,
+  "message": "获取成功",
+  "body": [
+    {
+      "id": 1,
+      "code": "ABC123XY",
+      "courseId": 1,
+      "courseTitle": "犬敏捷入门基础",
+      "description": "快速授权码(24小时)",
+      "status": "active",
+      "usageLimit": 1,
+      "usedCount": 0,
+      "validUntil": "2024-12-21T10:30:00.000Z",
+      "createdAt": "2024-12-20T10:30:00.000Z"
+    }
+  ]
+}
+```
+
+### 15.4 兑换授权码注册课程（用户）
+**接口地址**: `/courses/access-codes/redeem`  
+**请求方法**: `POST`  
+**是否需要认证**: 是
+
+**功能描述**: 使用授权码注册课程
+
+**请求参数**:
+```json
+{
+  "code": "ABC123XY"  // 授权码
+}
+```
+
+**响应数据**:
+```json
+{
+  "error": 0,
+  "message": "授权码兑换成功",
+  "body": {
+    "message": "课程注册成功",
+    "courseId": 1,
+    "registrationId": 456
+  }
+}
+```
+
+**错误响应**:
+```json
+{
+  "error": 400,
+  "message": "兑换失败: 授权码不存在"
+}
+```
+
+### 15.5 验证授权码信息
+**接口地址**: `/courses/access-codes/validate/{code}`  
+**请求方法**: `GET`  
+**是否需要认证**: 否
+
+**功能描述**: 验证授权码是否有效（不消耗使用次数）
+
+**响应数据**:
+```json
+{
+  "error": 0,
+  "message": "授权码信息",
+  "body": {
+    "code": "ABC123XY",
+    "courseId": 1,
+    "courseTitle": "犬敏捷入门基础",
+    "isUsable": true,
+    "status": "active",
+    "usageLimit": 1,
+    "usedCount": 0,
+    "validUntil": "2024-12-21T10:30:00.000Z"
+  }
+}
+```
+
+### 15.6 禁用授权码（管理员）
+**接口地址**: `/courses/access-codes/{codeId}/disable`  
+**请求方法**: `PUT`  
+**是否需要认证**: 是（需要管理员权限）
+
+**功能描述**: 禁用指定的授权码
+
+### 15.7 启用授权码（管理员）
+**接口地址**: `/courses/access-codes/{codeId}/enable`  
+**请求方法**: `PUT`  
+**是否需要认证**: 是（需要管理员权限）
+
+**功能描述**: 启用指定的授权码
+
+### 15.8 删除授权码（管理员）
+**接口地址**: `/courses/access-codes/{codeId}`  
+**请求方法**: `DELETE`  
+**是否需要认证**: 是（需要管理员权限）
+
+**功能描述**: 删除指定的授权码
+
+## 授权码状态说明
+
+| 状态 | 说明 |
+|------|------|
+| active | 有效，可以使用 |
+| used | 已使用，无法再次使用 |
+| expired | 已过期，无法使用 |
+| disabled | 已禁用，无法使用 |
+
+## 授权码使用流程
+
+### 管理员生成授权码的完整流程
+
+1. **生成授权码**:
+```javascript
+const response = await api.generateAccessCode({
+  courseId: 1,
+  description: '快速授权码(24小时)',
+  usageLimit: 1,
+  validUntil: '2024-12-21T10:30:00.000Z'
+})
+```
+
+2. **分享授权码给用户**: `ABC123XY`
+
+3. **用户兑换授权码**:
+```javascript
+const response = await api.redeemAccessCode('ABC123XY')
+```
+
+### 小程序端授权码管理示例
+
+**小程序端兑换授权码**:
+```javascript
+// 用户兑换授权码
+async redeemAccessCode(code) {
+  try {
+    const response = await api.redeemAccessCode(code)
+    
+    if (response.success) {
+      wx.showToast({
+        title: '课程注册成功',
+        icon: 'success'
+      })
+      
+      // 跳转到课程页面
+      wx.navigateTo({
+        url: `/pages/course-detail/course-detail?id=${response.courseId}`
+      })
+    }
+  } catch (error) {
+    wx.showToast({
+      title: error.message || '兑换失败',
+      icon: 'none'
+    })
+  }
+}
+```
+
+**管理员生成授权码**:
+```javascript
+// 管理员生成授权码
+async generateAccessCode(courseId, options) {
+  try {
+    const response = await api.generateAccessCode({
+      courseId,
+      description: options.description,
+      usageLimit: options.usageLimit || 1,
+      validUntil: options.validUntil
+    })
+    
+    // 显示生成的授权码
+    wx.showModal({
+      title: '授权码生成成功',
+      content: `新授权码：${response.code}`,
+      confirmText: '复制授权码',
+      success: (res) => {
+        if (res.confirm) {
+          wx.setClipboardData({
+            data: response.code,
+            success: () => {
+              wx.showToast({ title: '已复制', icon: 'success' })
+            }
+          })
+        }
+      }
+    })
+  } catch (error) {
+    wx.showToast({
+      title: error.message || '生成失败',
+      icon: 'none'
+    })
+  }
+}
+```
+
+## 授权码功能特性
+
+1. **授权码唯一性**: 每个授权码都是全局唯一的8位字符串
+2. **使用次数**: 授权码可以设置使用次数限制，达到限制后自动标记为已使用
+3. **有效期**: 可以为授权码设置有效期，过期后无法使用
+4. **状态管理**: 支持启用/禁用授权码，灵活控制访问
+5. **权限控制**: 只有管理员可以生成和管理授权码
+6. **日志记录**: 所有授权码的生成和使用都会记录详细日志
+7. **用户追踪**: 记录授权码的使用者信息和使用时间 

@@ -46,8 +46,16 @@ Page({
         title: '新增课程'
       });
       
-      // 尝试从本地存储恢复表单数据
-      this.restoreFormData();
+      // 检查是否强制创建新课程（不恢复草稿）
+      // 注意：即使没有forceNew参数，通过"新增课程"按钮进入也应该从空白开始
+      if (options.forceNew === 'true') {
+        // 强制从空白开始，清理可能存在的草稿
+        this.clearFormDataFromStorage();
+        console.log('强制创建新课程，不恢复草稿内容');
+      } else {
+        // 检查草稿是否应该恢复（只有在非正常新增流程时才恢复）
+        this.checkAndRestoreFormData();
+      }
     }
   },
 
@@ -502,12 +510,6 @@ Page({
       });
       return false;
     }
-    if (description.length < 10) {
-      this.setData({
-        'errors.description': '课程介绍至少需要10个字符'
-      });
-      return false;
-    }
     return true;
   },
 
@@ -633,7 +635,8 @@ Page({
         duration: 2000
       });
 
-      // 清理本地存储的草稿数据
+      // 标记草稿为已发布状态，然后清理
+      this.markDraftAsPublished();
       this.clearFormDataFromStorage();
 
       // 保存成功后返回课程管理页面
@@ -667,6 +670,40 @@ Page({
     }
   },
 
+  // 清空表单重新开始（提供给用户的选项）
+  clearFormAndRestart() {
+    wx.showModal({
+      title: '清空表单',
+      content: '确定要清空当前表单内容重新开始吗？此操作不可恢复。',
+      confirmText: '清空',
+      confirmColor: '#ff4757',
+      success: (res) => {
+        if (res.confirm) {
+          // 重置表单数据
+          this.setData({
+            formData: {
+              title: '',
+              description: '',
+              cover: '',
+              category: '基础训练',
+              tags: ['']
+            },
+            categoryIndex: 0,
+            errors: {}
+          });
+          
+          // 清理本地存储
+          this.clearFormDataFromStorage();
+          
+          wx.showToast({
+            title: '已清空表单',
+            icon: 'success'
+          });
+        }
+      }
+    });
+  },
+
   // 页面隐藏时
   onHide() {
     // 可以在这里处理页面隐藏逻辑
@@ -689,12 +726,18 @@ Page({
   // 保存表单数据到本地存储
   saveFormDataToStorage() {
     try {
+      // 只在新增模式下保存草稿，编辑模式不需要保存草稿
+      if (this.data.isEditMode) {
+        return;
+      }
+      
       const formData = this.data.formData;
       if (formData.title || formData.description || formData.cover) {
         wx.setStorageSync('course_create_draft', {
           formData: formData,
           categoryIndex: this.data.categoryIndex,
-          timestamp: Date.now()
+          timestamp: Date.now(),
+          isPublished: false // 明确标记为未发布
         });
         console.log('表单数据已保存到本地存储');
       }
@@ -703,15 +746,21 @@ Page({
     }
   },
 
-  // 从本地存储恢复表单数据
-  restoreFormData() {
+  // 检查并恢复表单数据（更严格的条件）
+  checkAndRestoreFormData() {
     try {
       const savedData = wx.getStorageSync('course_create_draft');
       if (savedData && savedData.formData) {
         // 检查数据是否过期（24小时）
         const isExpired = Date.now() - savedData.timestamp > 24 * 60 * 60 * 1000;
         
-        if (!isExpired) {
+        // 检查草稿是否已经被发布过
+        const isPublished = savedData.isPublished || false;
+        
+        // 检查是否是真正的意外退出（而非正常的新增流程）
+        const isValidDraft = savedData.isValidDraft !== false;
+        
+        if (!isExpired && !isPublished && isValidDraft) {
           console.log('恢复保存的表单数据:', savedData);
           
           // 处理标签格式兼容性 - 使用通用清理函数
@@ -723,18 +772,58 @@ Page({
             categoryIndex: savedData.categoryIndex || 0
           });
           
-          wx.showToast({
-            title: '已恢复上次编辑的内容',
-            icon: 'none',
-            duration: 2000
+          wx.showModal({
+            title: '发现未完成的草稿',
+            content: '检测到您有未完成的课程草稿，是否恢复？',
+            confirmText: '恢复',
+            cancelText: '重新开始',
+            success: (res) => {
+              if (res.confirm) {
+                wx.showToast({
+                  title: '已恢复草稿内容',
+                  icon: 'success',
+                  duration: 2000
+                });
+              } else {
+                // 用户选择重新开始
+                this.clearFormAndRestart();
+              }
+            }
           });
         } else {
-          // 清理过期数据
+          // 清理无效的草稿数据
           wx.removeStorageSync('course_create_draft');
+          if (isPublished) {
+            console.log('草稿已发布，清理本地存储');
+          } else if (isExpired) {
+            console.log('草稿已过期，清理本地存储');
+          } else {
+            console.log('草稿无效，清理本地存储');
+          }
         }
       }
     } catch (error) {
-      console.error('恢复表单数据失败:', error);
+      console.error('检查表单数据失败:', error);
+    }
+  },
+
+  // 从本地存储恢复表单数据（保留原方法供其他地方调用）
+  restoreFormData() {
+    this.checkAndRestoreFormData();
+  },
+
+  // 标记草稿为已发布状态
+  markDraftAsPublished() {
+    try {
+      const savedData = wx.getStorageSync('course_create_draft');
+      if (savedData) {
+        savedData.isPublished = true;
+        savedData.publishTimestamp = Date.now();
+        wx.setStorageSync('course_create_draft', savedData);
+        console.log('已标记草稿为已发布状态');
+      }
+    } catch (error) {
+      console.error('标记草稿发布状态失败:', error);
     }
   },
 

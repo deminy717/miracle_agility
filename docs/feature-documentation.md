@@ -284,6 +284,91 @@ publish-course.js:uploadVideo() → wx.chooseVideo() → uploadFile()
 publish-course.js:submitCourse() → validateCourse() → saveCourse()
 ```
 
+### 5.3 课时编辑器（卡片式编辑器）
+**功能描述**: 管理员可以使用卡片式编辑器创建和编辑课时内容，支持多种内容类型和草稿保存
+
+**操作流程**:
+1. 进入课时编辑页面
+2. 填写课时基本信息（标题、简介等）
+3. 添加内容卡片（文本、图片、视频、重点等）
+4. 预览课时效果
+5. 保存草稿或直接发布
+
+**涉及文件**:
+- `pages/card-editor/card-editor.js` - 编辑器核心逻辑
+- `pages/card-editor/card-editor.wxml` - 编辑器界面布局
+- `pages/card-editor/card-editor.wxss` - 编辑器样式定义
+- `pages/card-editor/card-editor.json` - 页面配置
+
+**主要功能**:
+
+#### 5.3.1 内容卡片管理
+- **文本卡片**: 支持标题和正文内容
+- **图片卡片**: 支持图片上传和描述
+- **视频卡片**: 支持视频上传和播放配置
+- **重点卡片**: 支持要点列表展示
+
+#### 5.3.2 草稿保存功能
+**功能描述**: 用户可以将未完成的课时内容保存为草稿，稍后继续编辑
+
+**操作流程**:
+1. 在新增课时页面填写基本信息
+2. 添加内容卡片（可选）
+3. 点击"保存草稿"按钮
+4. 系统将课时保存为草稿状态
+5. 返回课时管理页面
+
+**按钮显示条件**:
+- 仅在新增课时模式下显示（`editorType === 'lesson' && !editMode`）
+- 编辑已有课时时不显示草稿按钮
+
+**验证规则**:
+- 必须填写课时标题
+- 课时简介和内容卡片为可选
+
+#### 5.3.3 发布功能
+**功能描述**: 创建课时时默认为发布状态，编辑时保持草稿状态
+
+**状态设置**:
+- 新增课时: `status: 'published'` - 直接发布
+- 编辑课时: `status: 'draft'` - 保持草稿状态
+- 保存草稿: `status: 'draft'` - 明确设为草稿
+
+**方法调用关系**:
+```
+card-editor.js:onLoad(options) → initLessonMode() → setData({lessonInfo})
+card-editor.js:addCard(type) → createCard() → setData({contentCards})
+card-editor.js:saveDraft() → validateBasicInfo() → api.request('/api/lessons/create')
+card-editor.js:saveContent() → saveLesson() → api.request('/api/lessons/create')
+card-editor.js:showPreview() → setData({showPreview: true})
+```
+
+**错误处理**:
+- 网络请求失败时显示错误提示
+- 必填字段验证失败时阻止保存
+- 上传文件失败时提供重试选项
+
+#### 5.3.4 开关状态管理
+**功能描述**: 通过开关组件管理课程、章节、课时的发布状态
+
+**状态切换逻辑**:
+- **发布状态**: `status: 'published'` - 内容对用户可见
+- **草稿状态**: `status: 'draft'` - 内容仅管理员可见
+- **下架操作**: 将已发布内容转为草稿状态
+
+**API接口**:
+- `POST /api/courses/{id}/publish` - 发布课程
+- `POST /api/courses/{id}/unpublish` - 下架课程
+- `POST /api/chapters/{id}/publish` - 发布章节
+- `POST /api/chapters/{id}/unpublish` - 下架章节
+- `POST /api/lessons/{id}/publish` - 发布课时
+- `POST /api/lessons/{id}/unpublish` - 下架课时
+
+**前端实现**:
+- 使用switch组件显示当前状态
+- 绿色表示已发布，灰色表示草稿
+- 点击开关触发状态切换确认对话框
+
 ## 6. 富文本编辑器功能
 
 ### 6.1 文本格式化
@@ -456,4 +541,180 @@ TabBar:
 - 下拉刷新
 - 上拉加载更多
 - 骨架屏展示
-- 平滑过渡动画 
+- 平滑过渡动画
+
+## 13. 授权码管理功能
+
+### 13.1 授权码生成功能
+**功能描述**: 管理员可以为课程生成授权码，用户通过授权码可以获得课程访问权限
+
+**操作流程**:
+1. 管理员进入课程管理页面
+2. 点击课程的"授权码"按钮
+3. 选择"生成新授权码"
+4. 选择生成方式（快速生成24小时 或 自定义设置）
+5. 设置有效期和使用次数
+6. 确认生成授权码
+7. 复制授权码分享给用户
+
+**涉及文件**:
+- `pages/admin/course-manage/course-manage.js` - 课程管理逻辑
+- `pages/admin/course-manage/course-manage.wxml` - 界面布局
+- `utils/api.js` - API接口封装
+
+**方法调用关系**:
+```
+course-manage.js:manageAccessCodes() 
+  → wx.showActionSheet(['查看授权码', '生成新授权码'])
+  → generateAccessCode() 
+  → showValidityOptions() 
+  → confirmGenerateAccessCode() 
+  → performGenerateAccessCode() 
+  → api.generateAccessCode()
+  → showGeneratedCodeModal()
+```
+
+### 13.2 授权码查看功能
+**功能描述**: 管理员可以查看课程的所有授权码及其使用情况
+
+**操作流程**:
+1. 管理员点击课程的"授权码"按钮
+2. 选择"查看授权码"
+3. 系统显示该课程的所有授权码
+4. 显示授权码状态、有效期、使用情况等信息
+5. 可选择复制单个或全部授权码
+
+**显示信息**:
+- **授权码**: 8位字符串（如：ABC123XY）
+- **状态**: 有效/已使用/已过期/已禁用
+- **使用情况**: 已使用次数/总次数
+- **有效期**: 具体到期时间或"永久有效"
+- **使用者**: 使用该授权码的用户名
+- **使用时间**: 授权码被使用的具体时间
+
+**方法调用关系**:
+```
+course-manage.js:manageAccessCodes() 
+  → viewAccessCodes() 
+  → api.getCourseAccessCodes()
+  → showAccessCodesModal()
+  → copyAllAccessCodes() (可选)
+```
+
+### 13.3 授权码有效期设置
+**功能描述**: 支持灵活设置授权码的有效期
+
+**有效期选项**:
+- **快速生成**: 默认24小时有效
+- **自定义选项**:
+  - 1天（24小时）
+  - 7天（1周）
+  - 30天（1个月）
+  - 90天（3个月）
+  - 365天（1年）
+  - 永久有效
+
+**实现逻辑**:
+- 按小时计算（validHours）: 用于24小时快速生成
+- 按天数计算（validDays）: 用于其他时间段
+- 无有效期设置: 永久有效
+
+**方法调用关系**:
+```
+course-manage.js:showValidityOptions() 
+  → wx.showActionSheet(validityOptions)
+  → confirmGenerateAccessCode(validity)
+  → performGenerateAccessCode(courseId, options)
+```
+
+### 13.4 授权码状态管理
+**功能描述**: 系统自动管理授权码的状态变化
+
+**状态类型**:
+- **active**: 有效状态，可以使用
+- **used**: 已使用状态，达到使用次数限制
+- **expired**: 已过期状态，超过有效期
+- **disabled**: 已禁用状态，管理员手动禁用
+
+**状态切换逻辑**:
+1. 生成时状态为 `active`
+2. 使用达到限制后变为 `used`
+3. 超过有效期后变为 `expired`
+4. 管理员可手动设置为 `disabled`
+
+### 13.5 用户兑换授权码功能
+**功能描述**: 用户通过授权码获得课程访问权限
+
+**操作流程**:
+1. 用户获得授权码（如：ABC123XY）
+2. 在小程序中输入授权码
+3. 系统验证授权码有效性
+4. 验证通过后为用户添加课程权限
+5. 授权码状态更新为已使用
+
+**验证逻辑**:
+- 检查授权码是否存在
+- 检查是否已达到使用次数限制
+- 检查是否已过期
+- 检查关联课程是否可用
+- 检查用户是否已注册该课程
+
+### 13.6 API接口支持
+**相关接口**:
+- `POST /courses/access-codes/generate` - 生成授权码
+- `GET /courses/access-codes/course/{courseId}` - 获取课程授权码列表
+- `GET /courses/access-codes/admin/list` - 获取所有授权码
+- `POST /courses/access-codes/redeem` - 兑换授权码
+- `GET /courses/access-codes/validate/{code}` - 验证授权码
+- `PUT /courses/access-codes/{codeId}/disable` - 禁用授权码
+- `PUT /courses/access-codes/{codeId}/enable` - 启用授权码
+- `DELETE /courses/access-codes/{codeId}` - 删除授权码
+
+### 13.7 Mock数据支持
+**Mock数据内容**:
+- 模拟不同状态的授权码
+- 包含使用者信息的已使用授权码
+- 不同有效期的授权码示例
+- 完整的授权码生成流程模拟
+
+**Mock数据文件**: `utils/mockData.js`
+
+### 13.8 用户界面优化
+**界面特点**:
+- 使用表情符号增强视觉效果（📋 📚 🔢 🎉）
+- 清晰的状态标识和颜色区分
+- 友好的错误提示和操作反馈
+- 便捷的复制功能支持
+- 响应式的对话框和操作面板
+
+**交互设计**:
+- 二级菜单设计，避免界面拥挤
+- 确认对话框防止误操作
+- 操作反馈及时且明确
+- 支持批量操作（如复制所有授权码）
+
+### 13.9 安全和权限控制
+**权限验证**:
+- 只有管理员可以生成和管理授权码
+- JWT token验证确保请求安全
+- 授权码唯一性验证
+- 防重复兑换机制
+
+**安全措施**:
+- 授权码采用8位随机字符串，避免猜测
+- 有效期限制防止长期滥用
+- 使用次数限制控制访问范围
+- 详细的操作日志记录
+
+### 13.10 错误处理和用户反馈
+**错误处理场景**:
+- 网络请求失败
+- 授权码生成失败
+- 授权码验证失败
+- 权限不足
+
+**用户反馈机制**:
+- Loading状态显示
+- 成功操作的Toast提示
+- 错误信息的详细说明
+- 操作指引和帮助文本 

@@ -246,6 +246,23 @@ public class LessonServiceImpl implements LessonService {
         lessonMapper.updateById(lesson);
     }
 
+    @Override
+    @Transactional
+    public void unpublishLesson(Long lessonId, Long unpublishedBy) {
+        log.info("下架课时: lessonId={}", lessonId);
+        
+        Lesson lesson = lessonMapper.selectById(lessonId);
+        if (lesson == null) {
+            throw new IllegalArgumentException("课时不存在");
+        }
+        
+        // 将状态设置为草稿
+        lesson.setStatus("draft");
+        lesson.setPublishedAt(null);
+        lesson.setUpdatedAt(LocalDateTime.now());
+        lessonMapper.updateById(lesson);
+    }
+
 
     @Override
     public long countLessonsByChapterId(Long chapterId) {

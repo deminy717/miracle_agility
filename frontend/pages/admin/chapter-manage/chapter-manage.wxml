@@ -14,7 +14,6 @@
       <text class="course-title">{{courseInfo.title}}</text>
       <view class="course-stats">
         <text class="stat-item">{{chapters.length}}个章节</text>
-        <text class="stat-item">{{courseInfo.studentCount}}人学习</text>
       </view>
     </view>
   </view>
@@ -43,20 +42,24 @@
             <text class="chapter-description">{{item.description}}</text>
             <view class="chapter-meta">
               <text class="meta-item">{{item.lessonCount || 0}}个课时</text>
-              <text class="meta-item">{{item.duration || 0}}分钟</text>
               <text class="meta-item status-{{item.status}}">{{item.status === 'published' ? '已发布' : '草稿'}}</text>
             </view>
           </view>
           
           <view class="chapter-actions">
-            <view class="action-btn add-subchapter-btn" catchtap="addSubChapter" data-id="{{item.id}}" data-title="{{item.title}}">
-              <text class="btn-icon">📝</text>
+            <view class="switch-container" catchtap="toggleChapterStatus" data-id="{{item.id}}">
+              <view class="switch {{item.status === 'published' ? 'switch-on' : 'switch-off'}}">
+                <view class="switch-handle"></view>
+              </view>
             </view>
             <view class="action-btn edit-btn" catchtap="editChapter" data-id="{{item.id}}" data-title="{{item.title}}">
-              <text class="btn-icon">✏️</text>
+              <text class="btn-text">编辑章节</text>
+            </view>
+            <view class="action-btn add-subchapter-btn" catchtap="addSubChapter" data-id="{{item.id}}" data-title="{{item.title}}">
+              <text class="btn-text">新增内容</text>
             </view>
             <view class="action-btn delete-btn" catchtap="deleteChapter" data-id="{{item.id}}">
-              <text class="btn-icon">🗑️</text>
+              <text class="btn-text">删除章节</text>
             </view>
           </view>
         </view>
@@ -81,28 +84,28 @@
                 <text class="lesson-title">{{lesson.title}}</text>
                 <text class="lesson-description">{{lesson.description}}</text>
                 <view class="lesson-meta">
-                  <text class="meta-item">{{lesson.durationMinutes || 0}}分钟</text>
                   <text class="meta-item status-{{lesson.status}}">{{lesson.status === 'published' ? '已发布' : '草稿'}}</text>
                 </view>
               </view>
               
               <view class="lesson-actions">
+                <view class="lesson-switch-container" catchtap="toggleLessonStatus" 
+                      data-lesson-id="{{lesson.id}}" 
+                      data-title="{{lesson.title}}">
+                  <view class="lesson-switch {{lesson.status === 'published' ? 'switch-on' : 'switch-off'}}">
+                    <view class="lesson-switch-handle"></view>
+                  </view>
+                </view>
                 <view class="action-btn edit-lesson-btn" catchtap="editLesson" 
                       data-lesson-id="{{lesson.id}}" 
                       data-chapter-id="{{item.id}}" 
                       data-title="{{lesson.title}}">
-                  <text class="btn-icon">✏️</text>
-                </view>
-                <view class="action-btn publish-lesson-btn" catchtap="publishLesson" 
-                      data-lesson-id="{{lesson.id}}" 
-                      data-title="{{lesson.title}}"
-                      wx:if="{{lesson.status !== 'published'}}">
-                  <text class="btn-icon">🚀</text>
+                  <text class="btn-text">编辑课时</text>
                 </view>
                 <view class="action-btn delete-lesson-btn" catchtap="deleteLesson" 
                       data-lesson-id="{{lesson.id}}" 
                       data-title="{{lesson.title}}">
-                  <text class="btn-icon">🗑️</text>
+                  <text class="btn-text">删除课时</text>
                 </view>
               </view>
             </view>

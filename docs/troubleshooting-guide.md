@@ -914,3 +914,135 @@ onLogout() {
 - 提供更好的用户反馈和错误处理
 
 --- 
+
+## 10. 开关下架功能问题
+
+### 问题描述
+使用开关下架课时或章节失败，提示"操作失败，请重试"。
+
+### 可能原因
+1. **API接口缺失**: 前端调用了不存在的`unpublishLesson`和`unpublishChapter`方法
+2. **环境配置错误**: API基础URL配置不正确，无法连接后端服务
+3. **Mock数据缺失**: Mock模式下缺少相关接口的模拟数据
+4. **权限验证失败**: JWT令牌过期或用户权限不足
+
+### 解决方案
+
+#### 方案1: 检查环境配置
+首先确认当前使用的环境配置是否正确：
+
+```javascript
+// 检查 frontend/utils/config.js
+environment: 'production', // 或 'mock'
+
+// 生产环境确保API地址正确
+production: {
+  baseUrl: 'http://localhost:8080/api', // 确保地址和端口正确
+}
+```
+
+#### 方案2: 使用Mock模式测试
+如果后端服务未启动，可以切换到Mock模式：
+
+1. 修改`frontend/utils/config.js`:
+```javascript
+environment: 'mock', // 切换为mock模式
+```
+
+2. 确认`frontend/utils/mockData.js`中已添加下架功能支持（已修复）
+
+#### 方案3: 修复生产环境
+如果使用真实后端，确保以下API方法存在：
+
+**前端API方法** (`frontend/utils/api.js`):
+```javascript
+unpublishChapter: (chapterId) => request(`/chapters/${chapterId}/unpublish`, {}, 'POST'),
+unpublishLesson: (lessonId) => request(`/lessons/${lessonId}/unpublish`, {}, 'POST'),
+```
+
+**后端控制器方法**:
+- `ChapterController.unpublishChapter()` - 下架章节
+- `LessonController.unpublishLesson()` - 下架课时
+
+**后端服务方法**:
+- `ChapterService.unpublishChapter()` - 将章节状态设为草稿
+- `LessonService.unpublishLesson()` - 将课时状态设为草稿
+
+### 快速诊断步骤
+
+#### 1. 检查网络请求
+1. 打开微信开发者工具
+2. 进入Network标签页
+3. 尝试下架操作
+4. 查看请求状态：
+   - **200**: 成功，检查响应内容
+   - **404**: 接口不存在，检查API路径
+   - **500**: 服务器错误，检查后端日志
+   - **连接失败**: 检查API地址配置
+
+#### 2. 检查控制台日志
+查看控制台是否有以下信息：
+- `[Mock] 处理课时发布/下架接口` - Mock模式正常
+- `更新课时状态失败` - 前端调用失败
+- API请求URL和参数信息
+
+#### 3. 验证后端服务
+```bash
+# 检查后端服务是否运行
+curl http://localhost:8080/api/health
+
+# 检查具体API接口
+curl -X POST http://localhost:8080/api/lessons/1/unpublish \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 测试步骤
+1. 进入章节管理页面
+2. 找到已发布的课时（开关显示为绿色）
+3. 点击开关切换状态
+4. 确认下架操作
+5. 验证开关变为灰色，状态显示为"草稿"
+
+### 状态说明
+- **已发布**: `status: 'published'` - 开关显示绿色
+- **草稿**: `status: 'draft'` - 开关显示灰色
+- **下架操作**: 将已发布内容转为草稿状态
+
+### 相关文件
+- `frontend/utils/config.js` - 环境配置
+- `frontend/utils/mockData.js` - Mock数据支持
+- `frontend/pages/admin/chapter-manage/chapter-manage.js` - 前端开关逻辑
+- `frontend/utils/api.js` - API方法定义
+- `miracle_agility_backend/src/main/java/com/miracle/agility/controller/` - 后端控制器
+- `miracle_agility_backend/src/main/java/com/miracle/agility/service/impl/` - 后端服务实现
+
+### 预防措施
+- 定期检查前后端接口一致性
+- 使用环境变量管理不同环境配置
+- 为Mock模式添加完整的接口支持
+- 实现详细的错误日志和用户反馈
+
+## 其他常见问题
+
+### 网络请求失败
+**症状**: 显示"网络请求失败"或"操作失败，请重试"
+**解决方案**:
+1. 检查网络连接
+2. 确认后端服务是否启动
+3. 检查API接口是否正确实现
+4. 查看浏览器控制台错误信息
+
+### 权限验证失败
+**症状**: 显示"未登录或登录已过期"
+**解决方案**:
+1. 重新登录获取新的访问令牌
+2. 检查JWT令牌是否过期
+3. 确认用户是否有相应操作权限
+
+### 数据加载失败
+**症状**: 页面显示空白或加载失败
+**解决方案**:
+1. 检查数据库连接
+2. 确认数据是否存在
+3. 检查API返回的数据格式
+4. 查看后端日志错误信息

@@ -61,6 +61,11 @@ public interface LessonService {
     void publishLesson(Long lessonId, Long publishedBy);
 
     /**
+     * 下架课时（转为草稿状态）
+     */
+    void unpublishLesson(Long lessonId, Long unpublishedBy);
+
+    /**
      * 统计章节下的课时数量
      */
     long countLessonsByChapterId(Long chapterId);

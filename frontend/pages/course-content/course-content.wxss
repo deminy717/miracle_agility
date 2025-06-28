@@ -32,8 +32,9 @@
 /* 内容容器 */
 .content-container {
   flex: 1;
-  padding-bottom: 80rpx;
+  padding-bottom: 120rpx;
   background: white;
+  box-sizing: border-box;
 }
 
 /* 章节样式 */
