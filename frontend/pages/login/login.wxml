@@ -1,0 +1,19 @@
+<view class="login-page">
+  <view class="login-container">
+    <view class="login-card">
+      <view class="login-icon">
+        <text class="paw-icon">🐾</text>
+      </view>
+      <text class="login-title">欢迎来到犬敏捷俱乐部</text>
+      <text class="login-desc">登录后可享受个性化学习体验</text>
+      
+      <view class="login-actions">
+        <button class="login-btn" bindtap="onWechatLogin">
+          <text class="wechat-icon">💬</text>
+          微信一键登录
+        </button>
+        <button class="skip-btn" bindtap="onSkipLogin">暂不登录</button>
+      </view>
+    </view>
+  </view>
+</view> 

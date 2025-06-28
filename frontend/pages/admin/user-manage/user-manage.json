@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "用户管理",
+  "navigationBarBackgroundColor": "#203b9d",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f5f5f5"
+} 

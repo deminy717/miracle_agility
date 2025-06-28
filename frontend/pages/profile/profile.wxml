@@ -13,7 +13,7 @@
           <text class="user-name">{{userInfo.nickname}}</text>
           <text class="user-level">{{userInfo.level || '用户'}}</text>
         </view>
-        <image class="edit-btn" src="/static/images/icon/edit.png" bindtap="onEditProfile" />
+        <image class="edit-btn" src="/static/icon/edit.png" bindtap="onEditProfile" />
       </view>
     </view>
 
@@ -100,21 +100,10 @@
     </view>
   </view>
 
-  <!-- 未登录状态 -->
-  <view wx:else class="not-logged-in-content">
-    <view class="login-prompt">
-      <view class="login-icon">
-        <text>👤</text>
-      </view>
-      <text class="login-title">欢迎使用犬敏捷训练</text>
-      <text class="login-desc">登录后可享受个性化学习体验</text>
-      
-      <view class="login-actions">
-        <button class="login-btn" bindtap="onWechatLogin">微信一键登录</button>
-        <button class="skip-btn" bindtap="onSkipLogin">暂不登录</button>
-      </view>
+  <!-- 未登录状态：显示加载中或跳转到登录页 -->
+  <view wx:else class="loading-container">
+    <view class="loading-content">
+      <text class="loading-text">正在检查登录状态...</text>
     </view>
-
-
   </view>
 </view>

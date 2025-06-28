@@ -76,6 +76,9 @@
         <view class="action-btn chapter-btn" catchtap="manageChapters" data-id="{{item.id}}">
           <text class="btn-icon">📖</text>
         </view>
+        <view class="action-btn code-btn" catchtap="manageAccessCodes" data-id="{{item.id}}" data-title="{{item.title}}">
+          <text class="btn-icon">🎫</text>
+        </view>
         <view class="action-btn status-btn" catchtap="toggleStatus" data-id="{{item.id}}">
           <text class="btn-icon">{{item.status === 'published' ? '📴' : '📡'}}</text>
         </view>

@@ -127,7 +127,7 @@ Page({
     app.globalData.editorContext = 'article'; // 标识来源
     
     wx.navigateTo({
-      url: '/pages/rich-text-editor/rich-text-editor'
+      url: '/pages/card-editor/card-editor'
     });
   },
 

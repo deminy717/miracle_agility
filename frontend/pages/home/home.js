@@ -1,7 +1,7 @@
 Page({
   data: {
     clubInfo: {
-      logo: '/static/logo.JPG',
+      logo: '/static/images/logo.JPG',
       name: '奇迹犬敏捷',
       description: '欢迎来到奇迹犬敏捷！我们致力于为每一位狗狗和主人提供专业的敏捷训练课程，让您的爱犬在快乐中成长，在挑战中进步。'
     },
@@ -102,19 +102,9 @@ Page({
     });
   },
 
-  // 跳转到富文本编辑器
-  goToRichTextEditor() {
-    wx.navigateTo({
-      url: '/pages/rich-text-editor/rich-text-editor'
-    });
-  },
 
-  // 跳转到卡片式编辑器
-  goToCardEditor() {
-    wx.navigateTo({
-      url: '/pages/card-editor/card-editor'
-    });
-  },
+
+
 
   // 下拉刷新
   onPullDownRefresh() {

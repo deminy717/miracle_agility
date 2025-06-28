@@ -88,14 +88,19 @@ Page({
           userInfo: null
         })
       }
-    } else {
-      // 生产模式，通过API获取最新用户信息
-      if (auth.checkLoginStatus()) {
-        this.loadUserInfoFromAPI()
-      } else {
-        this.showLoginRequired()
+          } else {
+        // 生产模式，通过API获取最新用户信息
+        if (auth.checkLoginStatus()) {
+          this.loadUserInfoFromAPI()
+        } else {
+          console.log('个人中心：用户未登录，跳转到登录页')
+          this.setData({
+            isLogin: false,
+            userInfo: null
+          })
+          this.navigateToLogin()
+        }
       }
-    }
   },
 
   // 从API加载用户信息
@@ -142,76 +147,24 @@ Page({
           this.checkUserStatus(cachedUserInfo)
           this.initMenuItems()
         } else {
-          this.showLoginRequired()
+          console.log('个人中心：获取用户信息失败，跳转到登录页')
+          this.setData({
+            isLogin: false,
+            userInfo: null
+          })
+          this.navigateToLogin()
         }
       }
     }
   },
 
-  // 显示需要登录的提示
-  showLoginRequired() {
-    this.setData({
-      userInfo: null
+  // 跳转到登录页面
+  navigateToLogin() {
+    const currentUrl = '/pages/profile/profile'
+    const returnUrl = encodeURIComponent(currentUrl)
+    wx.navigateTo({
+      url: `/pages/login/login?returnUrl=${returnUrl}&returnType=tab`
     })
-    
-    wx.showModal({
-      title: '需要登录',
-      content: '请先登录后再查看个人信息',
-      confirmText: '立即登录',
-      cancelText: '暂不登录',
-      success: (res) => {
-        if (res.confirm) {
-          this.performLogin()
-        }
-        // 取消时不跳转，留在当前页面
-      }
-    })
-  },
-
-  // 执行登录
-  performLogin() {
-    wx.showLoading({ title: '登录中...' })
-    
-    auth.wxLogin({ withUserInfo: true })
-      .then((result) => {
-        wx.hideLoading()
-        console.log('登录成功:', result)
-        
-        // 立即更新登录状态
-        this.setData({
-          isLogin: true,
-          userInfo: result.data.userInfo
-        })
-        
-        // 检查用户状态和初始化菜单
-        this.checkUserStatus(result.data.userInfo)
-        this.initMenuItems()
-        
-        if (result.isNewUser) {
-          wx.showToast({
-            title: '欢迎新用户！',
-            icon: 'success'
-          })
-        } else {
-          wx.showToast({
-            title: '登录成功',
-            icon: 'success'
-          })
-        }
-        
-        // 延迟重新加载用户信息（确保完整性）
-        setTimeout(() => {
-          this.loadUserInfo()
-        }, 500)  // 减少延迟时间
-      })
-      .catch((error) => {
-        wx.hideLoading()
-        console.error('登录失败:', error)
-        wx.showToast({
-          title: error.message || '登录失败',
-          icon: 'none'
-        })
-      })
   },
 
   // 检查用户状态（管理员或开发者）
@@ -419,99 +372,5 @@ Page({
 
 
 
-  // 微信一键登录（profile页面）
-  onWechatLogin() {
-    wx.showLoading({ title: '登录中...' })
-    console.log('个人中心：开始微信一键登录')
-    
-    if (config.isMock()) {
-      // Mock模式使用模拟登录
-      this.mockLogin()
-    } else {
-      // 生产模式使用真实登录
-      auth.wxLogin({ withUserInfo: true })
-        .then((result) => {
-          wx.hideLoading()
-          console.log('个人中心：登录成功', result)
-          
-          // 立即更新登录状态
-          this.setData({
-            isLogin: true,
-            userInfo: result.data.userInfo
-          })
-          
-          // 检查用户状态和初始化菜单
-          this.checkUserStatus(result.data.userInfo)
-          this.initMenuItems()
-          
-          if (result.isNewUser) {
-            wx.showToast({
-              title: '欢迎新用户！',
-              icon: 'success'
-            })
-          } else {
-            wx.showToast({
-              title: '登录成功',
-              icon: 'success'
-            })
-          }
-          
-          // 延迟重新加载用户信息（确保完整性）
-          setTimeout(() => {
-            this.loadUserInfo()
-          }, 500)
-        })
-        .catch((error) => {
-          wx.hideLoading()
-          console.error('个人中心：登录失败', error)
-          wx.showToast({
-            title: error.message || '登录失败',
-            icon: 'none'
-          })
-        })
-    }
-  },
 
-  // 模拟登录成功（仅Mock模式使用）
-  mockLogin() {
-    setTimeout(() => {
-      // 获取全局设置的用户信息
-      const app = getApp()
-      const mockUserInfo = app.globalData.userInfo || {
-        nickname: '张三',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face',
-        level: '中级训练师',
-        role: 'user',
-        isAdmin: false,
-        isDeveloper: false
-      }
-
-      wx.setStorageSync('token', 'mock_token_123456')
-      wx.setStorageSync('userInfo', mockUserInfo)
-      
-      this.setData({
-        isLogin: true,
-        userInfo: mockUserInfo
-      })
-      
-      // 检查用户状态和初始化菜单
-      this.checkUserStatus(mockUserInfo)
-      this.initMenuItems()
-      
-      wx.hideLoading()
-      wx.showToast({
-        title: '模拟登录成功',
-        icon: 'success'
-      })
-      
-      console.log('个人中心：模拟登录成功，用户信息:', mockUserInfo)
-    }, 1000)
-  },
-
-  // 暂不登录，跳转到主页
-  onSkipLogin() {
-    wx.switchTab({
-      url: '/pages/home/home'
-    })
-  }
 })

@@ -9,8 +9,7 @@ Page({
     courseName: '',
     formData: {
       title: '',
-      description: '',
-      duration: ''
+      description: ''
     },
     errors: {},
     saving: false
@@ -97,16 +96,6 @@ Page({
     });
   },
 
-  // 预计时长输入
-  onDurationInput(e) {
-    const duration = e.detail.value;
-    this.setData({
-      'formData.duration': duration
-    });
-  },
-
-
-
   // 表单验证
   validateForm() {
     const { title, description } = this.data.formData;
@@ -150,7 +139,6 @@ Page({
         courseId: this.data.courseId,
         title: this.data.formData.title.trim(),
         description: this.data.formData.description.trim(),
-        duration: parseInt(this.data.formData.duration) || 0,
         status: 'draft'
       };
 
@@ -200,7 +188,6 @@ Page({
         courseId: this.data.courseId,
         title: this.data.formData.title.trim(),
         description: this.data.formData.description.trim(),
-        duration: parseInt(this.data.formData.duration) || 0,
         status: 'published'
       };
 

@@ -3,8 +3,8 @@
   min-height: 100vh;
 }
 
-/* 未登录状态样式 */
-.login-container {
+/* 加载状态样式 */
+.loading-container {
   padding: 120rpx 64rpx;
   display: flex;
   justify-content: center;
@@ -12,7 +12,7 @@
   min-height: 80vh;
 }
 
-.login-card {
+.loading-content {
   background: white;
   border-radius: 40rpx;
   padding: 80rpx 48rpx;
@@ -22,50 +22,65 @@
   max-width: 500rpx;
 }
 
-.login-icon {
-  margin-bottom: 32rpx;
-}
-
-.paw-icon {
-  font-size: 120rpx;
-  color: #3b82f6;
-}
-
-.login-title {
+.loading-text {
   display: block;
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #374151;
-  margin-bottom: 16rpx;
-}
-
-.login-desc {
-  display: block;
-  font-size: 28rpx;
-  color: #6b7280;
-  margin-bottom: 64rpx;
-}
-
-.login-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border-radius: 50rpx;
-  padding: 32rpx 64rpx;
   font-size: 32rpx;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16rpx;
-}
-
-.wechat-icon {
-  font-size: 36rpx;
+  color: #6b7280;
+  text-align: center;
 }
 
 /* 已登录状态样式 */
 .course-container {
   padding: 32rpx;
+}
+
+/* 兑换授权码区域 */
+.redeem-section {
+  margin-bottom: 30rpx;
+}
+
+.redeem-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.redeem-card:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 5rpx 20rpx rgba(102, 126, 234, 0.4);
+}
+
+.redeem-icon {
+  font-size: 48rpx;
+  margin-right: 25rpx;
+}
+
+.redeem-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.redeem-title {
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 5rpx;
+}
+
+.redeem-desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+.redeem-arrow {
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
 }
 
 /* 用户信息卡片 */

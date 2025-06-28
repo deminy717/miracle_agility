@@ -364,11 +364,35 @@
   border: none;
 }
 
-
-
 .user-level {
   display: block;
   font-size: 24rpx;
   color: #999;
   margin-top: 8rpx;
+}
+
+/* 加载状态样式 */
+.loading-container {
+  padding: 120rpx 64rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.loading-content {
+  background: white;
+  border-radius: 40rpx;
+  padding: 80rpx 48rpx;
+  text-align: center;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500rpx;
+}
+
+.loading-text {
+  display: block;
+  font-size: 32rpx;
+  color: #6b7280;
+  text-align: center;
 } 

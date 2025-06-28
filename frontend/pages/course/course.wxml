@@ -1,23 +1,27 @@
 <view class="course-page">
-  <!-- 未登录状态 -->
-  <view wx:if="{{!isLogin}}" class="login-container">
-    <view class="login-card">
-      <view class="login-icon">
-      </view>
-      <text class="login-title">欢迎来到犬敏捷俱乐部</text>
-      <text class="login-desc">请登录查看您的专属课程</text>
-      <button class="login-btn" bindtap="onWechatLogin">
-        微信一键登录
-      </button>
+  <!-- 未登录状态：显示加载中或跳转到登录页 -->
+  <view wx:if="{{!isLogin}}" class="loading-container">
+    <view class="loading-content">
+      <text class="loading-text">正在检查登录状态...</text>
     </view>
   </view>
 
   <!-- 已登录状态 -->
   <view wx:else class="course-container">
+    <!-- 兑换授权码入口 -->
+    <view class="redeem-section">
+      <view class="redeem-card" bindtap="showRedeemModal">
+        <view class="redeem-icon">🎫</view>
+        <view class="redeem-text">
+          <text class="redeem-title">有授权码？</text>
+          <text class="redeem-desc">点击兑换课程</text>
+        </view>
+        <text class="redeem-arrow">→</text>
+      </view>
+    </view>
 
-
-          <!-- 课程列表 -->
-      <view class="course-section">
+    <!-- 课程列表 -->
+    <view class="course-section">
 
       <view class="course-list">
         <view 

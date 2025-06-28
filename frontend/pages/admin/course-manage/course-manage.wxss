@@ -217,6 +217,10 @@
   background: #10b981;
 }
 
+.code-btn {
+  background: #8b5cf6;
+}
+
 .status-btn {
   background: #f59e0b;
 }

@@ -1,20 +1,15 @@
 {
   "pages": [
     "pages/home/home",
-    "pages/index/index",
+    "pages/login/login",
     "pages/course/course",
     "pages/course-detail/course-detail",
     "pages/course-content/course-content",
     "pages/profile/profile",
-    "pages/logs/logs",
     "pages/article-list/article-list",
     "pages/article-detail/article-detail",
     "pages/admin-home/admin-home",
     "pages/developer-home/developer-home",
-    "pages/publish-article/publish-article",
-    "pages/publish-course/publish-course",
-    "pages/publish-content/publish-content",
-    "pages/rich-text-editor/rich-text-editor",
     "pages/card-editor/card-editor",
     "pages/admin/course-manage/course-manage",
     "pages/admin/course-create/course-create",
@@ -22,12 +17,11 @@
     "pages/admin/chapter-manage/chapter-manage",
     "pages/admin/chapter-create/chapter-create",
     "pages/admin/chapter-edit/chapter-edit",
-    "pages/admin/lesson-create/lesson-create",
-    "pages/admin/lesson-edit/lesson-edit",
     "pages/lesson-detail/lesson-detail",
     "pages/admin/article-manage/article-manage",
     "pages/admin/article-create/article-create",
     "pages/admin/article-edit/article-edit",
+    "pages/admin/user-manage/user-manage",
     "pages/edit-profile/edit-profile"
   ],
   "window": {
@@ -45,20 +39,20 @@
       {
         "pagePath": "pages/home/home",
         "text": "主页",
-        "iconPath": "static/images/icon/home.png",
-        "selectedIconPath": "static/images/icon/home-active.png"
+        "iconPath": "static/icon/home.png",
+        "selectedIconPath": "static/icon/home-active.png"
       },
       {
         "pagePath": "pages/course/course",
         "text": "课程",
-        "iconPath": "static/images/icon/course.png",
-        "selectedIconPath": "static/images/icon/course-active.png"
+        "iconPath": "static/icon/course.png",
+        "selectedIconPath": "static/icon/course-active.png"
       },
       {
         "pagePath": "pages/profile/profile",
         "text": "我的",
-        "iconPath": "static/images/icon/profile.png",
-        "selectedIconPath": "static/images/icon/profile-active.png"
+        "iconPath": "static/icon/profile.png",
+        "selectedIconPath": "static/icon/profile-active.png"
       }
     ]
   },

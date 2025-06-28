@@ -273,88 +273,185 @@ Page({
     const that = this;
     wx.chooseImage({
       count: 1,
-      sizeType: ['compressed'],
+      sizeType: ['compressed'], // 选择压缩图
       sourceType: ['album', 'camera'],
       success(res) {
         const tempFilePath = res.tempFilePaths[0];
         
-        console.log('选择图片成功，开始上传:', tempFilePath);
+        console.log('选择图片成功，开始检查文件信息:', tempFilePath);
         
-        // 设置上传状态
-        that.setData({
-          uploading: true
-        });
-        
-        wx.showLoading({
-          title: '上传中...'
-        });
-
-        // 先显示本地预览图
-        that.setData({
-          'formData.cover': tempFilePath,
-          'errors.cover': ''
-        });
-
-        // 上传图片到服务器
-        that.uploadImage(tempFilePath).then(result => {
-          console.log('图片上传成功，返回结果:', result);
-          console.log('当前页面数据状态:', that.data);
-          
-          // 验证返回结果
-          if (!result || !result.url) {
-            throw new Error('服务器返回的图片URL无效');
+        // 获取文件信息
+        wx.getFileInfo({
+          filePath: tempFilePath,
+          success(fileInfo) {
+            console.log('文件信息:', fileInfo);
+            
+            const fileSizeMB = (fileInfo.size / 1024 / 1024).toFixed(2);
+            console.log(`文件大小: ${fileSizeMB}MB (${fileInfo.size} bytes)`);
+            
+            // 检查文件大小
+            if (fileInfo.size > 5 * 1024 * 1024) { // 大于5MB
+              wx.showModal({
+                title: '文件较大',
+                content: `图片大小: ${fileSizeMB}MB\n文件较大，建议选择更小的图片或重新选择时选择"原图"选项进行压缩`,
+                confirmText: '重新选择',
+                cancelText: '强制上传',
+                success: (modalRes) => {
+                  if (modalRes.confirm) {
+                    // 重新选择，建议原图压缩
+                    that.chooseCompressedImage();
+                  } else {
+                    // 强制上传大文件
+                    that.startUpload(tempFilePath, fileSizeMB);
+                  }
+                }
+              });
+            } else {
+              // 文件大小合适，直接显示确认对话框
+              wx.showModal({
+                title: '文件信息',
+                content: `图片大小: ${fileSizeMB}MB\n是否继续上传？`,
+                success: (modalRes) => {
+                  if (modalRes.confirm) {
+                    that.startUpload(tempFilePath, fileSizeMB);
+                  }
+                }
+              });
+            }
+          },
+          fail(error) {
+            console.error('获取文件信息失败:', error);
+            wx.showToast({
+              title: '获取文件信息失败',
+              icon: 'none'
+            });
           }
-          
-          // 更新为服务器返回的URL
-          that.setData({
-            'formData.cover': result.url,
-            'errors.cover': ''
-          });
-          
-          console.log('图片URL已更新到formData.cover:', result.url);
-          console.log('更新后的表单数据:', that.data.formData);
-          
-          // 保存到本地存储
-          that.saveFormDataToStorage();
-          
-          // 清除上传状态
-          that.setData({
-            uploading: false
-          });
-          
-          wx.hideLoading();
-          wx.showToast({
-            title: '图片上传成功',
-            icon: 'success',
-            duration: 1500
-          });
-          
-        }).catch(error => {
-          console.error('图片上传失败:', error);
-          
-          wx.hideLoading();
-          
-          // 上传失败，清除预览图和上传状态
-          that.setData({
-            'formData.cover': '',
-            'errors.cover': '图片上传失败，请重试',
-            uploading: false
-          });
-          
-          wx.showToast({
-            title: error.message || '图片上传失败',
-            icon: 'none',
-            duration: 2000
-          });
         });
       },
       fail(error) {
         console.error('选择图片失败:', error);
         wx.showToast({
           title: '选择图片失败',
-          icon: 'error'
+          icon: 'none'
         });
       }
+    });
+  },
+
+  // 选择压缩图片
+  chooseCompressedImage() {
+    const that = this;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'], // 强制压缩
+      sourceType: ['album', 'camera'],
+      success(res) {
+        const tempFilePath = res.tempFilePaths[0];
+        
+        // 再次检查压缩后的文件大小
+        wx.getFileInfo({
+          filePath: tempFilePath,
+          success(fileInfo) {
+            const fileSizeMB = (fileInfo.size / 1024 / 1024).toFixed(2);
+            console.log(`压缩后文件大小: ${fileSizeMB}MB`);
+            
+            wx.showModal({
+              title: '压缩后文件信息',
+              content: `压缩后图片大小: ${fileSizeMB}MB\n是否上传？`,
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  that.startUpload(tempFilePath, fileSizeMB);
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+  },
+
+  // 开始上传流程
+  startUpload(tempFilePath, fileSizeMB) {
+    console.log(`开始上传，文件大小: ${fileSizeMB}MB`);
+    
+    // 设置上传状态
+    this.setData({
+      uploading: true
+    });
+    
+    wx.showLoading({
+      title: `上传中(${fileSizeMB}MB)...`
+    });
+
+    // 先显示本地预览图
+    this.setData({
+      'formData.cover': tempFilePath,
+      'errors.cover': ''
+    });
+
+    // 上传图片到服务器
+    this.uploadImage(tempFilePath).then(result => {
+      console.log('图片上传成功，返回结果:', result);
+      console.log('当前页面数据状态:', this.data);
+      
+      // 验证返回结果
+      if (!result || !result.url) {
+        throw new Error('服务器返回的图片URL无效');
+      }
+      
+      // 更新为服务器返回的URL
+      this.setData({
+        'formData.cover': result.url,
+        'errors.cover': ''
+      });
+      
+      console.log('图片URL已更新到formData.cover:', result.url);
+      console.log('更新后的表单数据:', this.data.formData);
+      
+      // 保存到本地存储
+      this.saveFormDataToStorage();
+      
+      // 清除上传状态
+      this.setData({
+        uploading: false
+      });
+      
+      wx.hideLoading();
+      wx.showToast({
+        title: '图片上传成功',
+        icon: 'success',
+        duration: 1500
+      });
+      
+    }).catch(error => {
+      console.error('图片上传失败:', error);
+      
+      wx.hideLoading();
+      
+      // 检查错误类型
+      let errorTitle = '上传失败';
+      let errorContent = error.message || '图片上传失败，请重试';
+      
+      if (error.message && error.message.includes('413')) {
+        errorTitle = '文件过大';
+        errorContent = `图片文件太大（${fileSizeMB}MB），服务器拒绝接收。\n建议：\n1. 压缩图片后重试\n2. 选择较小的图片文件`;
+      } else if (error.message && error.message.includes('网络')) {
+        errorContent = '网络连接失败，请检查网络后重试';
+      }
+      
+      // 上传失败，清除预览图和上传状态
+      this.setData({
+        'formData.cover': '',
+        'errors.cover': errorContent,
+        uploading: false
+      });
+      
+      wx.showModal({
+        title: errorTitle,
+        content: errorContent,
+        showCancel: false,
+        confirmText: '知道了'
+      });
     });
   },
 

@@ -42,6 +42,8 @@ function uploadFile(filePath, fileType = 'image', category = 'chapter') {
     }
 
     console.log(`[UPLOAD] 开始上传: ${filePath} 到 ${uploadUrl}`)
+    console.log(`[UPLOAD] 使用token: ${accessToken}`)
+    console.log(`[UPLOAD] 文件分类: ${category}, 文件类型: ${fileType}`)
 
     wx.uploadFile({
       url: uploadUrl,

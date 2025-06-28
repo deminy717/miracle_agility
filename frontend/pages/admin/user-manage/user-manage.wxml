@@ -1,0 +1,124 @@
+<view class="user-manage-page">
+  <!-- 统计信息卡片 -->
+  <view class="statistics-section">
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-number">{{statistics.totalUsers || 0}}</text>
+        <text class="stats-label">总用户数</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">{{statistics.totalRegistrations || 0}}</text>
+        <text class="stats-label">总注册课程数</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">{{statistics.completedCourses || 0}}</text>
+        <text class="stats-label">已完成课程数</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">{{statistics.completionRate ? statistics.completionRate.toFixed(1) : 0}}%</text>
+        <text class="stats-label">完成率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户列表 -->
+  <view class="user-list-section">
+    <view class="section-title">
+      <text class="title-text">用户列表</text>
+      <text class="title-count">（{{userList.length}}人）</text>
+    </view>
+
+    <view class="user-list">
+      <view 
+        class="user-card" 
+        wx:for="{{userList}}" 
+        wx:key="userId"
+      >
+        <!-- 用户基本信息 -->
+        <view class="user-header" data-user-id="{{item.userId}}" bindtap="toggleUserExpanded">
+          <view class="user-avatar">
+            <image 
+              class="avatar-image" 
+              src="{{item.avatarUrl || '/static/images/default-avatar.png'}}" 
+              mode="aspectFill"
+            />
+          </view>
+          
+          <view class="user-info">
+            <view class="user-name">{{item.nickname || '未知用户'}}</view>
+            <view class="user-meta">
+              <text class="course-count">{{item.courseCount}}门课程</text>
+              <text class="completion-rate">完成率 {{item.completionRate}}%</text>
+            </view>
+            <view class="user-contact" wx:if="{{item.phone || item.email}}">
+              <text wx:if="{{item.phone}}" class="contact-item">📱 {{item.phone}}</text>
+              <text wx:if="{{item.email}}" class="contact-item">✉️ {{item.email}}</text>
+            </view>
+          </view>
+
+          <view class="expand-icon">
+            <text class="icon {{expandedUsers[item.userId] ? 'expanded' : ''}}">▼</text>
+          </view>
+        </view>
+
+        <!-- 展开的课程列表 -->
+        <view class="user-courses" wx:if="{{expandedUsers[item.userId]}}">
+          <view class="courses-header">
+            <text class="courses-title">注册的课程</text>
+            <view class="action-buttons">
+              <button 
+                class="detail-btn" 
+                size="mini"
+                data-user-id="{{item.userId}}" 
+                bindtap="viewUserDetail"
+              >
+                查看详情
+              </button>
+            </view>
+          </view>
+
+          <view class="course-list">
+            <view 
+              class="course-item" 
+              wx:for="{{item.courses}}" 
+              wx:for-item="course"
+              wx:key="courseId"
+            >
+              <view class="course-info">
+                <text class="course-title">{{course.courseTitle}}</text>
+                <view class="course-meta">
+                  <text class="registration-type">{{course.registrationTypeText}}</text>
+                  <text class="registration-date">{{course.formattedCreatedAt}}</text>
+                </view>
+              </view>
+              
+              <view class="course-progress">
+                <view class="progress-bar">
+                  <view 
+                    class="progress-fill" 
+                    style="width: {{course.progress}}%"
+                  ></view>
+                </view>
+                <text class="progress-text">{{course.progress}}%</text>
+                <text class="status-badge {{course.isCompleted ? 'completed' : 'learning'}}">
+                  {{course.isCompleted ? '已完成' : '学习中'}}
+                </text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && userList.length === 0}}">
+      <image class="empty-icon" src="/static/icon/person.png" mode="aspectFit" />
+      <text class="empty-text">暂无用户数据</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+</view> 

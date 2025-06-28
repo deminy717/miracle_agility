@@ -32,20 +32,8 @@
         maxlength="300"
         auto-height
       />
-      <view class="char-count">{{formData.description.length}}/300</view>
+            <view class="char-count">{{formData.description.length}}/300</view>
       <view class="error-tip" wx:if="{{errors.description}}">{{errors.description}}</view>
-    </view>
-
-    <!-- 预计时长 -->
-    <view class="form-item">
-      <text class="form-label">预计时长（分钟）</text>
-      <input 
-        class="form-input" 
-        placeholder="请输入章节学习时长"
-        value="{{formData.duration}}"
-        bindinput="onDurationInput"
-        type="number"
-      />
     </view>
   </view>
 

@@ -35,7 +35,7 @@ Page({
   // 跳转到用户管理
   goToUserManagement() {
     wx.navigateTo({
-      url: '/pages/admin/user/list'
+      url: '/pages/admin/user-manage/user-manage'
     }).catch(() => {
       wx.showToast({
         title: '功能开发中',

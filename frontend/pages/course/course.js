@@ -46,11 +46,12 @@ Page({
         })
         this.loadCourseList()
       } else {
-        console.log('课程页面：用户未登录')
+        console.log('课程页面：用户未登录，跳转到登录页')
         this.setData({
           isLogin: false,
           userInfo: null
         })
+        this.navigateToLogin()
       }
     } else {
       // 生产模式，检查认证状态
@@ -70,96 +71,17 @@ Page({
           })
         }
       } else {
+        console.log('课程页面：用户未登录（生产模式），跳转到登录页')
         this.setData({
           isLogin: false,
           userInfo: null
         })
+        this.navigateToLogin()
       }
     }
   },
 
-  // 微信一键登录
-  onWechatLogin() {
-    wx.showLoading({ title: '登录中...' })
-    console.log('课程页面：开始微信一键登录')
-    if (config.isMock()) {
-      // Mock模式使用模拟登录
-      this.mockLogin()
-    } else {
-      // 生产模式使用真实登录
-      auth.wxLogin({ withUserInfo: true })
-        .then((result) => {
-          wx.hideLoading()
-          console.log('课程页面：登录成功', result)
-          
-          // 立即更新登录状态
-          this.setData({
-            isLogin: true,
-            userInfo: result.data.userInfo
-          })
-          
-          if (result.isNewUser) {
-            wx.showToast({
-              title: '欢迎新用户！',
-              icon: 'success'
-            })
-          } else {
-            wx.showToast({
-              title: '登录成功',
-              icon: 'success'
-            })
-          }
-          
-          // 立即加载课程列表
-          this.loadCourseList()
-          
-          // 延迟重新检查登录状态（确保完整性）
-          setTimeout(() => {
-            this.checkLoginStatus()
-          }, 500)
-        })
-        .catch((error) => {
-          wx.hideLoading()
-          console.error('课程页面：登录失败', error)
-          wx.showToast({
-            title: error.message || '登录失败',
-            icon: 'none'
-          })
-        })
-    }
-  },
 
-  // 模拟登录成功（仅开发模式使用）
-  mockLogin() {
-    setTimeout(() => {
-      // 获取全局设置的用户信息
-      const app = getApp()
-      const mockUserInfo = app.globalData.userInfo || {
-        nickname: '张三',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face',
-        level: '中级训练师',
-        trainedDogs: 3,
-        monthlyProgress: 75
-      }
-
-      wx.setStorageSync('token', 'mock_token_123456')
-      wx.setStorageSync('userInfo', mockUserInfo)
-      
-      this.setData({
-        isLogin: true,
-        userInfo: mockUserInfo
-      })
-      
-      wx.hideLoading()
-      wx.showToast({
-        title: '模拟登录成功',
-        icon: 'success'
-      })
-      
-      console.log('课程页面：模拟登录成功，用户信息:', mockUserInfo)
-      this.loadCourseList()
-    }, 1000)
-  },
 
   // 加载课程列表
   async loadCourseList() {
@@ -209,6 +131,95 @@ Page({
     wx.navigateTo({
       url: `/pages/course-detail/course-detail?id=${courseId}`
     })
+  },
+
+  // 显示兑换授权码模态框
+  showRedeemModal() {
+    wx.showModal({
+      title: '兑换授权码',
+      placeholderText: '请输入8位授权码',
+      editable: true,
+      success: (res) => {
+        if (res.confirm && res.content) {
+          const code = res.content.trim().toUpperCase()
+          if (code.length === 8) {
+            this.redeemAccessCode(code)
+          } else {
+            wx.showToast({
+              title: '请输入8位授权码',
+              icon: 'none'
+            })
+          }
+        }
+      }
+    })
+  },
+
+  // 兑换授权码
+  async redeemAccessCode(code) {
+    if (!this.data.isLogin) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none'
+      })
+      return
+    }
+
+    wx.showLoading({ title: '兑换中...' })
+
+    try {
+      const response = await api.request('/courses/access-codes/redeem', {
+        code: code
+      }, 'POST')
+
+      if (response && response.code === 200) {
+        const result = response.data
+        wx.hideLoading()
+        
+        wx.showModal({
+          title: '兑换成功！',
+          content: `恭喜您成功兑换课程！\n\n是否立即查看课程？`,
+          confirmText: '立即查看',
+          cancelText: '稍后查看',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: `/pages/course-detail/course-detail?id=${result.courseId}`
+              })
+            } else {
+              // 刷新课程列表以显示新课程
+              this.loadCourseList()
+            }
+          }
+        })
+      } else {
+        throw new Error(response?.message || '兑换失败')
+      }
+    } catch (error) {
+      wx.hideLoading()
+      console.error('兑换授权码失败:', error)
+      
+      let errorMessage = '兑换失败'
+      if (error.message) {
+        if (error.message.includes('授权码不存在')) {
+          errorMessage = '授权码不存在，请检查后重试'
+        } else if (error.message.includes('已使用')) {
+          errorMessage = '授权码已被使用'
+        } else if (error.message.includes('已过期')) {
+          errorMessage = '授权码已过期'
+        } else if (error.message.includes('已注册')) {
+          errorMessage = '您已经注册了该课程'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      
+      wx.showToast({
+        title: errorMessage,
+        icon: 'none',
+        duration: 3000
+      })
+    }
   },
 
   // 退出登录
@@ -279,6 +290,15 @@ Page({
           }
         }
       }
+    })
+  },
+
+  // 跳转到登录页面
+  navigateToLogin() {
+    const currentUrl = '/pages/course/course'
+    const returnUrl = encodeURIComponent(currentUrl)
+    wx.navigateTo({
+      url: `/pages/login/login?returnUrl=${returnUrl}&returnType=tab`
     })
   }
 }) 
