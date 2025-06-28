@@ -132,7 +132,7 @@ Page({
   viewCourse(e) {
     const course = e.currentTarget.dataset.course
     wx.navigateTo({
-      url: `/pages/course-detail/course-detail?id=${course.id}`
+      url: `/pages/course-detail/course-detail?id=${course.id}&admin=true`
     })
   },
 

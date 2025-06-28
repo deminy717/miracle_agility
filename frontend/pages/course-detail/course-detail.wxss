@@ -3,6 +3,36 @@
   min-height: 100vh;
 }
 
+/* 管理视图标识 */
+.admin-view-badge {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 16rpx 32rpx;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  box-shadow: 0 4rpx 16rpx rgba(239, 68, 68, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-view-badge .badge-icon {
+  font-size: 32rpx;
+}
+
+.admin-view-badge .badge-text {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.admin-view-badge .badge-desc {
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-left: auto;
+}
+
 /* 课程Banner */
 .course-banner {
   position: relative;
@@ -416,4 +446,32 @@
   font-size: 26rpx;
   color: #6b7280;
   line-height: 1.5;
+}
+
+/* 状态标识样式 */
+.chapter-status-badge,
+.lesson-status-badge {
+  margin-top: 8rpx;
+}
+
+.status-text {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-weight: 500;
+}
+
+.status-text.status-published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-text.status-draft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-text.status-archived {
+  background: #f3f4f6;
+  color: #6b7280;
 } 

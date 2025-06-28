@@ -136,6 +136,26 @@ public class LessonController {
     }
 
     /**
+     * 根据课程ID获取已发布的课时列表
+     */
+    @GetMapping("/course/{courseId}/published")
+    public ResponseEntity<ApiResponse<List<LessonResponse>>> getPublishedLessonsByCourse(@PathVariable Long courseId) {
+        
+        log.info("获取课程已发布课时列表: courseId={}", courseId);
+        
+        try {
+            List<LessonResponse> responses = lessonService.getPublishedLessonsByCourseId(courseId);
+            return ResponseEntity.ok(ApiResponse.success("获取成功", responses));
+            
+        } catch (AuthenticationException authenticationException) {
+            throw authenticationException;
+        } catch (Exception e) {
+            log.error("获取课程已发布课时列表失败: courseId={}, error={}", courseId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error("获取课程已发布课时列表失败: " + e.getMessage()));
+        }
+    }
+
+    /**
      * 更新课时
      */
     @PutMapping("/{lessonId}")

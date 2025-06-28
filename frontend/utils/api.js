@@ -194,6 +194,7 @@ module.exports = {
   getLessonsByChapterId: (chapterId) => request(`/api/lessons/chapter/${chapterId}`, {}, 'GET'),
   getLessonsByCourseId: (courseId) => request(`/api/lessons/course/${courseId}`, {}, 'GET'),
   getPublishedLessonsByChapterId: (chapterId) => request(`/api/lessons/chapter/${chapterId}/published`, {}, 'GET'),
+  getPublishedLessonsByCourseId: (courseId) => request(`/api/lessons/course/${courseId}/published`, {}, 'GET'),
   getLessonById: (lessonId) => request(`/api/lessons/${lessonId}`, {}, 'GET'),
   getLessonWithCards: (lessonId) => request(`/api/lessons/${lessonId}`, {}, 'GET'), // 别名，包含卡片数据
   createLesson: (lessonData) => request('/api/lessons/create', lessonData, 'POST'),

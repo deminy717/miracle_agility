@@ -2,12 +2,18 @@ Page({
   data: {
     courseId: null,
     courseInfo: {},
-    chapters: []
+    chapters: [],
+    isAdminView: false // 是否为后台管理页面视图
   },
 
   onLoad(options) {
     const courseId = options.id
-    this.setData({ courseId })
+    const isAdminView = options.admin === 'true' // 通过admin参数判断是否为后台管理页面
+    this.setData({ 
+      courseId,
+      isAdminView 
+    })
+    console.log('课程详情页面加载:', { courseId, isAdminView })
     this.loadCourseDetail()
     this.loadChapters()
   },
@@ -71,13 +77,26 @@ Page({
         return;
       }
       
-      console.log('正在获取课程章节列表，课程ID:', this.data.courseId);
+      const { courseId, isAdminView } = this.data;
+      console.log('正在获取课程章节列表，课程ID:', courseId, '管理页面视图:', isAdminView);
       
-      // 并行获取章节数据和课时数据
-      const [chapters, allLessons] = await Promise.all([
-        api.getChaptersByCourseId(this.data.courseId),
-        api.getLessonsByCourseId(this.data.courseId)
-      ]);
+      // 根据页面类型选择不同的API
+      let chapters, allLessons;
+      if (isAdminView) {
+        // 后台管理页面：获取所有章节和课时（包括草稿状态）
+        console.log('管理页面：获取所有章节和课时');
+        [chapters, allLessons] = await Promise.all([
+          api.getChaptersByCourseId(courseId),
+          api.getLessonsByCourseId(courseId)
+        ]);
+      } else {
+        // 前台用户页面：只获取已发布的章节和课时
+        console.log('用户页面：获取已发布的章节和课时');
+        [chapters, allLessons] = await Promise.all([
+          api.getPublishedChaptersByCourseId(courseId),
+          api.getPublishedLessonsByCourseId(courseId)
+        ]);
+      }
       
       console.log('获取章节列表成功:', chapters);
       console.log('获取课时列表成功:', allLessons);

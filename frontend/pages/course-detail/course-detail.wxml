@@ -1,4 +1,11 @@
 <view class="course-detail-page">
+    <!-- 管理视图标识 -->
+    <view wx:if="{{isAdminView}}" class="admin-view-badge">
+      <text class="badge-icon">🔧</text>
+      <text class="badge-text">管理视图</text>
+      <text class="badge-desc">显示所有章节和课时（包括草稿）</text>
+    </view>
+    
     <!-- 课程Banner -->
   <view class="course-banner">
     <view class="banner-background">
@@ -35,6 +42,10 @@
             <view class="chapter-text">
               <text class="chapter-title">{{item.title}}</text>
               <text class="chapter-subtitle">{{item.subtitle}}</text>
+              <!-- 管理视图下显示章节状态 -->
+              <view wx:if="{{isAdminView}}" class="chapter-status-badge">
+                <text class="status-text status-{{item.status}}">{{item.status === 'published' ? '已发布' : '草稿'}}</text>
+              </view>
             </view>
           </view>
           <view class="chapter-status">
@@ -60,6 +71,10 @@
               <view class="lesson-info">
                 <text class="lesson-title">{{lesson.title}}</text>
                 <text class="lesson-meta">{{lesson.duration}} • {{lesson.type}}</text>
+                <!-- 管理视图下显示课时状态 -->
+                <view wx:if="{{isAdminView}}" class="lesson-status-badge">
+                  <text class="status-text status-{{lesson.status}}">{{lesson.status === 'published' ? '已发布' : '草稿'}}</text>
+                </view>
               </view>
               <view class="lesson-action">
                 <text wx:if="{{lesson.status === 'completed'}}" class="action-icon completed">✓</text>
