@@ -1,38 +1,49 @@
-# 使用腾讯云公共镜像
-FROM ccr.ccs.tencentyun.com/library/maven:3.6.3-openjdk-8 as build
-COPY . /code
-WORKDIR /code
+FROM maven:3.6.3-jdk-8 as build
 
-# 配置阿里云 Maven 镜像源加速
+# 配置阿里云 Maven 镜像源
 RUN mkdir -p /root/.m2 && \
-    echo '<?xml version="1.0" encoding="UTF-8"?><settings><mirrors><mirror><id>aliyunmaven</id><mirrorOf>*</mirrorOf><name>阿里云公共仓库</name><url>https://maven.aliyun.com/repository/public</url></mirror></mirrors></settings>' > /root/.m2/settings.xml
+    echo '<?xml version="1.0" encoding="UTF-8"?>' > /root/.m2/settings.xml && \
+    echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> /root/.m2/settings.xml && \
+    echo '          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> /root/.m2/settings.xml && \
+    echo '          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0' >> /root/.m2/settings.xml && \
+    echo '          http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> /root/.m2/settings.xml && \
+    echo '  <mirrors>' >> /root/.m2/settings.xml && \
+    echo '    <mirror>' >> /root/.m2/settings.xml && \
+    echo '      <id>aliyunmaven</id>' >> /root/.m2/settings.xml && \
+    echo '      <mirrorOf>*</mirrorOf>' >> /root/.m2/settings.xml && \
+    echo '      <name>阿里云公共仓库</name>' >> /root/.m2/settings.xml && \
+    echo '      <url>https://maven.aliyun.com/repository/public</url>' >> /root/.m2/settings.xml && \
+    echo '    </mirror>' >> /root/.m2/settings.xml && \
+    echo '  </mirrors>' >> /root/.m2/settings.xml && \
+    echo '</settings>' >> /root/.m2/settings.xml
 
-RUN mvn clean package -DskipTests
+COPY pom.xml /code/
+WORKDIR /code
+RUN mvn dependency:go-offline -B
 
-# 使用腾讯云 JRE 镜像
-FROM ccr.ccs.tencentyun.com/library/openjdk:8-jre-alpine
+COPY . /code
+RUN mvn clean package -DskipTests -B
 
-# 替换为国内源
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories && \
-    apk add --no-cache tzdata curl
+FROM adoptopenjdk:8-jre-hotspot-bionic
 
-# Copy the application's jar to the container
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tzdata curl && \
+    ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo Asia/Shanghai > /etc/timezone && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /code/target/agility-backend.jar /app.jar
 
-# Set timezone to China
-RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-
-# Informs the container listens on the specified network ports at runtime
-EXPOSE 8085
-
-# Create log directory
 RUN mkdir -p /var/log/myapp && \
     chmod -R 755 /var/log/myapp
 
-# Run the jar file
+EXPOSE 8085
+
+# 使用更合理的内存配置
 ENTRYPOINT ["java", \
     "-server", \
     "-jar", \
-    "-Xms4096M", \
-    "-Xmx4096M", \
+    "-Xms512M", \
+    "-Xmx1024M", \
     "/app.jar"]

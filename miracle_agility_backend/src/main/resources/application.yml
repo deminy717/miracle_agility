@@ -8,9 +8,9 @@ spring:
     name: miracle-agility-backend
   
   datasource:
-    url: jdbc:mysql://localhost:3306/miracle_agility?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://mysql-server:3306/miracle_agility?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: Hhm980510
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   # 文件上传配置
@@ -54,6 +54,8 @@ file:
     domain: http://124.222.225.172:8085   # 文件访问域名
 
 logging:
+  file:
+    path: /var/log/myapp
   level:
     com.miracle.agility: DEBUG
     org.springframework.web: DEBUG
