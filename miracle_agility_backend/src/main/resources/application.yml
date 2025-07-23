@@ -51,7 +51,7 @@ file:
   upload:
     path: ./data/uploads/        # 文件上传目录（相对于后端项目根目录）
   access:
-    domain: http://124.222.225.172:8085   # 文件访问域名
+    domain: https://www.1733.site   # 文件访问域名
 
 logging:
   file:

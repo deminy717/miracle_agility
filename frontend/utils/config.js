@@ -15,7 +15,7 @@ const config = {
     production: {
       // baseUrl: 'http://localhost:8085', // 生产环境API地址
       // baseUrl: 'http://bitable-plugin.momenta.cn', // 生产环境API地址
-      baseUrl: 'http://124.222.225.172:8085', // 生产环境API地址
+      baseUrl: 'https://www.1733.site', // 生产环境API地址
       timeout: 10000,
       description: '生产环境API'
     }
