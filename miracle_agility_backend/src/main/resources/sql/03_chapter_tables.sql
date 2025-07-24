@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS chapters (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     published_at TIMESTAMP NULL COMMENT '发布时间',
     deleted_at TIMESTAMP NULL COMMENT '删除时间(软删除)',
+    lesson_count INT DEFAULT 0 COMMENT '课时数量',
     
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,

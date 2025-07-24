@@ -4,6 +4,8 @@ server:
     context-path: /api
 
 spring:
+#  profiles:
+#    active: dev
   application:
     name: miracle-agility-backend
   

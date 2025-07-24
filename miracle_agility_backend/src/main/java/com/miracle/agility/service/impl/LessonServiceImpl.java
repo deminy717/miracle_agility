@@ -76,7 +76,7 @@ public class LessonServiceImpl implements LessonService {
         if (request.getLessonCards() != null && !request.getLessonCards().isEmpty()) {
             for (int i = 0; i < request.getLessonCards().size(); i++) {
                 LessonCreateRequest.LessonCardRequest cardRequest = request.getLessonCards().get(i);
-                createLessonCard(lesson.getId(), cardRequest, i + 1);
+                createLessonCard(lesson.getId(), request.getChapterId(), request.getCourseId(), cardRequest, i + 1);
             }
             lesson.setLessonCardCount(request.getLessonCards().size());
             lessonMapper.updateById(lesson);
@@ -365,9 +365,11 @@ public class LessonServiceImpl implements LessonService {
     /**
      * 创建课时卡片
      */
-    private void createLessonCard(Long lessonId, LessonCreateRequest.LessonCardRequest cardRequest, int sortOrder) {
+    private void createLessonCard(Long lessonId, Long chapterId, Long courseId, LessonCreateRequest.LessonCardRequest cardRequest, int sortOrder) {
         LessonCard card = new LessonCard();
         card.setLessonId(lessonId);
+        card.setChapterId(chapterId);  // 设置章节ID
+        card.setCourseId(courseId);
         card.setCardType(cardRequest.getCardType());
         card.setTitle(cardRequest.getTitle());
         card.setContent(cardRequest.getContent());
